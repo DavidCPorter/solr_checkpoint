@@ -1,2 +1,4 @@
 ---
 # defaults file for cloud-env
+
+ramdisk_path: /dev/shm

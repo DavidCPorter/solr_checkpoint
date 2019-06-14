@@ -1,0 +1,10 @@
+[nodes]
+{% for host in hostsfile %}{{host}}{% if not loop.last %}{% endif %}{% endfor %}
+
+
+[generatorNode]
+{{traffic_node}}
+
+[all:vars]
+ansible_connection=ssh
+ansible_user={{host_user}}
