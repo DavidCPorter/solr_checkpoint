@@ -1,0 +1,8 @@
+- src: https://github.com/DavidCPorter/lucene-solr
+  version: branch_8_1
+  name: lucene-solr
+
+- src: https://archive.apache.org/dist/zookeeper/zookeeper-3.5.5/apache-zookeeper-3.5.5.tar.gz
+  name: zookeeper-3.5.5
+
+# add this repo later
