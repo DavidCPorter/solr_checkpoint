@@ -46,13 +46,16 @@ for host in hosts:
         ssh.close()
         break
     globalIP = stdout.readlines().pop()
-    ansible_line = globalIP[:-1]+' ansible_subnet='+str(stdout2.readlines().pop())
-    solr_node_list.append(ansible_line)
+    ansible_subnet=str(stdout2.readlines().pop())
+    ansible_line = globalIP[:-1]+' ansible_subnet='+ansible_subnet
+    zoo_id = ansible_subnet.split('.').pop()
+    solr_node_list.append(ansible_line[:-1]+' zoo_id='+zoo_id)
+
     # get subnet
 
     ssh.close()
 
-print("...generating inventory file with Ips -> ./inventory_gen.txt")
+print("...generating inventory file with Ips -> ./inventory_gen.txt\n *** please merge ./inventory file with this output *** ")
 with open('hostfile.j2') as file_:
     template = Template(file_.read())
 template = template.render(hostsfile=solr_node_list,traffic_node=tnode,host_user=user,node='node')
