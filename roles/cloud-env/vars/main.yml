@@ -1,2 +1,11 @@
 ---
 # vars file for cloud-env
+
+rem_user: dporte7
+packages:
+- python3-pip
+- python3-dev
+- htop
+- dstat
+- maven
+- ant

@@ -1,9 +1,9 @@
 [nodes]
-{% for host in hostsfile %}{{host}}{% if not loop.last %}{% endif %}{% endfor %}
+{% for host in hostsfile %}{{node}}{{loop.index0}}{{' '}}{{ host}}{% if not loop.last %}{% endif %}{% endfor %}
 
 
 [generatorNode]
-{{traffic_node}}
+node3 {{traffic_node}}
 
 [all:vars]
 ansible_connection=ssh
