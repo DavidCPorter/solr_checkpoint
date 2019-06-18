@@ -1,2 +1,70 @@
----
-# tasks file for solr
+#get the 8_1 version of solr (this repo was forked from apache on 6/12/19).
+
+
+- name: Check if Solr has been installed already.
+  stat:
+    path: "{{ solr_install_dir }}"
+  register: solr_install_path_status
+
+
+- name: 'Download Solr to -> "{{solr_install_dir}}"'
+  git:
+      repo: https://github.com/DavidCPorter/lucene-solr.git
+      dest: "{{solr_install_dir}}"
+      version: branch_8_0
+  when: solr_install_path_status.stat.isdir is not defined
+  register: solr_git_status
+
+
+- name: Run ant-ivy.
+  shell: ant ivy-bootstrap
+  args:
+    chdir: "{{solr_install_dir}}"
+  when: solr_git_status.changed
+
+- name: Build solr with ant.
+  shell: ant compile
+  args:
+    chdir: '{{solr_install_dir}}'
+  when: solr_git_status.changed
+
+- name: run ant server
+  shell: ant server
+  args:
+    chdir: '{{solr_install_dir}}/solr'
+  when: solr_git_status.changed
+
+- name: remove old solr.in.sh
+  shell: rm -f '{{solr_install_dir}}/solr/bin/solr.in.sh'
+
+# not the best convention here...
+- name: copy solr config file to hosts
+  copy:
+    src: ./roles/solr/files/solr.in.sh
+    dest: '{{solr_install_dir}}/solr/bin'
+
+- name: create and grant log dir permissions for solr
+  file:
+    path: "{{solr_log_dir}}"
+    state: directory
+    mode: "777"
+    recurse: yes
+  become: yes
+  become_user: root
+
+
+- name: stop solr
+  shell: ./solr/bin/solr stop -c
+  args:
+    chdir: '{{solr_install_dir}}'
+  environment:
+    SOLR_HOST: "{{ansible_subnet}}"
+  tags: stop_solr
+
+- name: start solr
+  shell: ./solr/bin/solr start -c
+  args:
+    chdir: '{{solr_install_dir}}'
+  environment:
+    SOLR_HOST: "{{ansible_subnet}}"
+  tags: start_solr

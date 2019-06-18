@@ -1,0 +1,7 @@
+---
+# defaults file for zookeeper
+
+solr_install_dir: /users/dporte7/solr-8_0
+zoo_conf_dir: /users/dporte7/solr-8_0/zookeeper-3.4.13/conf
+zoo_root_dir: /users/dporte7/solr-8_0/zookeeper-3.4.13
+zoo_bin_dir: /users/dporte7/solr-8_0/zookeeper-3.4.13/bin
