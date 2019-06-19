@@ -59,7 +59,7 @@
     chdir: '{{solr_install_dir}}'
   environment:
     SOLR_HOST: "{{ansible_subnet}}"
-  tags: stop_solr
+  tags: solr_stop
 
 - name: start solr
   shell: ./solr/bin/solr start -c
@@ -67,4 +67,4 @@
     chdir: '{{solr_install_dir}}'
   environment:
     SOLR_HOST: "{{ansible_subnet}}"
-  tags: start_solr
+  tags: solr_start

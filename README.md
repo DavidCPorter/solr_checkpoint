@@ -1,7 +1,8 @@
 ## This project builds and deploys a distributed SolrCloud Development Environment w/ solr source version control
 
-To deploy:
+To deploy you need a local and remote env:
 
+LOCAL:
 Create a python3 virtual env:
 `pyenv activate your_env`
 
@@ -9,12 +10,28 @@ install packages:
 `pip install ansible paramiko Jinja2 numpy`
 
 
+REMOTE:
+1) to set up your remote env, put the four Cloudlab domains in a file ./cloudlabDNS e.g
+`domain1`
+`domain2`
+`domain3`
+`domain4`
+
+2) run $python3 getips.py <cloudlab username> <cloudlabDNS filename> <path_to_private_rsa_key>
+this will generate >> `inventory_gen.txt` file
+- rename this file to `./inventory`
+
+3) to install the cloud env, run `ansible-playbook -i inventory configure_cloud.yml`
+4) to install and run zookeeper, run `ansible-playbook -i inventory zoo_install.yml`
+5) to install and run solrcloud, run `ansible-playbook -i inventory solr_install.yml`
+
+
 ### Notes on Ansible Roles:
-#### Variables
+There are three roles in this repo `cloudenv, solr, zookeeper` located in the ./roles dir. You can take a look at the procedurees for setting up the envs in ./roles/<role_name>/tasks/main.yml
+
+#### Ansible Variables
+when you run ansible playbooks, the process will generate sys variables, and to viewe these you can run `ansible -i inventory -m setup`
 `hostvars`
-
-
-
 `VARIABLE PRECEDENCE`
 If multiple variables of the same name are defined in different places, they win in a certain order, which is:
 - extra vars (-e in the command line) always win

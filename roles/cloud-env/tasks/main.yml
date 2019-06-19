@@ -27,7 +27,7 @@
   become: yes
   become_user: root
 
-- name: sudo apt-get install python3-pip, python3-dev
+- name: sudo apt-get install packages
   apt:
     name: "{{ packages }}"
     state: present
