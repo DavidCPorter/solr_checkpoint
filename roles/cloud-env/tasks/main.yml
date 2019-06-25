@@ -15,17 +15,18 @@
 #     opts: "size={{ ramdisk_size }}"
 #     state: mounted
 
+- name: update packages
+  apt:
+    update_cache: yes
+  become: yes
+  become_user: root
+
 - name: ensure jdk8 is installed
   apt:
     name: openjdk-8-jdk
   become: yes
   become_user: root
 
-- name: update packages
-  apt:
-    update_cache: yes
-  become: yes
-  become_user: root
 
 - name: sudo apt-get install packages
   apt:

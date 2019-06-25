@@ -6,14 +6,15 @@
     path: "{{ solr_install_dir }}"
   register: solr_install_path_status
 
-
 - name: 'Download Solr to -> "{{solr_install_dir}}"'
   git:
       repo: https://github.com/DavidCPorter/lucene-solr.git
       dest: "{{solr_install_dir}}"
-      version: branch_8_0
-  when: solr_install_path_status.stat.isdir is not defined
+      version: dporter
+      force: yes
   register: solr_git_status
+  tags:
+    - solr_update
 
 
 - name: Run ant-ivy.
@@ -59,7 +60,9 @@
     chdir: '{{solr_install_dir}}'
   environment:
     SOLR_HOST: "{{ansible_subnet}}"
-  tags: solr_stop
+  tags:
+    - solr_stop
+    - solr_update
 
 - name: start solr
   shell: ./solr/bin/solr start -c
@@ -67,4 +70,6 @@
     chdir: '{{solr_install_dir}}'
   environment:
     SOLR_HOST: "{{ansible_subnet}}"
-  tags: solr_start
+  tags:
+    - solr_update
+    - solr_start

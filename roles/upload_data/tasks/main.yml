@@ -1,0 +1,44 @@
+---
+# tasks file for upload_data
+- name: Check if data has been downloaded already.
+  stat:
+    path: '{{data_upload_dir}}/reviews_Electronics_5.json'
+  register: data_download_path_status
+
+# unarchive module maintainers argued about .gz file support https://github.com/ansible/ansible-modules-core/issues/3241
+# - name: Download data set
+#   unarchive:
+#     remote_src: yes
+#     src: http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/reviews_Electronics_5.json.gz
+#     dest: '{{data_upload_dir}}'
+#     creates: "{{data_upload_dir}}/reviews_Electronics_5.json"
+#     extra_opts: --gunzip
+#
+#   tags:
+#     - download_data
+
+- name: download data
+  shell: wget http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/reviews_Electronics_5.json.gz
+  args:
+    creates: '{{data_upload_dir}}/reviews_Electronics_5.json.gz'
+  when: data_download_path_status.stat.exists
+
+- name: unzip data
+  shell: gunzip -f "{{data_upload_dir}}/reviews_Electronics_5.json.gz"
+  args:
+    creates: '{{data_upload_dir}}/reviews_Electronics_5.json'
+
+- name: create collection
+  shell: ./bin/solr create_collection -c "{{collection_name}}" -s 3 -rf 3 -force
+  args:
+    chdir: '{{solr_install_dir}}/solr'
+    creates: '{{data_upload_dir}}/{{collection_name}}.txt'
+
+
+- name: create schema
+  script: ../files/schema_create.sh "{{ansible_subnet}}" "{{collection_name}}"
+
+- name: post data
+  shell: ./bin/post -c "{{collection_name}}" "{{data_upload_dir}}/reviews_Electronics_5.json"
+  args:
+    chdir: '{{solr_install_dir}}/solr'

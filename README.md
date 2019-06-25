@@ -1,6 +1,6 @@
 ## This project builds and deploys a distributed SolrCloud Development Environment w/ solr source version control
 
-To deploy you need a local and remote env:
+To deploy you need to set up a local and remote env:
 
 LOCAL:
 Create a python3 virtual env:
@@ -21,6 +21,15 @@ REMOTE:
 this will generate >> `inventory_gen.txt` file
 - rename this file to `./inventory`
 
+### before you run the ansible scripts:
+- locally clone the lucene-solr repo https://github.com/DavidCPorter/lucene-solr.git
+- checkout branch_8_0
+- create new branch <name>
+- push <name> branch to origin
+- replace 'dporter' with <name> in solr_install.yml script under field "version" in the git step.
+
+- replace dporte7 in variable files with your username in cloudlab
+
 3) to install the cloud env, run `ansible-playbook -i inventory configure_cloud.yml`
 4) to install and run zookeeper, run `ansible-playbook -i inventory zoo_install.yml`
 5) to install and run solrcloud, run `ansible-playbook -i inventory solr_install.yml`
@@ -30,7 +39,7 @@ this will generate >> `inventory_gen.txt` file
 There are three roles in this repo `cloudenv, solr, zookeeper` located in the ./roles dir. You can take a look at the procedurees for setting up the envs in ./roles/<role_name>/tasks/main.yml
 
 #### Ansible Variables
-when you run ansible playbooks, the process will generate sys variables, and to viewe these you can run `ansible -i inventory -m setup`
+when you run ansible playbooks, the process will generate sys variables, and to view these you can run `ansible -i inventory -m setup`
 `hostvars`
 `VARIABLE PRECEDENCE`
 If multiple variables of the same name are defined in different places, they win in a certain order, which is:
