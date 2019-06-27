@@ -1,0 +1,9 @@
+---
+# tasks file for benchmark
+- name: run dstat on each machine
+  shell: "(dstat --time --output '{{ansible_subnet}}'_dstat_'{{pyscript}}'.csv &>/dev/null &)"
+  async: 20
+  poll: 0
+
+# - name: stop dstat
+#   shell: "ps aux | grep -i 'dstat*' | awk -F' ' '{print $2}' | xargs kill -9"

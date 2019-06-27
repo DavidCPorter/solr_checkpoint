@@ -24,11 +24,11 @@ this will generate >> `inventory_gen.txt` file
 ### before you run the ansible scripts:
 - locally clone the lucene-solr repo https://github.com/DavidCPorter/lucene-solr.git
 - checkout branch_8_0
-- create new branch <name>
+- create new branch <name> e.g. `git checkout -b <name>`
 - push <name> branch to origin
-- replace 'dporter' with <name> in solr_install.yml script under field "version" in the git step.
+- replace `dporter` with <name> in solr_install.yml script under field "version" in the git step.
 
-- replace dporte7 in variable files with your username in cloudlab
+- replace `dporte7` in ansible "vars" and "defaults" files with your username in cloudlab
 
 3) to install the cloud env, run `ansible-playbook -i inventory configure_cloud.yml`
 4) to install and run zookeeper, run `ansible-playbook -i inventory zoo_install.yml`
