@@ -35,6 +35,13 @@ this will generate >> `inventory_gen.txt` file
 5) to install and run solrcloud, run `ansible-playbook -i inventory solr_install.yml`
 
 
+### Running tests
+- I found the easiest way to connect with the remote JMX is to modify this line in the ~/solr-8_0/solr/bin/solr executable 
+
+REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname=$SOLR_HOST")
+to
+REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname=<globalIP>")
+
 ### Notes on Ansible Roles:
 There are three roles in this repo `cloudenv, solr, zookeeper` located in the ./roles dir. You can take a look at the procedurees for setting up the envs in ./roles/<role_name>/tasks/main.yml
 
