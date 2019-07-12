@@ -5,6 +5,19 @@
 [generatorNode]
 {{traffic_node}}
 
+[dataServer]
+{{ hostsfile[0] }}
+
+
+localhost ansible_connection=local
+
+
 [all:vars]
 ansible_connection=ssh
 ansible_user={{host_user}}
+node0={{ hostsfile[0][:15] }}
+node1={{ hostsfile[1][:15] }}
+node2={{ hostsfile[2][:15] }}
+node3={{ traffic_node[:15] }}
+root_path=/Users/dporter/projects/solrcloud/
+main_class=src/main/java/com/mycompany/solrcloud/loadbalancer/DistributedWebServer.java

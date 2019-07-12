@@ -21,7 +21,7 @@
   shell: wget http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/reviews_Electronics_5.json.gz
   args:
     creates: '{{data_upload_dir}}/reviews_Electronics_5.json.gz'
-  when: data_download_path_status.stat.exists
+  when: data_download_path_status.stat.exists == False
 
 - name: unzip data
   shell: gunzip -f "{{data_upload_dir}}/reviews_Electronics_5.json.gz"

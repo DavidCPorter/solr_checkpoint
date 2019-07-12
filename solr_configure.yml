@@ -2,3 +2,18 @@
 - hosts: nodes
   roles:
     - solr
+
+- hosts: localhost
+  tasks:
+    - name: open solr admin panel
+      command: open http://"{{node0}}":8983
+      async: 99999
+      poll: 0
+      tags:
+        - solr_panel
+    - name: view remote JMX monitoring for solr nodes
+      command: jconsole "{{node0}}":18983 "{{node1}}":18983 "{{node2}}":18983
+      async: 99999
+      poll: 0
+      tags:
+        - jmx

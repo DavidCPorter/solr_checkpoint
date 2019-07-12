@@ -240,14 +240,14 @@ def duration_based_test( test_param, thread_stats, start_flag, stop_flag ):
             field = indexed_fields[i%len(indexed_fields)]
             #q = 'solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
             q = 'solr/reviews/select?q='+field+'%3A'+term
-            urls.append( "%s%s" % (prefix_url, q))
+            urls.append( "%s:%s" % (indexed_fields, terms))
 
     else:
         for i in range( test_param.max_iters ):
             term = terms[i%len(terms)]
             field = indexed_fields[i%len(indexed_fields)]
-            q = 'solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
-            urls.append( "%s%s" % (prefix_url, q))
+            # q = 'solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
+            # urls.append( "%s%s" % (prefix_url, q))
 
     # Wait for start signal
     logging.debug( "Waiting for start event" )
@@ -286,9 +286,9 @@ def main( ):
     parser = argparse.ArgumentParser( )
     parser.add_argument( "--threads", dest="threads", type=int, default=1,
                          help="Number of threads to use"  )
-    parser.add_argument( "--host", dest="host", default="128.104.222.94",
+    parser.add_argument( "--host", dest="host", default="128.110.153.106",
                          help="Web server host name" )
-    parser.add_argument( "--port", dest="port", type=int, default="8983",
+    parser.add_argument( "--port", dest="port", type=int, default="9111",
                          help="Web server port number" )
     parser.add_argument( "--duration", dest="duration", type=float, default=20.0,
                          help="Duration of test in seconds" )

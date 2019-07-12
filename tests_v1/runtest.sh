@@ -15,19 +15,15 @@ function start_experiment() {
     echo 'Coping python script on remote machine'
     scp $PY_SCRIPT $USER@node3:~/
 
-    IP_0=$(ssh $USER@node0 "ifconfig | awk '/inet/ {print \$2}' | head -n 1")
-    IP_1=$(ssh $USER@node1 "ifconfig | awk '/inet/ {print \$2}' | head -n 1")
-    IP_2=$(ssh $USER@node2 "ifconfig | awk '/inet/ {print \$2}' | head -n 1")
 
-    PAR_0="--host 10.10.1.1 --port 8983 --threads 80 --duration 20 --random --connections 10 --output-dir ./"
-    PAR_1="--host 10.10.1.2 --port 8983 --threads 80 --duration 20 --random --connections 10 --output-dir ./"
-    PAR_2="--host 10.10.1.3 --port 8983 --threads 80 --duration 20 --random --connections 10 --output-dir ./"
-    PAR_N="--host 10.10.1.3 --port 8983 --threads 80 --duration 25 --random --connections 10 --output-dir ./"
+    PAR_0="--host 10.10.1.3 --port 9111 --threads 10 --duration 20 --random --connections 10 --output-dir ./"
+    PAR_1="--host 10.10.1.3 --port 9111 --threads 10 --duration 20 --random --connections 10 --output-dir ./"
+    # PAR_2="--host 10.10.1.3 --port 9000 --threads 10 --duration 20 --random --connections 10 --output-dir ./"
+    # PAR_N="--host 10.10.1.3 --port 9000 --threads 810--duration 25 --random --connections 10 --output-dir ./"
 
     for i in $(seq 6); do
     	nohup ssh $USER@node3 "python3 $(basename $PY_SCRIPT) $PAR_0 &>/dev/null &"
-        nohup ssh $USER@node3 "python3 $(basename $PY_SCRIPT) $PAR_1 &>/dev/null &"
-        nohup ssh $USER@node3 "python3 $(basename $PY_SCRIPT) $PAR_2 &>/dev/null &"
+      nohup ssh $USER@node3 "python3 $(basename $PY_SCRIPT) $PAR_1 &>/dev/null &"
     done
     ssh $USER@node3 "python3 $(basename $PY_SCRIPT) $PAR_N"
 
@@ -59,16 +55,16 @@ function profile_experiment_dstat() {
 	echo 'Starting the experiment'
 	start_experiment $USER $PY_SCRIPT
 
-    echo 'Stopping dstat'
-    nohup parallel-ssh -i -H "$USER@node0 $USER@node1 $USER@node2 $USER@node3" "ps aux | grep -i 'dstat*' | awk -F' ' '{print \$2}' | xargs kill -9"
-
-    echo 'Coping the profiling data locally'
-    for i in `seq 0 3`; do
-        scp $USER@node$i:"./node${i}_dstat_$PY_NAME.csv" profiling_data/
-    done
-    echo 'Done'
-
-}
+#     echo 'Stopping dstat'
+#     nohup parallel-ssh -i -H "$USER@node0 $USER@node1 $USER@node2 $USER@node3" "ps aux | grep -i 'dstat*' | awk -F' ' '{print \$2}' | xargs kill -9"
+#
+#     echo 'Coping the profiling data locally'
+#     for i in `seq 0 3`; do
+#         scp $USER@node$i:"./node${i}_dstat_$PY_NAME.csv" profiling_data/
+#     done
+#     echo 'Done'
+#
+# }
 
 
 if [ "$#" -ne 2 ]; then
@@ -80,9 +76,10 @@ USER=$1
 PY_SCRIPT=$2
 #PARAMETERS=$3
 
-echo "starting experiment"
+echo 'Starting the experiment'
+start_experiment $USER $PY_SCRIPT
 
-profile_experiment_dstat $USER $PY_SCRIPT
+# profile_experiment_dstat $USER $PY_SCRIPT
 
 #start_experiment $USER $PY_SCRIPT "\"$PARAMETERS\""
 

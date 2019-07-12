@@ -53,23 +53,18 @@
   become: yes
   become_user: root
 
-
-- name: stop solr
-  shell: ./solr/bin/solr stop -c
-  args:
-    chdir: '{{solr_install_dir}}'
-  environment:
-    SOLR_HOST: "{{ansible_subnet}}"
+- name: calling handler for stopping solr
+  command: echo "stopping solr..."
+  notify:
+    - "stop solr services"
   tags:
+    - solr_restart
     - solr_stop
-    - solr_update
 
-- name: start solr
-  shell: ./solr/bin/solr start -c -Dcom.sun.management.jmxremote
-  args:
-    chdir: '{{solr_install_dir}}'
-  environment:
-    SOLR_HOST: "{{ansible_subnet}}"
+- name: calling handler for starting solr
+  command: echo "starting solr..."
+  notify:
+    - "start solr services"
   tags:
-    - solr_update
+    - solr_restart
     - solr_start

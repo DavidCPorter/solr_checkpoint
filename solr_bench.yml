@@ -1,4 +1,4 @@
-- hosts: nodes
+- hosts: generatorNode
   roles:
     - benchmark
 
