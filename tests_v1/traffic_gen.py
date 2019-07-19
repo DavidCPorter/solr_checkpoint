@@ -40,7 +40,7 @@ class ThreadStats( object ):
 class TestParam( object ):
     def __init__( self, host="", port=0, threads=1, http_pool=None, base_url="", ramp=1,
                   duration=1, conns=1, rand_req=False, max_rand_obj=1, req_dist="", poisson_lam=1.0,
-                  gauss_mean=1.0, gauss_std=1.0, max_iters=131072 ):
+                  gauss_mean=1.0, gauss_std=1.0, max_iters=1310 ):
         self.host         = host
         self.port         = port
         self.threads      = threads
@@ -200,7 +200,7 @@ def size_based_test( test_param, thread_stats, start_flag, stop_flag ):
         time.sleep( sleep_times[i] )
         req_start = time.time()
         try:
-            rsp = http_pool.request( "GET", urls[i] )
+            rsp = http_pool.request( "GET", urls[i%test_param.max_iters] )
             thread_stats.avg_lat[j] += time.time() - req_start
             thread_stats.responses[j] += 1
             thread_stats.byte_count[j] += len( rsp.data )
@@ -219,6 +219,8 @@ def duration_based_test( test_param, thread_stats, start_flag, stop_flag ):
     """ Duration-based test to be carried out by each thread """
     terms = ["good","bad","5","stars","best","horrible","incredible","terrific","garbage","useful","useless","nice","awful","amazing","friend","new","stuck","blocked"]
     indexed_fields = ["reviewText","summary"]
+    print("hello from duration")
+    sys.stdout.flush()
 
     name = threading.currentThread().getName()
     j = int( name )
@@ -239,15 +241,15 @@ def duration_based_test( test_param, thread_stats, start_flag, stop_flag ):
             term = terms[i%len(terms)]
             field = indexed_fields[i%len(indexed_fields)]
             #q = 'solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
-            q = 'solr/reviews/select?q='+field+'%3A'+term
-            urls.append( "%s:%s" % (indexed_fields, terms))
+            # q = 'solr/reviews/select?q='+field+'%3A'+term
+            urls.append( "%s:%s" % (field, term))
 
     else:
         for i in range( test_param.max_iters ):
             term = terms[i%len(terms)]
             field = indexed_fields[i%len(indexed_fields)]
             # q = 'solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
-            # urls.append( "%s%s" % (prefix_url, q))
+            urls.append( "%s:%s" % (field, term))
 
     # Wait for start signal
     logging.debug( "Waiting for start event" )
@@ -262,13 +264,16 @@ def duration_based_test( test_param, thread_stats, start_flag, stop_flag ):
         #time.sleep( sleep_times[i] )
         req_start = time.time()
         try:
-            rsp = http_pool.request( "GET", urls[i] )
+            # print("trying to get %s" % urls[i%test_param.max_iters] )
+            # import pdb; pdb.set_trace()
+            rsp = http_pool.request( "GET", "/summary/good/")
+            print("response -> %s"%rsp.data)
             if dt > test_param.ramp:
                 thread_stats.avg_lat[j] += time.time() - req_start
                 thread_stats.responses[j] += 1
                 thread_stats.byte_count[j] += len( rsp.data )
         except Exception as e:
-            logging.debug( "Error while requesting: %s - %s" % (urls[i], str(e)) )
+            logging.debug( "Error while requesting: %s - %s" % (urls[i%test_param.max_iters], str(e)) )
             if dt > test_param.ramp:
                 thread_stats.errors[j] += 1
         i += 1
@@ -284,9 +289,9 @@ def main( ):
 
     # Parse command line arguments
     parser = argparse.ArgumentParser( )
-    parser.add_argument( "--threads", dest="threads", type=int, default=1,
+    parser.add_argument( "--threads", dest="threads", type=int, default=5,
                          help="Number of threads to use"  )
-    parser.add_argument( "--host", dest="host", default="128.110.153.106",
+    parser.add_argument( "--host", dest="host", default="127.0.0.1",
                          help="Web server host name" )
     parser.add_argument( "--port", dest="port", type=int, default="9111",
                          help="Web server port number" )
@@ -298,7 +303,7 @@ def main( ):
     parser.add_argument( "--size", dest="transfer_size", type=int, default=1024,
                          help="Total transfer size in bytes. Overrides duration-based settings" )
 
-    parser.add_argument( "--connections", dest="conns", type=int, default=1,
+    parser.add_argument( "--connections", dest="conns", type=int, default=10,
                          help="Number of connections to use per thread" )
 
     parser.add_argument( "--test-type", dest="test_type", choices=["duration","size"], default="duration",
@@ -335,6 +340,7 @@ def main( ):
     gauss_mean = 1.0 / 16384.0
     gauss_std = 0.5
     poisson_lam = gauss_mean
+    # import pdb; pdb.set_trace()
 
     thread_stats = ThreadStats()
     for i in range( main_args.threads ):
@@ -344,9 +350,12 @@ def main( ):
         thread_stats.errors.append( 0 )
         thread_stats.avg_lat.append( 0.0 )
 
+    print(main_args.host, main_args.port)
+    # header = {'Connection':'Close'}
     http_pool = urllib3.connectionpool.HTTPConnectionPool( main_args.host,
                                                           port=main_args.port,
-                                                          maxsize=(main_args.threads * main_args.conns) )
+                                                          maxsize=(main_args.threads * main_args.conns))
+
     if main_args.test_type == "size":
         target = size_based_test
         test_param = TestParam( http_pool=http_pool, host=main_args.host, port=main_args.port, threads=main_args.threads,
@@ -371,6 +380,7 @@ def main( ):
                                         args=thread_args,
                                       )
         next_thread.start()
+
 
     init_interval = 3
     logging.debug( "Waiting %d s for %d threads to initialize" % (init_interval, main_args.threads) )

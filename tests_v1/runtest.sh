@@ -16,8 +16,8 @@ function start_experiment() {
     scp $PY_SCRIPT $USER@node3:~/
 
 
-    PAR_0="--host 10.10.1.3 --port 9111 --threads 10 --duration 20 --random --connections 10 --output-dir ./"
-    PAR_1="--host 10.10.1.3 --port 9111 --threads 10 --duration 20 --random --connections 10 --output-dir ./"
+    PAR_0="--host 127.0.0.1 --port 9111 --threads 10 --duration 5 --connections 10 --output-dir ./"
+    PAR_1="--host 127.0.0.1 --port 9111 --threads 10 --duration 5 --connections 10 --output-dir ./"
     # PAR_2="--host 10.10.1.3 --port 9000 --threads 10 --duration 20 --random --connections 10 --output-dir ./"
     # PAR_N="--host 10.10.1.3 --port 9000 --threads 810--duration 25 --random --connections 10 --output-dir ./"
 
@@ -55,16 +55,16 @@ function profile_experiment_dstat() {
 	echo 'Starting the experiment'
 	start_experiment $USER $PY_SCRIPT
 
-#     echo 'Stopping dstat'
-#     nohup parallel-ssh -i -H "$USER@node0 $USER@node1 $USER@node2 $USER@node3" "ps aux | grep -i 'dstat*' | awk -F' ' '{print \$2}' | xargs kill -9"
-#
-#     echo 'Coping the profiling data locally'
-#     for i in `seq 0 3`; do
-#         scp $USER@node$i:"./node${i}_dstat_$PY_NAME.csv" profiling_data/
-#     done
-#     echo 'Done'
-#
-# }
+  echo 'Stopping dstat'
+  nohup parallel-ssh -i -H "$USER@node0 $USER@node1 $USER@node2 $USER@node3" "ps aux | grep -i 'dstat*' | awk -F' ' '{print \$2}' | xargs kill -9"
+
+  echo 'Coping the profiling data locally'
+  for i in `seq 0 3`; do
+      scp $USER@node$i:"./node${i}_dstat_$PY_NAME.csv" profiling_data/
+  done
+  echo 'Done'
+
+ }
 
 
 if [ "$#" -ne 2 ]; then

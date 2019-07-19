@@ -28,6 +28,7 @@ public class MultiThreadedServer implements Runnable{
             Socket pySocket = null;
             try {
                 pySocket = this.pyServer.accept();
+                
             } catch (IOException e) {
                 if(isStopped()) {
                     System.out.println("Server Stopped.") ;
@@ -62,7 +63,7 @@ public class MultiThreadedServer implements Runnable{
         try {
             this.pyServer = new ServerSocket(this.serverPort);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot open port 9000", e);
+            throw new RuntimeException("Cannot open serverPort", e);
         }
     }
 
