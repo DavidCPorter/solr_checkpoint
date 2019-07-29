@@ -22,7 +22,7 @@ this will generate >> `inventory_gen.txt` file
 - rename this file to `./inventory`
 
 ### before you run the ansible scripts:
-<em> these steps fork the solr repo, check out a specific branch, and duplicate that branch to your own dev branch. </em>
+*these steps fork the solr repo, check out a specific branch, and duplicate that branch to your own dev branch.*
 - fork the lucene-solr repo https://github.com/DavidCPorter/lucene-solr.git
 - add ssh keys from solr nodes to github account (temp solution so ansible can easily update repos remotely)
 - locally clone repo
@@ -48,11 +48,11 @@ this will generate >> `inventory_gen.txt` file
 
 ### NOTES
 #### Notes on Solr Config
-- I found the easiest way to connect with the remote JMX is to modify this line in the ~/solr-8_0/solr/bin/solr executable
+I found the easiest way to connect with the remote JMX is to modify this line in the ~/solr-8_0/solr/bin/solr executable
 
-REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname=$SOLR_HOST")
+`REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname=$SOLR_HOST")`
 to
-REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname=$GLOBALIP")
+`REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname=$GLOBALIP")`
 
 ansible sets $GLOBALIP variable
 
