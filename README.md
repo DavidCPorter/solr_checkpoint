@@ -22,6 +22,7 @@ this will generate >> `inventory_gen.txt` file
 - rename this file to `./inventory`
 
 ### before you run the ansible scripts:
+<em> these steps fork the solr repo, check out a specific branch, and duplicate that branch to your own dev branch. </em>
 - fork the lucene-solr repo https://github.com/DavidCPorter/lucene-solr.git
 - add ssh keys from solr nodes to github account (temp solution so ansible can easily update repos remotely)
 - locally clone repo
@@ -31,12 +32,22 @@ this will generate >> `inventory_gen.txt` file
 - replace `dporter` with <name> in solr_install.yml script under field "version" in the git step.
 - replace `dporte7` in ansible "vars" and "defaults" files with your username in cloudlab
 
-3) to install the cloud env, run `ansible-playbook -i inventory cloud_configure.yml`
-4) to install and run zookeeper, run `ansible-playbook -i inventory zoo_configure.yml`
-5) to install and run solrcloud, run `ansible-playbook -i inventory solr_configure.yml`
+#### run ansible scripts
+3) to install the cloud env, run:
+- `ansible-playbook -i inventory cloud_configure.yml`
+4) to install and run zookeeper, run:
+- `ansible-playbook -i inventory zoo_configure.yml`
+5) to install and run solrcloud, run:
+`ansible-playbook -i inventory solr_configure.yml`
+6) to post amazon review data to solr, run:
+`ansible-playbook -i inventory post_data.yml`
+7) to open solr admin page for node0 and jconsole for remote monitoring of solr nodes, run:
+`ansible-playbook -i inventory solr_bench.yml`
 
 
-### Running tests
+
+### NOTES
+#### Notes on Solr Config
 - I found the easiest way to connect with the remote JMX is to modify this line in the ~/solr-8_0/solr/bin/solr executable
 
 REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname=$SOLR_HOST")
@@ -46,10 +57,10 @@ REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname=$GLOBALIP")
 ansible sets $GLOBALIP variable
 
 
-### Notes on Ansible Roles:
+#### Notes on Ansible Roles:
 There are three roles in this repo `cloudenv, solr, zookeeper` located in the ./roles dir. You can take a look at the procedures for setting up the envs in ./roles/<role_name>/tasks/main.yml
 
-#### Ansible Variables
+#### Notes on Ansible Variables
 when you run ansible playbooks, the process will generate sys variables, and to view these you can run `ansible -i inventory -m setup`
 `hostvars`
 `VARIABLE PRECEDENCE`

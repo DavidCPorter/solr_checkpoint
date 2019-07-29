@@ -20,12 +20,3 @@
     - benchmark
   tags:
     - solrj
-
-# - include_tasks: make_site.yml
-#   with_items:
-#     - sitea
-#     - siteb
-#     - sitec
-#     - sited
-#   loop_control:
-#     loop_var: site

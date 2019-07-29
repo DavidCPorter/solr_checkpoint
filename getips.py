@@ -42,12 +42,13 @@ for host in hosts:
 
     [print(line) for line in stderr and stderr2]
     if host == node3:
-        tnode=stdout.readlines().pop()[:-1]+' ansible_subnet='+str(stdout2.readlines().pop())
+        ip = stdout.readlines().pop()[:-1]
+        tnode=ip+' globalIP='+ip+' ansible_subnet='+str(stdout2.readlines().pop())
         ssh.close()
         break
     globalIP = stdout.readlines().pop()
     ansible_subnet=str(stdout2.readlines().pop())
-    ansible_line = globalIP[:-1]+' ansible_subnet='+ansible_subnet
+    ansible_line = globalIP[:-1]+' globalIP='+globalIP[:-1]+' ansible_subnet='+ansible_subnet
     zoo_id = ansible_subnet.split('.').pop()
     solr_node_list.append(ansible_line[:-1]+' zoo_id='+zoo_id)
 

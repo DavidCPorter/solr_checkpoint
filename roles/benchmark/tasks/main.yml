@@ -26,10 +26,9 @@
 
 - name: Running solrj
   shell: java -cp target/solrcloud-loadbalancer-1.0-SNAPSHOT.jar '{{main_class}}'
-  async: 99999
+  async: 9999
   poll: 0
   args:
     chdir: '{{pom_path}}'
-  register: mvn_result
   tags:
     - run_solrj

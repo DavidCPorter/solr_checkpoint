@@ -53,7 +53,6 @@ public class WorkerRunnable implements Runnable{
 
 
             bf = new BufferedReader(new InputStreamReader(input_stream));
-            bw = new BufferedWriter(new OutputStreamWriter(output));
 
             // //System.out.println(bf);
             String line;
@@ -105,9 +104,15 @@ public class WorkerRunnable implements Runnable{
         //System.out.println("query string: " + q);
         QueryResponse response = cloudSolrClient.query("reviews", query);
         SolrDocumentList docs = response.getResults();
-        //System.out.println("#results：" + docs.getNumFound());
-        //System.out.println("qTime：" + response.getQTime());
-        //System.out.println("elapsedTime：" + response.getElapsedTime());
+        bw = new BufferedWriter(
+                            new FileWriter("/users/dporte7/output.txt", true)  //Set true for append mode
+                        );
+        bw.newLine();   //Add new line
+        bw.write("#results：" + docs.getNumFound());
+        bw.close();
+        System.out.println("#results：" + docs.getNumFound());
+        System.out.println("qTime：" + response.getQTime());
+        System.out.println("elapsedTime：" + response.getElapsedTime());
 
     }
 

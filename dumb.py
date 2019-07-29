@@ -7,7 +7,7 @@ import time
 def query(request):
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect(("128.110.153.106", 9111))
+        s.connect(('128.105.144.206', 9111))
         s.sendall(request)
         # s.send(b'')
         # time.sleep(1)

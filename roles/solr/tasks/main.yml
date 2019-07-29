@@ -53,6 +53,14 @@
   become: yes
   become_user: root
 
+- name: modify solr executable ~/solr-8_0/solr/bin/solr
+  lineinfile:
+    path: '{{solr_install_dir}}/solr/bin/solr'
+    regex: '^REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname=$SOLR_HOST")'
+    line: 'REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname={{globalIP}}")'
+  tags:
+    - rmi
+
 - name: calling handler for stopping solr
   command: echo "stopping solr..."
   notify:

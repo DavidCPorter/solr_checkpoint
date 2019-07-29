@@ -1,4 +1,4 @@
 # playbook for cloudconfig
-- hosts: all
+- hosts: all,!localhost
   roles:
     - cloud-env
