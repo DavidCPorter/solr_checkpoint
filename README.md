@@ -2,12 +2,11 @@
 
 To deploy you need to set up a local and remote env:
 
-LOCAL:
-
-- Create a python3 virtual env:
+LOCAL:  
+Create a python3 virtual env:
 `pyenv activate your_env`
 
-- install packages:
+install packages:
 `pip install ansible paramiko Jinja2 numpy`
 
 
