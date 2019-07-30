@@ -11,13 +11,13 @@ install packages:
 
 
 REMOTE:  
-1) to set up your remote env, put the four Cloudlab domains in a file ./cloudlabDNS e.g
+1. to set up your remote env, put the four Cloudlab domains in a file ./cloudlabDNS e.g
 `domain1`
 `domain2`
 `domain3`
 `domain4`
 
-2) run $python3 getips.py <cloudlab username> <cloudlabDNS filename> <path_to_private_rsa_key>
+2. run $python3 getips.py <cloudlab username> <cloudlabDNS filename> <path_to_private_rsa_key>
 this will generate >> `inventory_gen.txt` file
 - rename this file to `./inventory`
 
@@ -33,15 +33,15 @@ this will generate >> `inventory_gen.txt` file
 - replace `dporte7` in ansible "vars" and "defaults" files with your username in cloudlab
 
 #### run ansible scripts
-3) to install the cloud env, run:
+3. to install the cloud env, run:
 - `ansible-playbook -i inventory cloud_configure.yml`
-4) to install and run zookeeper, run:
+4. to install and run zookeeper, run:
 - `ansible-playbook -i inventory zoo_configure.yml`
-5) to install and run solrcloud, run:
+5. to install and run solrcloud, run:
 `ansible-playbook -i inventory solr_configure.yml`
-6) to post amazon review data to solr, run:
+6. to post amazon review data to solr, run:
 `ansible-playbook -i inventory post_data.yml`
-7) to open solr admin page for node0 and jconsole for remote monitoring of solr nodes, run:
+7. to open solr admin page for node0 and jconsole for remote monitoring of solr nodes, run:
 `ansible-playbook -i inventory solr_bench.yml`
 
 
