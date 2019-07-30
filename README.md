@@ -3,14 +3,15 @@
 To deploy you need to set up a local and remote env:
 
 LOCAL:
-Create a python3 virtual env:
+
+- Create a python3 virtual env:
 `pyenv activate your_env`
 
-install packages:
+- install packages:
 `pip install ansible paramiko Jinja2 numpy`
 
 
-REMOTE:
+REMOTE:  
 1) to set up your remote env, put the four Cloudlab domains in a file ./cloudlabDNS e.g
 `domain1`
 `domain2`
