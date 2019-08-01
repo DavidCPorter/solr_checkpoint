@@ -9,3 +9,5 @@ packages:
 - dstat
 - maven
 - ant
+- virtualenv #required for pip
+# - setuptools #required for pip

@@ -1,0 +1,5 @@
+Threads - Connections,Total Transfer Size (MB),Total Requests,Total Errors,Avg. Latency (ms),Std. Dev. Latency (%),Min. Latency (ms),Max. Latency (ms),Total Duration (s),Bandwidth (Mbps)
+5 - 3,0.04,10685,0,2.34,0.00,2.33,2.35,15.00,0.02
+5 - 3,0.04,10600,0,2.37,0.00,2.36,2.37,15.02,0.02
+5 - 3,0.04,10500,0,2.39,0.00,2.38,2.39,15.01,0.02
+5 - 3,0.04,10580,0,2.37,0.00,2.36,2.38,15.01,0.02

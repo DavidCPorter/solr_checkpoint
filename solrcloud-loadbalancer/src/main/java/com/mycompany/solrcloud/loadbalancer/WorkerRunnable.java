@@ -14,17 +14,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
-
+ *
+ * @author dporter
  */
 
 
-
-public class WorkerRunnable implements Runnable{
-    // private static final Logger logger = LogManager.getLogger();
+public class WorkerRunnable implements Runnable {
     protected Socket pySocket = null;
-    protected String serverText   = null;
+    protected String serverText = null;
     protected CloudSolrClient solrAPI;
-    //    static final Log LOG = LogFactory.getLog(DistributedWebServer.class);
     private String query_string;
     private String http_request;
     private BufferedReader bf;
@@ -34,86 +32,72 @@ public class WorkerRunnable implements Runnable{
     private OutputStream output;
     private long time;
 
-//    private String query;
-
     public WorkerRunnable(Socket clientSocket, CloudSolrClient solrAPI, String serverText) {
         this.pySocket = clientSocket;
-        this.serverText   = serverText;
+        this.serverText = serverText;
         this.solrAPI = solrAPI;
     }
 
     public void run() {
 
         try {
-            //System.out.println("running thread... ");
-
-            input_stream  = pySocket.getInputStream();
+            input_stream = pySocket.getInputStream();
             output = pySocket.getOutputStream();
-            //System.out.println("inputStream: " + input_stream);
-
-
             bf = new BufferedReader(new InputStreamReader(input_stream));
-
-            // //System.out.println(bf);
             String line;
-            // //System.out.println(first_line);
-            int count =0;
-            while ((line = bf.readLine()) != null) {
-                if (count==0){
+            int count = 0;
+            line = bf.readLine();
+            while (line.length() != 0) {
+                if (count == 0) {
                     http_request = line;
-                    //System.out.println("query line: " + http_request);
                     callSolrAPI(http_request);
-
-                    time = System.currentTimeMillis();
-                    output.write(("HTTP/1.1 200 OK\n\nWorkerRunnable: " +
-                            this.serverText + " - " +
-                            time +
-                            "").getBytes());
-                    output.close();
+                    count += 1;
+                    line = bf.readLine();
+                }else{
+                    line = bf.readLine();
                 }
-                //System.out.println(line);
-                count +=1;
-                // logger.info(http_request);
+
             }
+            time = System.currentTimeMillis();
+            output.write(("HTTP/1.1 200 OK\n\nWorkerRunnable: " +
+                    this.serverText + " - " +
+                    time +
+                    "").getBytes());
             output.close();
             input_stream.close();
-            //System.out.println("Request processed: " + time);
         } catch (IOException e) {
-            //report exception somewhere.
-            // e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
-    private void callSolrAPI(String query){
-        try{
+    private void callSolrAPI(String query) {
+        try {
             String[] query_parsed = query.split("/");
-            //System.out.println("Request term: " + query_parsed[1]+':'+query_parsed[2]);
-            doSearch(solrAPI,query_parsed[1]+':'+query_parsed[2]);
+            doSearch(solrAPI, query_parsed[1] + ':' + query_parsed[2]);
 
         } catch (Exception e) {
-            //report exception somewhere.
-            // e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
     private void doSearch(CloudSolrClient cloudSolrClient, String q) throws Exception {
-        SolrQuery query = new SolrQuery();
-        cloudSolrClient.connect();
-        query.setRows(100);
-        query.setQuery(q);
-        //System.out.println("query string: " + q);
-        QueryResponse response = cloudSolrClient.query("reviews", query);
-        SolrDocumentList docs = response.getResults();
-        bw = new BufferedWriter(
-                            new FileWriter("/users/dporte7/output.txt", true)  //Set true for append mode
-                        );
-        bw.newLine();   //Add new line
-        bw.write("#results：" + docs.getNumFound());
-        bw.close();
-        System.out.println("#results：" + docs.getNumFound());
-        System.out.println("qTime：" + response.getQTime());
-        System.out.println("elapsedTime：" + response.getElapsedTime());
+        try {
 
+            SolrQuery query = new SolrQuery();
+            cloudSolrClient.connect();
+            query.setRows(100);
+            query.setQuery(q);
+            QueryResponse response = cloudSolrClient.query("reviews", query);
+            SolrDocumentList docs = response.getResults();
+            bw = new BufferedWriter(
+                    new FileWriter("/users/dporte7/output.txt", true)  //Set true for append mode
+            );
+            bw.newLine();
+            bw.write("#results：" + docs.getNumFound());
+            bw.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-
 }

@@ -3,10 +3,10 @@
 To deploy you need to set up a local and remote env:
 
 LOCAL:  
-Create a python3 virtual env:
+Create a python3 virtual env:  
 `pyenv activate your_env`
 
-install packages:
+install packages:  
 `pip install ansible paramiko Jinja2 numpy`
 
 
@@ -18,8 +18,7 @@ REMOTE:
 `domain4`
 
 2. run $python3 getips.py <cloudlab username> <cloudlabDNS filename> <path_to_private_rsa_key>
-this will generate >> `inventory_gen.txt` file
-- rename this file to `./inventory`
+this will generate >> `inventory_gen.txt` file. swap this file with `./inventory`
 
 ### before you run the ansible scripts:
 *these steps fork the solr repo, check out a specific branch, and duplicate that branch to your own dev branch.*
@@ -33,15 +32,15 @@ this will generate >> `inventory_gen.txt` file
 - replace `dporte7` in ansible "vars" and "defaults" files with your username in cloudlab
 
 #### run ansible scripts
-3. to install the cloud env, run:
-- `ansible-playbook -i inventory cloud_configure.yml`
-4. to install and run zookeeper, run:
-- `ansible-playbook -i inventory zoo_configure.yml`
-5. to install and run solrcloud, run:
+3. to install the cloud env, run:  
+`ansible-playbook -i inventory cloud_configure.yml`
+4. to install and run zookeeper, run:  
+`ansible-playbook -i inventory zoo_configure.yml`
+5. to install and run solrcloud, run:  
 `ansible-playbook -i inventory solr_configure.yml`
-6. to post amazon review data to solr, run:
+6. to post amazon review data to solr, run:  
 `ansible-playbook -i inventory post_data.yml`
-7. to open solr admin page for node0 and jconsole for remote monitoring of solr nodes, run:
+7. to open solr admin page for node0 and jconsole for remote monitoring of solr nodes, run:  
 `ansible-playbook -i inventory solr_bench.yml`
 
 
@@ -50,12 +49,11 @@ this will generate >> `inventory_gen.txt` file
 #### Notes on Solr Config
 I found the easiest way to connect with the remote JMX is to modify this line in the ~/solr-8_0/solr/bin/solr executable
 
-`REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname=$SOLR_HOST")`
-to
+`REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname=$SOLR_HOST")`  
+to  
 `REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname=$GLOBALIP")`
 
-ansible sets $GLOBALIP variable
-
+*This is completed during the solr config step with the ansible playbooks.*
 
 #### Notes on Ansible Roles:
 There are three roles in this repo `cloudenv, solr, zookeeper` located in the ./roles dir. You can take a look at the procedures for setting up the envs in ./roles/<role_name>/tasks/main.yml

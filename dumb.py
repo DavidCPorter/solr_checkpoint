@@ -18,5 +18,5 @@ def query(request):
     print("received", repr(result))
 
 for i in range(10):
-    request = b'some overall:5.0 some\n'
+    request = b'/summary/good/\r'
     threading.Thread(target = query, args = (request,)).start()

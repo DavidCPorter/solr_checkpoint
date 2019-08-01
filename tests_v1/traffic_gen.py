@@ -219,9 +219,7 @@ def duration_based_test( test_param, thread_stats, start_flag, stop_flag ):
     """ Duration-based test to be carried out by each thread """
     terms = ["good","bad","5","stars","best","horrible","incredible","terrific","garbage","useful","useless","nice","awful","amazing","friend","new","stuck","blocked"]
     indexed_fields = ["reviewText","summary"]
-    print("hello from duration")
     sys.stdout.flush()
-
     name = threading.currentThread().getName()
     j = int( name )
     prefix_url = "%s" % (test_param.base_url)
@@ -266,8 +264,8 @@ def duration_based_test( test_param, thread_stats, start_flag, stop_flag ):
         try:
             # print("trying to get %s" % urls[i%test_param.max_iters] )
             # import pdb; pdb.set_trace()
-            rsp = http_pool.request( "GET", "/summary/good/")
-            print("response -> %s"%rsp.data)
+            rsp = http_pool.request( "GET", "/summary/good/\r")
+            # print("response -> %s"%rsp.data)
             if dt > test_param.ramp:
                 thread_stats.avg_lat[j] += time.time() - req_start
                 thread_stats.responses[j] += 1
@@ -295,7 +293,7 @@ def main( ):
                          help="Web server host name" )
     parser.add_argument( "--port", dest="port", type=int, default="9111",
                          help="Web server port number" )
-    parser.add_argument( "--duration", dest="duration", type=float, default=20.0,
+    parser.add_argument( "--duration", dest="duration", type=float, default=5.0,
                          help="Duration of test in seconds" )
     parser.add_argument( "--ramp", dest="ramp", type=float, default=10.0,
                          help="Ramp time for duration-based testing" )

@@ -16,15 +16,16 @@ function start_experiment() {
     scp $PY_SCRIPT $USER@node3:~/
 
 
-    PAR_0="--host 127.0.0.1 --port 9111 --threads 10 --duration 5 --connections 10 --output-dir ./"
-    PAR_1="--host 127.0.0.1 --port 9111 --threads 10 --duration 5 --connections 10 --output-dir ./"
-    # PAR_2="--host 10.10.1.3 --port 9000 --threads 10 --duration 20 --random --connections 10 --output-dir ./"
-    # PAR_N="--host 10.10.1.3 --port 9000 --threads 810--duration 25 --random --connections 10 --output-dir ./"
+    PAR_0="--host 127.0.0.1 --port 9111 --threads 5 --duration 5 --connections 3 --output-dir ./"
+    PAR_1="--host 127.0.0.1 --port 9111 --threads 5 --duration 5 --connections 3 --output-dir ./"
+    #PAR_N = foreground process terminates when all others terminate.
+    PAR_N="--host 127.0.0.1 --port 9111 --threads 5 --duration 5 --connections 3 --output-dir ./"
 
-    for i in $(seq 6); do
-    	nohup ssh $USER@node3 "python3 $(basename $PY_SCRIPT) $PAR_0 &>/dev/null &"
-      nohup ssh $USER@node3 "python3 $(basename $PY_SCRIPT) $PAR_1 &>/dev/null &"
+    for i in $(seq 3); do
+    	nohup ssh $USER@node3 "python3 $(basename $PY_SCRIPT) $PAR_0 &"&
+      nohup ssh $USER@node3 "python3 $(basename $PY_SCRIPT) $PAR_1 &"&
     done
+
     ssh $USER@node3 "python3 $(basename $PY_SCRIPT) $PAR_N"
 
     scp $USER@node3:~/http_benchmark.csv ./profiling_data

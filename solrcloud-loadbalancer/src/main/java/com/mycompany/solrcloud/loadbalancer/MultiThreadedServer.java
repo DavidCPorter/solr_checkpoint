@@ -6,6 +6,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
 
+/**
+ *
+ * @author dporter
+ */
+
 public class MultiThreadedServer implements Runnable{
 
     private int          serverPort;
@@ -20,15 +25,21 @@ public class MultiThreadedServer implements Runnable{
     }
 
     public void run(){
+      // to be fair, i dont understand why this steo needs to by synchronized, or in this file at all.
         synchronized(this){
             this.runningThread = Thread.currentThread();
         }
+        // creates pyServer socket
         openServerSocket();
-        while(! isStopped()){
+
+        // listens for connections then hands to another thread - WorkerRunnable
+        // so each request from the pyServer (traffic_gen.py) is passed to a new thread.
+        while(!isStopped()){
+          //creates new socket variable and assigns it to a new connection.
             Socket pySocket = null;
             try {
                 pySocket = this.pyServer.accept();
-                
+
             } catch (IOException e) {
                 if(isStopped()) {
                     System.out.println("Server Stopped.") ;
@@ -37,6 +48,7 @@ public class MultiThreadedServer implements Runnable{
                 throw new RuntimeException(
                         "Error accepting client connection", e);
             }
+            // passes socket object and a solrj connection to a new thread to handle request
             new Thread(
                     new WorkerRunnable(
                             pySocket, this.solrAPI, "Multithreaded Server")

@@ -2,3 +2,10 @@
 - hosts: all,!localhost
   roles:
     - cloud-env
+
+- hosts: generatorNode
+  tasks:
+    - name: pip install numpy
+      pip:
+        name: numpy
+        executable: /usr/bin/pip3
