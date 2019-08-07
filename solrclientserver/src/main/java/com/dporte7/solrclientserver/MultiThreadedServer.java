@@ -1,4 +1,4 @@
-package com.mycompany.solrcloud.loadbalancer;
+package com.dporte7.solrclientserver;
 
 import org.apache.solr.client.solrj.impl.CloudSolrClient;
 
@@ -25,7 +25,7 @@ public class MultiThreadedServer implements Runnable{
     }
 
     public void run(){
-      // to be fair, i dont understand why this steo needs to by synchronized, or in this file at all.
+        // i dont understand why this steo needs to by synchronized, or in this file at all.
         synchronized(this){
             this.runningThread = Thread.currentThread();
         }
@@ -35,7 +35,7 @@ public class MultiThreadedServer implements Runnable{
         // listens for connections then hands to another thread - WorkerRunnable
         // so each request from the pyServer (traffic_gen.py) is passed to a new thread.
         while(!isStopped()){
-          //creates new socket variable and assigns it to a new connection.
+            //creates new socket variable and assigns it to a new connection.
             Socket pySocket = null;
             try {
                 pySocket = this.pyServer.accept();

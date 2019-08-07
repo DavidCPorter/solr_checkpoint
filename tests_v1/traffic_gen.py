@@ -200,7 +200,9 @@ def size_based_test( test_param, thread_stats, start_flag, stop_flag ):
         time.sleep( sleep_times[i] )
         req_start = time.time()
         try:
-            rsp = http_pool.request( "GET", urls[i%test_param.max_iters] )
+            # rsp = http_pool.request( "GET", urls[i%test_param.max_iters] )
+            rsp = http_pool.request( "GET", "/good/" )
+
             thread_stats.avg_lat[j] += time.time() - req_start
             thread_stats.responses[j] += 1
             thread_stats.byte_count[j] += len( rsp.data )
@@ -240,14 +242,14 @@ def duration_based_test( test_param, thread_stats, start_flag, stop_flag ):
             field = indexed_fields[i%len(indexed_fields)]
             #q = 'solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
             # q = 'solr/reviews/select?q='+field+'%3A'+term
-            urls.append( "%s:%s" % (field, term))
+            urls.append( "/%s/%s/\r" % (field, term))
 
     else:
         for i in range( test_param.max_iters ):
             term = terms[i%len(terms)]
             field = indexed_fields[i%len(indexed_fields)]
             # q = 'solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
-            urls.append( "%s:%s" % (field, term))
+            urls.append( "/%s/%s/\r" % (field, term))
 
     # Wait for start signal
     logging.debug( "Waiting for start event" )
@@ -264,7 +266,9 @@ def duration_based_test( test_param, thread_stats, start_flag, stop_flag ):
         try:
             # print("trying to get %s" % urls[i%test_param.max_iters] )
             # import pdb; pdb.set_trace()
-            rsp = http_pool.request( "GET", "/summary/good/\r")
+            rsp = http_pool.request( "GET", "/overall/5.0/\r")
+
+            # rsp = http_pool.request( "GET", urls[i%test_param.max_iters])
             # print("response -> %s"%rsp.data)
             if dt > test_param.ramp:
                 thread_stats.avg_lat[j] += time.time() - req_start
@@ -293,9 +297,9 @@ def main( ):
                          help="Web server host name" )
     parser.add_argument( "--port", dest="port", type=int, default="9111",
                          help="Web server port number" )
-    parser.add_argument( "--duration", dest="duration", type=float, default=5.0,
+    parser.add_argument( "--duration", dest="duration", type=float, default=10.0,
                          help="Duration of test in seconds" )
-    parser.add_argument( "--ramp", dest="ramp", type=float, default=10.0,
+    parser.add_argument( "--ramp", dest="ramp", type=float, default=3.0,
                          help="Ramp time for duration-based testing" )
 
     parser.add_argument( "--size", dest="transfer_size", type=int, default=1024,
@@ -354,6 +358,8 @@ def main( ):
                                                           port=main_args.port,
                                                           maxsize=(main_args.threads * main_args.conns))
 
+    import pdb
+    # pdb.set_trace()
     if main_args.test_type == "size":
         target = size_based_test
         test_param = TestParam( http_pool=http_pool, host=main_args.host, port=main_args.port, threads=main_args.threads,

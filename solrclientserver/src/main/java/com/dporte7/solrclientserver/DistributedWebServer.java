@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.solrcloud.loadbalancer;
+package com.dporte7.solrclientserver;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,7 +22,6 @@ public class DistributedWebServer {
 
     private static String defaultCollection = "reviews";
     private static CloudSolrClient instance;
-
     static {
         CloudSolrClient.Builder builder = new CloudSolrClient.Builder();
         builder.withZkHost(Arrays.asList("10.10.1.1:2181","10.10.1.2:2181","10.10.1.3:2181"));

@@ -1,4 +1,4 @@
-package com.mycompany.solrcloud.loadbalancer;
+package com.dporte7.solrclientserver;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,9 +20,9 @@ import org.apache.logging.log4j.Logger;
 
 
 public class WorkerRunnable implements Runnable {
-    protected Socket pySocket = null;
-    protected String serverText = null;
-    protected CloudSolrClient solrAPI;
+    private Socket pySocket = null;
+    private String serverText = null;
+    private CloudSolrClient solrAPI;
     private String query_string;
     private String http_request;
     private BufferedReader bf;

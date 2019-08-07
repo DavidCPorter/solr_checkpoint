@@ -2,3 +2,4 @@
 # defaults file for cloud-env
 
 ramdisk_path: /dev/shm
+ptp_install_dir: '/users/{{ansible_user}}/linuxptp'
