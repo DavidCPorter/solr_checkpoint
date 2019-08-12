@@ -9,6 +9,7 @@ import urllib3
 import argparse
 import threading
 import numpy as np
+import queue
 
 class WebStats( object ):
     def __init__( self, tot_bytes=0, tot_requests=0, tot_errors=0,
@@ -118,7 +119,7 @@ def convert_units( web_stats ):
 
     return web_stats
 
-def write_csv( csv_file, web_stats, main_args ):
+def write_csv( csv_file, web_stats, main_args, return_list=None ):
     """ Generate CSV file """
     hdr_fmt = "%s - %s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n"
     header = hdr_fmt %  ( "Threads",
@@ -133,9 +134,11 @@ def write_csv( csv_file, web_stats, main_args ):
                           "Total Duration (s)",
                           "Bandwidth (Mbps)",
     )
-    mode = "w"
-    if os.path.isfile( csv_file ):
-        mode = "a"
+    # mode = "w"
+    # if os.path.isfile( csv_file ):
+    #     mode = "a"
+    request_enum_header = "thread_num,url_request,req_start,req_finish,fct\n"
+
     body_fmt = "%s - %s,%.2f,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n"
     next_line = body_fmt % ( main_args.threads,
                              main_args.conns,
@@ -150,74 +153,76 @@ def write_csv( csv_file, web_stats, main_args ):
                              web_stats.bw,
                            )
 
-    with open( csv_file, mode ) as output_file:
-        if mode == "w":
-            output_file.write( header )
+    with open( csv_file, 'w' ) as output_file:
+        output_file.write( header )
         output_file.write( next_line )
+        output_file.write( request_enum_header)
+        for i in range(return_list.qsize()):
+            output_file.write(str(return_list.get())[1:-1]+'\n')
 
     return
 
-def size_based_test( test_param, thread_stats, start_flag, stop_flag ):
-    """ Size-based test to be carried out by each thread """
-    terms = ["good","bad","5","stars","best","horrible","incredible","terrific","garbage"]
-    indexed_fields = ["reviewerName","reviewText","overall","summary"]
-    name = threading.currentThread().getName()
-    j = int( name )
-    prefix_url = "%s/" % (test_param.base_url)
-    np.random.seed( j )
-    http_pool = test_param.http_pool
+# def size_based_test( test_param, thread_stats, start_flag, stop_flag ):
+#     """ Size-based test to be carried out by each thread """
+#     terms = ["good","bad","5","stars","best","horrible","incredible","terrific","garbage"]
+#     indexed_fields = ["reviewerName","reviewText","overall ","summary"]
+#     name = threading.currentThread().getName()
+#     j = int( name )
+#     prefix_url = "%s/" % (test_param.base_url)
+#     np.random.seed( j )
+#     http_pool = test_param.http_pool
+#
+#     # Pre-stage requests and wait times
+#     sleep_times = [test_param.gauss_mean]
+#     if test_param.req_dist == "gauss":
+#         sleep_times = np.abs( np.random.normal(loc=test_param.gauss_mean,
+#                                                scale=test_param.gauss_std, size=test_param.max_iters) )
+#     elif test_param.req_dist == "poisson":
+#         sleep_times = np.random.poisson( lam=test_param.poisson_lam, size=test_param.max_iters )
+#     urls = []
+#
+#     if test_param.rand_req:
+#         for i in range( test_param.max_iters ):
+#             #add random query here
+#             term = terms[i%len(terms)]
+#             field = indexed_fields[i%len(indexed_fields)]
+#             q = 'solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
+#             urls.append( "%s%s" % (prefix_url, q))
+#     else:
+#         for i in range( test_param.max_iters ):
+#             term = terms[i%len(terms)]
+#             field = indexed_fields[i%len(indexed_fields)]
+#             q = 'solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
+#             urls.append( "%s%s" % (prefix_url, q))
+#     # Wait for start signal
+#     with start_flag:
+#         start_flag.wait()
+#         logging.debug( "Starting" )
+#
+#     i = 0
+#     while not stop_flag.isSet():
+#         # Wait before making next request
+#         time.sleep( sleep_times[i] )
+#         req_start = time.time()
+#         try:
+#             # rsp = http_pool.request( "GET", urls[i%test_param.max_iters] )
+#             rsp = http_pool.request( "GET", "/good/" )
+#
+#             thread_stats.avg_lat[j] += time.time() - req_start
+#             thread_stats.responses[j] += 1
+#             thread_stats.byte_count[j] += len( rsp.data )
+#         except Exception as e:
+#             logging.debug( "Error while requesting: %s - %s" % (urls[i], str(e)) )
+#             thread_stats.errors[j] += 1
+#         i += 1
+#     thread_stats.requests[j] = http_pool.num_requests
+#     if thread_stats.requests[j] > 0:
+#         thread_stats.avg_lat[j] = thread_stats.avg_lat[j] / float( thread_stats.requests[j] )
+#     logging.debug( "Exiting" )
+#
+#     return
 
-    # Pre-stage requests and wait times
-    sleep_times = [test_param.gauss_mean]
-    if test_param.req_dist == "gauss":
-        sleep_times = np.abs( np.random.normal(loc=test_param.gauss_mean,
-                                               scale=test_param.gauss_std, size=test_param.max_iters) )
-    elif test_param.req_dist == "poisson":
-        sleep_times = np.random.poisson( lam=test_param.poisson_lam, size=test_param.max_iters )
-    urls = []
-
-    if test_param.rand_req:
-        for i in range( test_param.max_iters ):
-            #add random query here
-            term = terms[i%len(terms)]
-            field = indexed_fields[i%len(indexed_fields)]
-            q = 'solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
-            urls.append( "%s%s" % (prefix_url, q))
-    else:
-        for i in range( test_param.max_iters ):
-            term = terms[i%len(terms)]
-            field = indexed_fields[i%len(indexed_fields)]
-            q = 'solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
-            urls.append( "%s%s" % (prefix_url, q))
-    # Wait for start signal
-    with start_flag:
-        start_flag.wait()
-        logging.debug( "Starting" )
-
-    i = 0
-    while not stop_flag.isSet():
-        # Wait before making next request
-        time.sleep( sleep_times[i] )
-        req_start = time.time()
-        try:
-            # rsp = http_pool.request( "GET", urls[i%test_param.max_iters] )
-            rsp = http_pool.request( "GET", "/good/" )
-
-            thread_stats.avg_lat[j] += time.time() - req_start
-            thread_stats.responses[j] += 1
-            thread_stats.byte_count[j] += len( rsp.data )
-        except Exception as e:
-            logging.debug( "Error while requesting: %s - %s" % (urls[i], str(e)) )
-            thread_stats.errors[j] += 1
-        i += 1
-    thread_stats.requests[j] = http_pool.num_requests
-    if thread_stats.requests[j] > 0:
-        thread_stats.avg_lat[j] = thread_stats.avg_lat[j] / float( thread_stats.requests[j] )
-    logging.debug( "Exiting" )
-
-    return
-
-def duration_based_test( test_param, thread_stats, start_flag, stop_flag ):
+def duration_based_test( test_param, thread_stats, start_flag, stop_flag, request_list ):
     """ Duration-based test to be carried out by each thread """
     terms = ["good","bad","5","stars","best","horrible","incredible","terrific","garbage","useful","useless","nice","awful","amazing","friend","new","stuck","blocked"]
     indexed_fields = ["reviewText","summary"]
@@ -266,11 +271,15 @@ def duration_based_test( test_param, thread_stats, start_flag, stop_flag ):
         try:
             # print("trying to get %s" % urls[i%test_param.max_iters] )
             # import pdb; pdb.set_trace()
-            rsp = http_pool.request( "GET", "/overall/5.0/\r")
+            # rsp = http_pool.request( "GET", "/overall/5.0/\r")
 
-            # rsp = http_pool.request( "GET", urls[i%test_param.max_iters])
+            rsp = http_pool.request( "GET", urls[i%test_param.max_iters])
             # print("response -> %s"%rsp.data)
             if dt > test_param.ramp:
+                req_finish = time.time()
+                fct = req_finish - req_start
+                thread_stats.avg_lat[j] += fct
+                request_list.put((name,urls[i],req_start,req_finish,fct))
                 thread_stats.avg_lat[j] += time.time() - req_start
                 thread_stats.responses[j] += 1
                 thread_stats.byte_count[j] += len( rsp.data )
@@ -297,7 +306,7 @@ def main( ):
                          help="Web server host name" )
     parser.add_argument( "--port", dest="port", type=int, default="9111",
                          help="Web server port number" )
-    parser.add_argument( "--duration", dest="duration", type=float, default=10.0,
+    parser.add_argument( "--duration", dest="duration", type=float, default=20,
                          help="Duration of test in seconds" )
     parser.add_argument( "--ramp", dest="ramp", type=float, default=3.0,
                          help="Ramp time for duration-based testing" )
@@ -342,7 +351,10 @@ def main( ):
     gauss_mean = 1.0 / 16384.0
     gauss_std = 0.5
     poisson_lam = gauss_mean
+    #returns a list passed to the threads to append (name,urls[i],req_start,req_finish,fct) for each request
+    return_list = queue.Queue()
     # import pdb; pdb.set_trace()
+
 
     thread_stats = ThreadStats()
     for i in range( main_args.threads ):
@@ -374,7 +386,7 @@ def main( ):
                                 max_rand_obj=main_args.max_rand_obj, req_dist=main_args.req_dist,
                                 gauss_mean=gauss_mean, gauss_std=gauss_std, poisson_lam=poisson_lam )
 
-    thread_args = ( test_param, thread_stats, start_flag, stop_flag )
+    thread_args = ( test_param, thread_stats, start_flag, stop_flag, return_list )
 
     # Spawn threads
     for i in range( main_args.threads ):
@@ -423,7 +435,7 @@ def main( ):
     web_stats = convert_units( web_stats )
 
     # Save statistics to CSV file
-    write_csv( csv_file, web_stats, main_args )
+    write_csv( csv_file, web_stats, main_args, return_list )
     logging.debug( "Wrote %s" % (csv_file) )
 
     return 0
