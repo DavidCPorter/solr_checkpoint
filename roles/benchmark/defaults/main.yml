@@ -1,4 +1,4 @@
 ---
 # defaults file for benchmark
 pyscript: traffic_gen.py
-pom_path: '/users/{{ansible_user}}/solrcloud-loadbalancer'
+pom_path: '/users/{{ansible_user}}/solrclientserver'

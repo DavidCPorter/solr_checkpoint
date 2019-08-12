@@ -1,17 +1,17 @@
 package com.dporte7.solrclientserver;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.impl.CloudSolrClient;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocumentList;
-import org.apache.solr.client.solrj.SolrRequest;
+        import org.apache.commons.logging.Log;
+        import org.apache.commons.logging.LogFactory;
+        import org.apache.solr.client.solrj.SolrQuery;
+        import org.apache.solr.client.solrj.impl.CloudSolrClient;
+        import org.apache.solr.client.solrj.response.QueryResponse;
+        import org.apache.solr.common.SolrDocumentList;
+        import org.apache.solr.client.solrj.SolrRequest;
 
-import java.io.*;
-import java.net.Socket;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+        import java.io.*;
+        import java.net.Socket;
+        import org.apache.logging.log4j.LogManager;
+        import org.apache.logging.log4j.Logger;
 
 /**
  *

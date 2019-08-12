@@ -10,7 +10,7 @@
 
 - name: copy solrj source to node3
   copy:
-    src: /Users/dporter/projects/solrcloud/solrcloud-loadbalancer
+    src: /Users/dporter/projects/solrcloud/solrclientserver
     dest: "/users/{{ansible_user}}/"
     owner: '{{ansible_user}}'
   tags:

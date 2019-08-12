@@ -25,10 +25,6 @@ public class MultiThreadedServer implements Runnable{
     }
 
     public void run(){
-        // i dont understand why this steo needs to by synchronized, or in this file at all.
-        synchronized(this){
-            this.runningThread = Thread.currentThread();
-        }
         // creates pyServer socket
         openServerSocket();
 
