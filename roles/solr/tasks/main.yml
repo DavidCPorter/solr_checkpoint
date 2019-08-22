@@ -43,6 +43,8 @@
   copy:
     src: ./roles/solr/files/solr.in.sh
     dest: '{{solr_install_dir}}/solr/bin'
+  tags:
+    - config
 
 - name: create and grant log dir permissions for solr
   file:
@@ -60,6 +62,7 @@
     line: 'REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname={{globalIP}}")'
   tags:
     - rmi
+
 
 - name: calling handler for stopping solr
   command: echo "stopping solr..."

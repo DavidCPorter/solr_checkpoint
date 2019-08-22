@@ -3,3 +3,6 @@ hostsIps
 inventory
 inventory_gen.txt
 *.retry
+profiling_data/
+words.txt
+traffic_gen.log

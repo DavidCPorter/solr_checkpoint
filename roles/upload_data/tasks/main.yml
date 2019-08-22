@@ -42,3 +42,10 @@
   shell: ./bin/post -c "{{collection_name}}" "{{data_upload_dir}}/reviews_Electronics_5.json"
   args:
     chdir: '{{solr_install_dir}}/solr'
+
+- name: copy word.txt to node3
+  copy:
+    src: ../../tests_v1/words.txt
+    dest: '{{data_upload_dir}}'
+  tags:
+    - terms
