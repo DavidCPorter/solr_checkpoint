@@ -37,8 +37,13 @@ public class DistributedWebServer {
         //try passing just one instance of cloudsolrclient to thread generator class
         System.out.println("starting Server");
         System.out.println(instance);
-        MultiThreadedServer server = new MultiThreadedServer(9111, instance);
-        new Thread(server).start();
+        MultiThreadedServer server1 = new MultiThreadedServer(9111, instance);
+        MultiThreadedServer server2 = new MultiThreadedServer(9222, instance);
+        MultiThreadedServer server3 = new MultiThreadedServer(9333, instance);
+
+        new Thread(server1).start();
+        new Thread(server2).start();
+        new Thread(server3).start();
 
         try {
             Thread.sleep(200 * 1000);
@@ -47,7 +52,9 @@ public class DistributedWebServer {
         }
         System.out.println("Stopping Server");
         //stops multithreded server loop
-        server.stop();
+        server1.stop();
+        server2.stop();
+        server3.stop();
 
     }
 

@@ -27,6 +27,7 @@ public class MultiThreadedServer implements Runnable{
     public void run(){
         // creates pyServer socket
         openServerSocket();
+        this.solrAPI.connect();
 
         // listens for connections then hands to another thread - WorkerRunnable
         // so each request from the pyServer (traffic_gen.py) is passed to a new thread.
@@ -47,7 +48,7 @@ public class MultiThreadedServer implements Runnable{
             // passes socket object and a solrj connection to a new thread to handle request
             new Thread(
                     new WorkerRunnable(
-                            pySocket, this.solrAPI, "Multithreaded Server")
+                            this.isStopped, pySocket, this.solrAPI, "Multithreaded Server")
             ).start();
         }
         System.out.println("Server Stopped.") ;
