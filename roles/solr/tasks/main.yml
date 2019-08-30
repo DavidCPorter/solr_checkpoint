@@ -55,6 +55,14 @@
   become: yes
   become_user: root
 
+- name: add slow query logging for queries > .5s to default solrconfig.xml
+  lineinfile:
+    path: '{{solr_install_dir}}/solr/server/solr/configsets/_default/conf/solrconfig.xml'
+    insertbefore: '</query>'
+    line: '<slowQueryThresholdMillis>500</slowQueryThresholdMillis>'
+  tags:
+    - rmi
+
 - name: modify solr executable ~/solr-8_0/solr/bin/solr
   lineinfile:
     path: '{{solr_install_dir}}/solr/bin/solr'
@@ -62,7 +70,6 @@
     line: 'REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname={{globalIP}}")'
   tags:
     - rmi
-
 
 - name: calling handler for stopping solr
   command: echo "stopping solr..."

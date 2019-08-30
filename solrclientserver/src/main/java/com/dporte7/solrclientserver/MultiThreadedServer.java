@@ -1,18 +1,13 @@
 package com.dporte7.solrclientserver;
-
 import org.apache.solr.client.solrj.impl.CloudSolrClient;
-
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
-
 /**
  *
  * @author dporter
  */
-
 public class MultiThreadedServer implements Runnable{
-
     private int          serverPort;
     private ServerSocket pyServer = null;
     private boolean      isStopped    = false;
@@ -28,7 +23,6 @@ public class MultiThreadedServer implements Runnable{
         // creates pyServer socket
         openServerSocket();
         this.solrAPI.connect();
-
         // listens for connections then hands to another thread - WorkerRunnable
         // so each request from the pyServer (traffic_gen.py) is passed to a new thread.
         while(!isStopped()){
@@ -36,7 +30,7 @@ public class MultiThreadedServer implements Runnable{
             Socket pySocket = null;
             try {
                 pySocket = this.pyServer.accept();
-
+                System.out.println("accepted connection."+ String.valueOf(serverPort));
             } catch (IOException e) {
                 if(isStopped()) {
                     System.out.println("Server Stopped.") ;
@@ -54,7 +48,6 @@ public class MultiThreadedServer implements Runnable{
         System.out.println("Server Stopped.") ;
     }
 
-
     private synchronized boolean isStopped() {
         return this.isStopped;
     }
@@ -70,6 +63,7 @@ public class MultiThreadedServer implements Runnable{
 
     private void openServerSocket() {
         try {
+            //serversocket just creates a server
             this.pyServer = new ServerSocket(this.serverPort);
         } catch (IOException e) {
             throw new RuntimeException("Cannot open serverPort", e);

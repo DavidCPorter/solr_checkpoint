@@ -1,5 +1,5 @@
 ---
 # defaults file for upload_data
 data_upload_dir: /users/dporte7
-collection_name: favorites
+collection_name: reviews 
 solr_install_dir: /users/dporte7/solr-8_0

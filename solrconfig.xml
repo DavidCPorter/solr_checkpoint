@@ -569,7 +569,7 @@
       -->
     <useColdSearcher>false</useColdSearcher>
 
-    <slowQueryThresholdMillis>100</slowQueryThresholdMillis>
+    <slowQueryThresholdMillis>500</slowQueryThresholdMillis>
   </query>
 
 

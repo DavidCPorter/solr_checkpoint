@@ -39,9 +39,9 @@ function start_experiment() {
     ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PAR_N"
     wait $!
     echo "finished"
-    scp $USER@node3:~/traffic_gen/first/http_benchmark_${15}.csv profiling_data/first
-    scp $USER@node3:~/traffic_gen/second/http_benchmark_${15}.csv profiling_data/second
-    scp $USER@node3:~/traffic_gen/third/http_benchmark_${15}.csv profiling_data/third
+    # scp $USER@node3:~/traffic_gen/first/http_benchmark_${15}.csv profiling_data/first
+    # scp $USER@node3:~/traffic_gen/second/http_benchmark_${15}.csv profiling_data/second
+    # scp $USER@node3:~/traffic_gen/third/http_benchmark_${15}.csv profiling_data/third
     scp $USER@node3:~/traffic_gen/http_benchmark_${15}.csv profiling_data/
 }
 
@@ -73,7 +73,7 @@ function profile_experiment_dstat() {
     echo 'deleting node dstat remote files'
     nohup pssh -i -H "$USER@node0 $USER@node1 $USER@node2 $USER@node3" "rm ~/${15}_node*_dstat_$PY_NAME.csv"
 
-    wait $!
+    sleep 1
   	echo 'Starting the dstat'
       nohup ssh $USER@node0 "dstat $DPARAMS --output ${15}_node0_dstat_$PY_NAME.csv &>/dev/null &"
       nohup ssh $USER@node1 "dstat $DPARAMS --output ${15}_node1_dstat_$PY_NAME.csv &>/dev/null &"
@@ -91,7 +91,7 @@ function profile_experiment_dstat() {
 
     echo 'Copying the remote dstat data to local -> /profiling_data'
       for i in `seq 0 3`; do
-          scp $USER@node$i:"./${15}_node${i}_dstat_$PY_NAME.csv" profiling_data/
+          scp $USER@node$i:"~/${15}_node${i}_dstat_$PY_NAME.csv" profiling_data/
       done
 
 

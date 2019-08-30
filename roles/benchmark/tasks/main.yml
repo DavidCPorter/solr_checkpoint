@@ -24,11 +24,13 @@
   tags:
     - mvn_install
 
-- name: Running solrj
-  shell: java -cp target/solrcloud-loadbalancer-1.0-SNAPSHOT.jar '{{main_class}}'
-  async: 9999
-  poll: 0
-  args:
-    chdir: '{{pom_path}}'
-  tags:
-    - run_solrj
+# - name: Running solrj
+#   shell: java -cp target/solrclientserver-1.0-SNAPSHOT.jar '{{main_class}}'
+#   async: 9999
+#   poll: 0
+#   args:
+#     chdir: '{{pom_path}}'
+#   tags:
+#     - run_solrj
+
+# cd solrclientserver;java -cp target/solrclientserver-1.0-SNAPSHOT.jar com.dporte7.solrclientserver.DistributedWebServer

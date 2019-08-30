@@ -50,9 +50,9 @@ public class WorkerRunnable implements Runnable {
             int counter=0;
             while (!isStopped){
                 counter+=1;
-                // System.out.println("beforeRead-> "+  String.valueOf(counter));
+                while (!bf.ready()) {
+                }
                 readBuffer(counter);
-                // System.out.println("read-> "+  String.valueOf(counter));
                 writeResponse();
             }
             output.close();
@@ -65,21 +65,15 @@ public class WorkerRunnable implements Runnable {
         try{
             String line = null;
             int count = 0;
-            while (line == null) {
-                System.out.println("line is null-> "+ line + ' ' + counter);
-                line = bf.readLine();
-                System.out.println("line is after null-> "+ line + ' ' + counter);
-
-            }
-            while (line.length() != 0) {
+            while (bf.ready()) {
                 if (count == 0) {
-                    // System.out.println("line-> "+ line + ' ' + counter);
+                    line = bf.readLine();
                     http_request = line;
                     callSolrAPI(http_request);
                     count += 1;
                     line = this.bf.readLine();
+
                 }else{
-                    // System.out.println("line-> "+ line + ' ' + counter);
                     line = this.bf.readLine();
                 }
             }
@@ -92,10 +86,7 @@ public class WorkerRunnable implements Runnable {
     private void writeResponse() throws IOException {
         try{
             time = System.currentTimeMillis();
-            output.write(("HTTP/1.1 200 OK\n\nWorkerRunnable: " +
-                    this.serverText + " - " +
-                    time +
-                    "").getBytes());
+            output.write(("HTTP/1.1 200 OK\nContent-Type: application/json;charset=utf-8\nContent-Length:0"+ "\n\n").getBytes());
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -120,7 +111,7 @@ public class WorkerRunnable implements Runnable {
             SolrQuery query = new SolrQuery();
             query.setRows(10);
             query.setQuery(q);
-            QueryResponse response = cloudSolrClient.query("favorites", query);
+            QueryResponse response = cloudSolrClient.query("reviews", query);
             // SolrDocumentList docs = response.getResults();
             // bw = new BufferedWriter(
             //         new FileWriter("/users/dporte7/output.txt", true)  //Set true for append mode

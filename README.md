@@ -69,3 +69,5 @@ If multiple variables of the same name are defined in different places, they win
 - then comes the rest of the variables defined in inventory
 - then comes facts discovered about a system
 - then "role defaults", which are the most "defaulty" and lose in priority to everything.
+
+`alias test="cd ~/solrclientserver;java -cp target/solrclientserver-1.0-SNAPSHOT.jar com.dporte7.solrclientserver.DistributedWebServer"`

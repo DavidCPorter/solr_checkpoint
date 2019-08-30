@@ -2,15 +2,3 @@
 - hosts: nodes
   roles:
     - solr
-
-- hosts: dataServer
-  tasks:
-    - name: change solrconfig.xml slowQueryThresholdMillis to 1 second -> logs to WARN level
-      shell:
-        command: http://0.0.0.0:8983/solr/reviews/config
-        method: POST
-        body: "{'add-config':{'query.slowQueryThresholdMillis': 1000}}"
-        body_format: json
-
-  tags:
-    - slowlogs

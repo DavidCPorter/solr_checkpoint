@@ -59,7 +59,7 @@ def size_based_test( test_param, thread_stats, start_flag, stop_flag ):
         try:
             # rsp = http_pool.request( "GET", urls[i%test_param.max_iters] )
             rsp = http_pool.request( "GET", "/good/" )
-
+            # print(rsp.headers)
             thread_stats.avg_lat[j] += time.time() - req_start
             thread_stats.responses[j] += 1
             thread_stats.byte_count[j] += len( rsp.data )
@@ -99,7 +99,7 @@ def duration_based_test( test_param, thread_stats, start_flag, stop_flag, reques
             i+=r
             term = terms[i%len(terms)].rstrip()
             field = indexed_fields[i%len(indexed_fields)]
-            q = '/solr/favorites/select?q='+field+'%3A'+term+'&rows=10'
+            q = '/solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
             urls.append("%s%s" % (prefix_url, q))
 
     else:
@@ -124,9 +124,9 @@ def duration_based_test( test_param, thread_stats, start_flag, stop_flag, reques
         dt = time.time() - start
         req_start = time.time()
         try:
-
+            # print("ABOUT TO SEND"+str(i))
             rsp = http_pool.request( "GET", urls[i%test_param.max_iters])
-            print("response -> %s"%rsp.data)
+            # print(rsp.headers)
             if dt > test_param.ramp:
                 req_finish = time.time()
                 fct = req_finish - req_start
@@ -135,8 +135,10 @@ def duration_based_test( test_param, thread_stats, start_flag, stop_flag, reques
                 thread_stats.avg_lat[j] += time.time() - req_start
                 thread_stats.responses[j] += 1
                 thread_stats.byte_count[j] += len( rsp.data )
+            logging.debug("SUCCESS->"+str(i)+urls[i%test_param.max_iters])
         except Exception as e:
-            logging.debug( "Error while requesting: %s - %s" % (urls[i%test_param.max_iters], str(e)) )
+            print("ERROR")
+            logging.debug("Error while requesting: %s - %s" % (urls[i%test_param.max_iters], str(e)) )
             if dt > test_param.ramp:
                 thread_stats.errors[j] += 1
         i += 1
