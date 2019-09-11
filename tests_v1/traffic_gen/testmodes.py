@@ -38,13 +38,13 @@ def size_based_test( test_param, thread_stats, start_flag, stop_flag ):
             #add random query here
             term = terms[i%len(terms)]
             field = indexed_fields[i%len(indexed_fields)]
-            q = 'solr/favorites/select?q='+field+'%3A'+term+'&rows=10'
+            q = 'solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
             urls.append( "%s%s" % (prefix_url, q))
     else:
         for i in range( test_param.max_iters ):
             term = terms[i%len(terms)]
             field = indexed_fields[i%len(indexed_fields)]
-            q = 'solr/favorites/select?q='+field+'%3A'+term+'&rows=10'
+            q = 'solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
             urls.append( "%s%s" % (prefix_url, q))
     # Wait for start signal
     with start_flag:
@@ -59,7 +59,7 @@ def size_based_test( test_param, thread_stats, start_flag, stop_flag ):
         try:
             # rsp = http_pool.request( "GET", urls[i%test_param.max_iters] )
             rsp = http_pool.request( "GET", "/good/" )
-            # print(rsp.headers)
+
             thread_stats.avg_lat[j] += time.time() - req_start
             thread_stats.responses[j] += 1
             thread_stats.byte_count[j] += len( rsp.data )
@@ -110,7 +110,7 @@ def duration_based_test( test_param, thread_stats, start_flag, stop_flag, reques
             i+=r
             term = terms[i%len(terms)].rstrip()
             field = indexed_fields[i%len(indexed_fields)]
-            # q = 'solr/favorites/select?q='+field+'%3A'+term+'&rows=10'
+            # q = 'solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
             urls.append( "/%s/%s/\r" % (field, term))
 
     # Wait for start signal
@@ -124,25 +124,24 @@ def duration_based_test( test_param, thread_stats, start_flag, stop_flag, reques
         dt = time.time() - start
         req_start = time.time()
         try:
-            # print("ABOUT TO SEND"+str(i))
-            rsp = http_pool.request( "GET", urls[i%test_param.max_iters])
-            # print(rsp.headers)
+            rsp = http_pool.request( "GET", urls[(i%test_param.max_iters)])
+            # print("response -> %s"%rsp.data)
             if dt > test_param.ramp:
                 req_finish = time.time()
                 fct = req_finish - req_start
                 thread_stats.avg_lat[j] += fct
-                request_list.put((name,urls[i],req_start,req_finish,fct))
+                request_list.put((name,urls[i%test_param.max_iters],req_start,req_finish,fct))
                 thread_stats.avg_lat[j] += time.time() - req_start
                 thread_stats.responses[j] += 1
                 thread_stats.byte_count[j] += len( rsp.data )
             logging.debug("SUCCESS->"+str(i)+urls[i%test_param.max_iters])
+
         except Exception as e:
             print("ERROR")
-            logging.debug("Error while requesting: %s - %s" % (urls[i%test_param.max_iters], str(e)) )
+            logging.debug( "Error while requesting: %s - %s - %s" % (str(i%test_param.max_iters), urls[i%test_param.max_iters], str(e)) )
             if dt > test_param.ramp:
                 thread_stats.errors[j] += 1
         i += 1
-
     thread_stats.requests[j] = http_pool.num_requests
     if thread_stats.requests[j] > 0:
         thread_stats.avg_lat[j] = thread_stats.avg_lat[j] / float( thread_stats.requests[j] )

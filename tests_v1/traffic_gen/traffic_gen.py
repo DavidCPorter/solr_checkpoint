@@ -21,7 +21,7 @@ def main( ):
     # get args
     main_args = parse_commandline(sys.argv[1:])
     if main_args.query == 'direct':
-        main_args.host = '10.10.1.'+str(random.randint(0,2))
+        main_args.host = '10.10.1.'+str(random.randint(1,3))
         main_args.port = 8983
 
 # config for closed loop -> throughput
