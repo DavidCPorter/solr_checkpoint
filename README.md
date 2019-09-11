@@ -28,8 +28,8 @@ this will generate >> `inventory_gen.txt` file. swap this file with `./inventory
 - checkout branch_8_0
 - create new branch <name> e.g. `git checkout -b <name>`
 - push <name> branch to origin
-- replace `dporter` with <name> in solr_install.yml script under field "version" in the git step.
-- replace `dporte7` in ansible "vars" and "defaults" files with your username in cloudlab
+- replace `dporter` with <branch name> in roles/solr/defaults/main.yml.
+- replace `dporte7` in ansible role "vars" and "defaults" files with your username in cloudlab
 
 #### run ansible scripts
 3. to install the cloud env, run:  
@@ -47,13 +47,14 @@ this will generate >> `inventory_gen.txt` file. swap this file with `./inventory
 
 ### NOTES
 #### Notes on Solr Config
+*This is completed automatically during the solr config step with the ansible playbooks.*
+
 I found the easiest way to connect with the remote JMX is to modify this line in the ~/solr-8_0/solr/bin/solr executable
 
 `REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname=$SOLR_HOST")`  
 to  
 `REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname=$GLOBALIP")`
 
-*This is completed during the solr config step with the ansible playbooks.*
 
 #### Notes on Ansible Roles:
 There are three roles in this repo `cloudenv, solr, zookeeper` located in the ./roles dir. You can take a look at the procedures for setting up the envs in ./roles/<role_name>/tasks/main.yml

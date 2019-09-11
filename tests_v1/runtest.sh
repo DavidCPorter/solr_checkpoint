@@ -15,6 +15,7 @@ function start_experiment() {
     CON="${10} ${11}"
     SIZE="${12} ${13}"
     QUERY="${14} ${15}"
+    LOOP="${16} ${17}"
 
     echo 'Copying python scripts tol remote machine'
     scp -r $PY_SCRIPT $USER@node3:~/
@@ -22,27 +23,33 @@ function start_experiment() {
 
 
     # parameters for py script running on node3
-    PAR_0="--host 127.0.0.1 --port 9111 $THREADS $DURATION $CON $QUERY --output-dir ./first/"
-    PAR_1="--host 127.0.0.1 --port 9222 $THREADS $DURATION $CON $QUERY --output-dir ./second/"
-    PAR_2="--host 127.0.0.1 --port 9333 $THREADS $DURATION $CON $QUERY --output-dir ./third/"
+    PAR_0="--host 127.0.0.1 --port 9111 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./first/"
+    PAR_1="--host 127.0.0.1 --port 9222 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./second/"
+    PAR_2="--host 127.0.0.1 --port 9333 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./third/"
     #PAR_N = foreground process terminates when all others terminate.
-    PAR_N="--host 127.0.0.1 --port 9111 $THREADS $DURATION $CON $QUERY --output-dir ./"
+    PAR_N="--host 127.0.0.1 --port 9111 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./"
 
     echo $PAR_0
     # run pyscript no hangup 'N' processes
-    for i in $(seq $PROCESSES); do
-    	nohup ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PAR_0 &"&
-      nohup ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PAR_1 &"&
-      nohup ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PAR_2 &"&
-    done
-    echo "starting"
-    ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PAR_N"
-    wait $!
-    echo "finished"
+    if [ $PROCESSES = '1' ]; then
+      echo "starting"
+      ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PAR_N"
+      wait $!
+      echo "finished"
+      scp $USER@node3:~/traffic_gen/http_benchmark_${15}.csv profiling_data/
+    else
+      for i in $(seq $PROCESSES); do
+      	nohup ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PAR_1 &"&
+      done
+      echo "starting"
+      ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PAR_N"
+      wait $!
+      echo "finished"
     # scp $USER@node3:~/traffic_gen/first/http_benchmark_${15}.csv profiling_data/first
     # scp $USER@node3:~/traffic_gen/second/http_benchmark_${15}.csv profiling_data/second
     # scp $USER@node3:~/traffic_gen/third/http_benchmark_${15}.csv profiling_data/third
-    scp $USER@node3:~/traffic_gen/http_benchmark_${15}.csv profiling_data/
+      scp $USER@node3:~/traffic_gen/http_benchmark_${15}.csv profiling_data/
+    fi
 }
 
 function profile_experiment_dstat() {
@@ -64,6 +71,8 @@ function profile_experiment_dstat() {
     SIZE="${12} ${13}"
     QUERY="${14} ${15}"
 	  #PARAMETERS=$3
+
+    LOOP="${16} ${17}"
     DPARAMS='-t --cpu --mem --disk --io --net --int --sys --swap --tcp'
 
     PY_NAME=$(basename $PY_SCRIPT | cut -d '.' -f1)
@@ -81,7 +90,7 @@ function profile_experiment_dstat() {
       nohup ssh $USER@node3 "dstat $DPARAMS --output ${15}_node3_dstat_$PY_NAME.csv &>/dev/null &"
 
   	echo 'Starting the experiment'
-  	 start_experiment $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $CON $SIZE $QUERY
+  	 start_experiment $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $CON $SIZE $QUERY $LOOP
 
     # start_experiment returns after requests
 
@@ -116,6 +125,7 @@ DURATION="x x"
 CON="x x"
 SIZE="x x"
 QUERY="x x"
+LOOP="x x"
 
 while (( "$#" )); do
   case "$1" in
@@ -148,6 +158,11 @@ while (( "$#" )); do
       shift 2
       ;;
 
+    --loop)
+      LOOP="--loop $2"
+      shift 2
+      ;;
+
     --) # end argument parsing
       shift
       break
@@ -163,7 +178,6 @@ while (( "$#" )); do
   esac
 done
 
-echo "$THREADS $PROCESSES $DURATION $CON $SIZE"
 
 PY_SCRIPT="traffic_gen"
 TERMS="words.txt"
@@ -173,7 +187,7 @@ TERMS="words.txt"
 echo 'Starting the experiment'
 # start_experiment $USER $PY_SCRIPT
 
-profile_experiment_dstat $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $CON $SIZE $QUERY
+profile_experiment_dstat $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $CON $SIZE $QUERY $LOOP
 
 #start_experiment $USER $PY_SCRIPT "\"$PARAMETERS\""
 

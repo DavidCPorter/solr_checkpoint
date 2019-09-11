@@ -10,7 +10,7 @@
   git:
       repo: https://github.com/DavidCPorter/lucene-solr.git
       dest: "{{solr_install_dir}}"
-      version: dporter
+      version: "{{git_branch_name}}" 
       force: yes
   register: solr_git_status
   tags:

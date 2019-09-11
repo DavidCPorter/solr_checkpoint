@@ -22,7 +22,7 @@ def create_threadargs(main_args,start_flag, stop_flag, gauss_mean, gauss_std, po
     # header = {'Connection':'Close'}
     http_pool = urllib3.connectionpool.HTTPConnectionPool( main_args.host,
                                                           port=main_args.port,
-                                                          maxsize=20,block=False)
+                                                          maxsize=(main_args.threads * main_args.conns),block=False)
 
     if main_args.test_type == "size":
         target = size_based_test
@@ -33,7 +33,7 @@ def create_threadargs(main_args,start_flag, stop_flag, gauss_mean, gauss_std, po
     else:
         target = duration_based_test
         test_param = TestParam( http_pool=http_pool, host=main_args.host, port=main_args.port, threads=main_args.threads,
-                                base_url=base_url, ramp=main_args.ramp,
+                                base_url=base_url, ramp=main_args.ramp, loop=main_args.loop,
                                 duration=main_args.duration, conns=main_args.conns, rand_req=main_args.rand_req,
                                 max_rand_obj=main_args.max_rand_obj, req_dist=main_args.req_dist,
                                 gauss_mean=gauss_mean, gauss_std=gauss_std, poisson_lam=poisson_lam )

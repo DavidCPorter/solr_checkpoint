@@ -6,3 +6,4 @@ inventory_gen.txt
 profiling_data/
 words.txt
 traffic_gen.log
+nohup.out

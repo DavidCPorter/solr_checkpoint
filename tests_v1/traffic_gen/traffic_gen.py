@@ -24,6 +24,12 @@ def main( ):
         main_args.host = '10.10.1.'+str(random.randint(0,2))
         main_args.port = 8983
 
+# config for closed loop -> throughput
+    if main_args.loop == 'closed':
+        main_args.threads = 1
+        main_args.connections = 1
+
+
     # Setup logging
     logging.basicConfig( level=logging.DEBUG,
                          format="[%(threadName)s]: [%(asctime)-15s] - %(message)s",

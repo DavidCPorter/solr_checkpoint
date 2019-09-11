@@ -5,7 +5,7 @@ import os
 class TestParam( object ):
     def __init__( self, host="", port=0, threads=1, http_pool=None, base_url="", ramp=1,
                   duration=1, conns=1, rand_req=False, max_rand_obj=1, req_dist="", poisson_lam=1.0,
-                  gauss_mean=1.0, gauss_std=1.0, max_iters=1310 ):
+                  gauss_mean=1.0, gauss_std=1.0, max_iters=1310, loop='closed' ):
         self.host         = host
         self.port         = port
         self.threads      = threads
@@ -21,6 +21,7 @@ class TestParam( object ):
         self.gauss_mean   = gauss_mean
         self.gauss_std    = gauss_std
         self.max_iters    = max_iters
+        self.loop         = loop
         return
 
 
@@ -62,6 +63,9 @@ def parse_commandline(cl_args):
 
     parser.add_argument( "--query", dest="query", choices=["direct", "solrj"], default="solrj",
                          help="queries made directly to solr http server OR solrJ" )
+    parser.add_argument( "--loop", dest="loop", choices=["open", "closed"], default="closed",
+                         help="run open or closed loop experiment")
+
 
     #just hardcoded a random generating query
     # parser.add_argument( "--query", dest="query", default="summary",
