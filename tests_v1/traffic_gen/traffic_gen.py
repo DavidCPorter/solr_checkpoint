@@ -19,15 +19,16 @@ from threadargs import *
 def main( ):
     """ Main function """
     # get args
+    print(sys.argv[1:])
     main_args = parse_commandline(sys.argv[1:])
     if main_args.query == 'direct':
-        main_args.host = '10.10.1.'+str(random.randint(1,3))
+        main_args.host = '10.10.1.'+str(main_args.port)[-1:]
         main_args.port = 8983
 
 # config for closed loop -> throughput
     if main_args.loop == 'closed':
         main_args.threads = 1
-        main_args.connections = 1
+        main_args.conns = 1
 
 
     # Setup logging
@@ -35,6 +36,8 @@ def main( ):
                          format="[%(threadName)s]: [%(asctime)-15s] - %(message)s",
                          filename="traffic_gen.log" )
     logging.getLogger( "urllib3" ).setLevel( logging.WARNING )
+
+    print("HOST=%s\nPORT=%s\nQUERY=%s\nThreads = %s\n")
 
     # objects to sync start time for threads
     start_flag = threading.Event()

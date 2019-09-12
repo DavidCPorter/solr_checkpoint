@@ -17,7 +17,7 @@ function start_experiment() {
     QUERY="${14} ${15}"
     LOOP="${16} ${17}"
 
-    echo 'Copying python scripts tol remote machine'
+    echo 'Copying python scripts to remote machine'
     scp -r $PY_SCRIPT $USER@node3:~/
     scp $TERMS $USER@node3:~/
 
@@ -25,9 +25,10 @@ function start_experiment() {
     # parameters for py script running on node3
     PAR_0="--host 127.0.0.1 --port 9111 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./first/"
     PAR_1="--host 127.0.0.1 --port 9222 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./second/"
-    PAR_2="--host 127.0.0.1 --port 9333 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./third/"
-    #PAR_N = foreground process terminates when all others terminate.
-    PAR_N="--host 127.0.0.1 --port 9111 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./"
+    # PAR_3="--host 127.0.0.1 --port 9333 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./third/"
+    #PAR_N == foreground process terminates when all others terminate.
+    PAR_N="--host 127.0.0.1 --port 9333 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./"
+
 
     echo $PAR_0
     # run pyscript no hangup 'N' processes
@@ -37,12 +38,18 @@ function start_experiment() {
       wait $!
       echo "finished"
       scp $USER@node3:~/traffic_gen/http_benchmark_${15}.csv profiling_data/
+
     else
-      for i in $(seq $PROCESSES); do
-      	nohup ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PAR_1 &"&
+
+      MINUS1="$((PROCESSES - 1))"
+      # PARAMS=""
+      for i in $(seq $MINUS1); do
+        PARAMS=$(eval 'echo $PAR_'"$(($i % 2))")
+      	nohup ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PARAMS">/dev/null 2>&1 &
       done
+
       echo "starting"
-      ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PAR_N"
+      ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PAR_N &>/dev/null" >/dev/null 2>&1
       wait $!
       echo "finished"
     # scp $USER@node3:~/traffic_gen/first/http_benchmark_${15}.csv profiling_data/first
@@ -80,14 +87,13 @@ function profile_experiment_dstat() {
     echo "q = $QUERY"
     echo "_$USER-"
     echo 'deleting node dstat remote files'
-    nohup pssh -i -H "$USER@node0 $USER@node1 $USER@node2 $USER@node3" "rm ~/${15}_node*_dstat_$PY_NAME.csv"
-
+    nohup pssh -i -H "$USER@node0 $USER@node1 $USER@node2 $USER@node3" "rm ~/${15}_node*_dstat_$PY_NAME.csv" >/dev/null 2>&1 &
     sleep 1
   	echo 'Starting the dstat'
-      nohup ssh $USER@node0 "dstat $DPARAMS --output ${15}_node0_dstat_$PY_NAME.csv &>/dev/null &"
-      nohup ssh $USER@node1 "dstat $DPARAMS --output ${15}_node1_dstat_$PY_NAME.csv &>/dev/null &"
-      nohup ssh $USER@node2 "dstat $DPARAMS --output ${15}_node2_dstat_$PY_NAME.csv &>/dev/null &"
-      nohup ssh $USER@node3 "dstat $DPARAMS --output ${15}_node3_dstat_$PY_NAME.csv &>/dev/null &"
+      nohup ssh $USER@node0 "dstat $DPARAMS --output ${15}_node0_dstat_$PY_NAME.csv &>/dev/null &" >/dev/null 2>&1 &
+      nohup ssh $USER@node1 "dstat $DPARAMS --output ${15}_node1_dstat_$PY_NAME.csv &>/dev/null &" >/dev/null 2>&1 &
+      nohup ssh $USER@node2 "dstat $DPARAMS --output ${15}_node2_dstat_$PY_NAME.csv &>/dev/null &" >/dev/null 2>&1 &
+      nohup ssh $USER@node3 "dstat $DPARAMS --output ${15}_node3_dstat_$PY_NAME.csv &>/dev/null &" >/dev/null 2>&1 &
 
   	echo 'Starting the experiment'
   	 start_experiment $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $CON $SIZE $QUERY $LOOP
@@ -96,7 +102,7 @@ function profile_experiment_dstat() {
 
 
     echo 'Stopping dstat'
-      nohup pssh -i -H "$USER@node0 $USER@node1 $USER@node2 $USER@node3" "ps aux | grep -i 'dstat*' | awk -F' ' '{print \$2}' | xargs kill -9"
+      nohup pssh -i -H "$USER@node0 $USER@node1 $USER@node2 $USER@node3" "ps aux | grep -i 'dstat*' | awk -F' ' '{print \$2}' | xargs kill -9" >/dev/null 2>&1 &
 
     echo 'Copying the remote dstat data to local -> /profiling_data'
       for i in `seq 0 3`; do
