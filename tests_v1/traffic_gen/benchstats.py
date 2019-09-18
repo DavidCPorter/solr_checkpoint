@@ -4,11 +4,12 @@ import sys
 
 
 class WebStats( object ):
-    def __init__( self, tot_bytes=0, tot_requests=0, tot_errors=0,
+    def __init__( self, tot_bytes=0, tot_requests=0, tot_responses=0, tot_errors=0,
                   avg_lat=0.0, duration=0.0, bw=0.0, stddev_lat=0.0,
                   min_lat=0.0, max_lat=0.0 ):
         self.tot_bytes    = tot_bytes
         self.tot_requests = tot_requests
+        self.tot_responses = tot_responses
         self.tot_errors   = tot_errors
         self.avg_lat      = avg_lat
         self.stddev_lat   = stddev_lat
@@ -20,7 +21,7 @@ class WebStats( object ):
         return
 
 class ThreadStats( object ):
-    def __init__( self, requests=[], responses=[], byte_count=[], errors=[],
+    def __init__( self, requests=0, responses=[], byte_count=[], errors=[],
                   avg_lat=[], duration=0.0 ):
         self.requests   = requests
         self.responses  = responses
@@ -32,7 +33,6 @@ class ThreadStats( object ):
 
     def init_thread_stats(self, num):
         for i in range( num ):
-            self.requests.append( 0 )
             self.responses.append( 0 )
             self.byte_count.append( 0 )
             self.errors.append( 0 )
@@ -53,7 +53,6 @@ def calc_web_stats( thread_stats ):
         Total number of errors
     """
     # Reorganize thread statistics for processing
-    thread_stats.requests   = np.array( thread_stats.requests   )
     thread_stats.responses  = np.array( thread_stats.responses  )
     thread_stats.byte_count = np.array( thread_stats.byte_count )
     thread_stats.errors     = np.array( thread_stats.errors     )
@@ -72,13 +71,15 @@ def calc_web_stats( thread_stats ):
     # Caclulate bandwidth
     bw           = np.divide( tot_bytes, thread_stats.duration    )
     # Calculate total number of requests
-    tot_requests = np.sum( thread_stats.requests  )
+    tot_requests = thread_stats.requests
+    # Calculate total number of responses
+    tot_responses = np.sum( thread_stats.responses )
     # Calculate number of requests per second
-    req_p_s      = np.divide( tot_requests, thread_stats.duration )
+    req_p_s      = np.divide( float(tot_requests), thread_stats.duration )
     # Calculate total number of errors
     tot_errors   = np.sum( thread_stats.errors )
 
-    web_stats = WebStats( tot_bytes=tot_bytes, tot_requests=tot_requests, tot_errors=tot_errors,
+    web_stats = WebStats( tot_bytes=tot_bytes, tot_requests=tot_requests, tot_responses=tot_responses, tot_errors=tot_errors,
                           avg_lat=avg_lat, stddev_lat=stddev_lat, min_lat=min_lat, max_lat=max_lat,
                           duration=thread_stats.duration, bw=bw )
 
@@ -102,11 +103,12 @@ def convert_units( web_stats ):
 
 def write_csv( csv_file, web_stats, main_args, return_list=None ):
     """ Generate CSV file """
-    hdr_fmt = "%s - %s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n"
+    hdr_fmt = "%s - %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n"
     header = hdr_fmt %  ( "Threads",
                           "Connections",
                           "Total Transfer Size (MB)",
                           "Total Requests",
+                          "Total Responses",
                           "Total Errors",
                           "Avg. Latency (ms)",
                           "Std. Dev. Latency (%)",
@@ -120,11 +122,12 @@ def write_csv( csv_file, web_stats, main_args, return_list=None ):
     #     mode = "a"
     request_enum_header = "thread_num,url_request,req_start,req_finish,fct\n"
 
-    body_fmt = "%s - %s,%.2f,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n"
+    body_fmt = "%s - %s,%.2f,%d,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n"
     next_line = body_fmt % ( main_args.threads,
                              main_args.conns,
                              web_stats.tot_bytes,
                              web_stats.tot_requests,
+                             web_stats.tot_responses,
                              web_stats.tot_errors,
                              web_stats.avg_lat,
                              web_stats.stddev_lat,

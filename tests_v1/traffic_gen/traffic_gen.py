@@ -9,12 +9,15 @@ import argparse
 import threading
 import numpy as np
 import queue
+import copy
 from testmodes import *
 from clparsing import *
 from benchstats import *
 from threadargs import *
 
-
+def get_args(ta):
+    x = copy.copy(ta)
+    return x
 
 def main( ):
     """ Main function """
@@ -24,6 +27,11 @@ def main( ):
     if main_args.query == 'direct':
         main_args.host = '10.10.1.'+str(main_args.port)[-1:]
         main_args.port = 8983
+
+    if main_args.query == 'local':
+        main_args.host = '128.104.222.152'
+        main_args.port = 8983
+        main_args.output_dir = './'
 
 # config for closed loop -> throughput
     if main_args.loop == 'closed':
@@ -37,7 +45,7 @@ def main( ):
                          filename="traffic_gen.log" )
     logging.getLogger( "urllib3" ).setLevel( logging.WARNING )
 
-    print("HOST=%s\nPORT=%s\nQUERY=%s\nThreads = %s\n")
+    print("HOST=%s\nPORT=%s\nQUERY=%s\nThreads = %s\n" % (main_args.host, main_args.port, main_args.query, main_args.threads))
 
     # objects to sync start time for threads
     start_flag = threading.Event()
@@ -49,6 +57,7 @@ def main( ):
     poisson_lam = gauss_mean
 
     # returns tuple with thread args
+    # """ returns a list -> [ test_param, thread_stats, start_flag, stop_flag, return_list ] """
     thread_args = create_threadargs(main_args, start_flag, stop_flag, gauss_mean, gauss_std, poisson_lam)
 
     # ******* START TEST ********
@@ -57,10 +66,14 @@ def main( ):
 
     # Spawn threads
     for i in range( main_args.threads ):
+        ta = get_args(thread_args)
         next_name = "%03d" % ( i )
+        # create http for each thread
+        http_pool = add_pool(main_args)
+        ta.append(http_pool)
         next_thread = threading.Thread( name=next_name,
                                         target=target,
-                                        args=thread_args,
+                                        args=tuple(ta)
                                       )
         next_thread.start()
 
@@ -105,11 +118,11 @@ def main( ):
 
     # Save statistics to CSV file
     if main_args.query == 'direct':
-        csv_file = os.path.join( main_args.output_dir, "http_benchmark_direct.csv" )
+        csv_file = os.path.join( main_args.output_dir, "http_benchmark_direct"+str(random.randint(0,1000))+"_"+str(main_args.host)[-1:]+".csv" )
     else:
         csv_file = os.path.join( main_args.output_dir, "http_benchmark_solrj.csv" )
-
-    write_csv( csv_file, web_stats, main_args, return_list )
+# threadargs[4] = return_list
+    write_csv( csv_file, web_stats, main_args, thread_args[4])
     logging.debug( "Wrote %s" % (csv_file) )
 
     return 0

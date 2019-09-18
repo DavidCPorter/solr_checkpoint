@@ -61,7 +61,7 @@ def parse_commandline(cl_args):
     parser.add_argument( "--req-dist", dest="req_dist", choices=["gauss", "poisson"], default="gauss",
                          help="Client wait time distribution type." )
 
-    parser.add_argument( "--query", dest="query", choices=["direct", "solrj"], default="solrj",
+    parser.add_argument( "--query", dest="query", choices=["direct", "solrj", "local"], default="solrj",
                          help="queries made directly to solr http server OR solrJ" )
     parser.add_argument( "--loop", dest="loop", choices=["open", "closed"], default="closed",
                          help="run open or closed loop experiment")

@@ -23,14 +23,13 @@ function start_experiment() {
 
 
     # parameters for py script running on node3
-    PAR_0="--host 127.0.0.1 --port 9111 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./first/"
-    PAR_1="--host 127.0.0.1 --port 9222 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./second/"
-    # PAR_3="--host 127.0.0.1 --port 9333 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./third/"
+    PAR_0="--host 127.0.0.1 --port 9111 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./"
+    PAR_1="--host 127.0.0.1 --port 9222 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./"
+    PAR_2="--host 127.0.0.1 --port 9333 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./"
     #PAR_N == foreground process terminates when all others terminate.
     PAR_N="--host 127.0.0.1 --port 9333 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./"
 
 
-    echo $PAR_0
     # run pyscript no hangup 'N' processes
     if [ $PROCESSES = '1' ]; then
       echo "starting"
@@ -43,19 +42,40 @@ function start_experiment() {
 
       MINUS1="$((PROCESSES - 1))"
       # PARAMS=""
-      for i in $(seq $MINUS1); do
-        PARAMS=$(eval 'echo $PAR_'"$(($i % 2))")
-      	nohup ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PARAMS">/dev/null 2>&1 &
-      done
+      if [ ${15} = 'local' ]; then
+        for i in $(seq $MINUS1); do
+          # PARMS will not be used in this case
+          PARAMS=$(eval 'echo $PAR_'"$(($i % 3))")
+        	python3 ~/projects/solrcloud/tests_v1/traffic_gen/traffic_gen.py $PARAMS>/dev/null 2>&1 &
+        done
+        echo "starting"
+        python3 ~/projects/solrcloud/tests_v1/traffic_gen/traffic_gen.py $PARAMS
+        echo "finished"
 
-      echo "starting"
-      ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PAR_N &>/dev/null" >/dev/null 2>&1
-      wait $!
-      echo "finished"
+
+      else
+        for i in $(seq $MINUS1); do
+          echo "$i"
+          PARAMS=$(eval 'echo $PAR_'"$(($i % 3))")
+          echo "$PARAMS"
+        	nohup ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PARAMS" &
+        done
+        PARAMS=$(eval 'echo $PAR_'"$(($PROCESSES % 3))")
+        echo "starting $PARAMS"
+        nohup ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PARAMS"
+        wait $!
+        echo "finished"
+      fi
+
+
     # scp $USER@node3:~/traffic_gen/first/http_benchmark_${15}.csv profiling_data/first
     # scp $USER@node3:~/traffic_gen/second/http_benchmark_${15}.csv profiling_data/second
     # scp $USER@node3:~/traffic_gen/third/http_benchmark_${15}.csv profiling_data/third
-      scp $USER@node3:~/traffic_gen/http_benchmark_${15}.csv profiling_data/
+      rm ~/projects/solrcloud/tests_v1/profiling_data/http_benchmark_${15}*
+      wait $!
+      sleep 2
+      scp $USER@node3:~/traffic_gen/http_benchmark_${15}* profiling_data/
+      ssh $USER@node3 "rm ~/traffic_gen/http_benchmark_${15}*"
     fi
 }
 
