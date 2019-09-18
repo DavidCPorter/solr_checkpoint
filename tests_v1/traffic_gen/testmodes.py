@@ -74,7 +74,7 @@ def size_based_test( test_param, thread_stats, start_flag, stop_flag ):
 
     return
 
-def duration_based_test( test_param, thread_stats, http_pool, start_flag, stop_flag ):
+def duration_based_test( test_param, thread_stats, conn, start_flag, stop_flag ):
     """ Duration-based test to be carried out by each thread """
     indexed_fields = ["reviewText","summary"]
     sys.stdout.flush()
@@ -113,36 +113,46 @@ def duration_based_test( test_param, thread_stats, http_pool, start_flag, stop_f
             urls.append( "/%s/%s/\r" % (field, term))
 
     # Wait for start signal
-    logging.debug( "Waiting for start event" )
+    logging.debug( "Waiting for start event %s" % name )
     event_start = start_flag.wait()
     logging.debug( "Event %s: Starting" , event_start )
     start = time.time()
 
     i = 0
-    while not stop_flag.isSet():
-        dt = time.time() - start
-        req_start = time.time()
+    # while not stop_flag.is_set():
+    while (time.time() - start) < 19:
+        # dt = time.time() - start
+        # req_start = time.time()
         try:
-            if dt > test_param.ramp:
-                rsp = http_pool.request( "GET", urls[(i%test_param.max_iters)])
+            # if dt > test_param.ramp:
+            conn.request( "GET", urls[random.randint(1,1000)])
+            resp = conn.getresponse()
+            resp.read()
+
                 # req_finish = time.time()
                 # fct = req_finish - req_start
                 # thread_stats.avg_lat[j] += fct
                 # # request_list.put((name,urls[i%test_param.max_iters],req_start,req_finish,fct))
                 # thread_stats.avg_lat[j] += time.time() - req_start
-                # thread_stats.responses[j] += 1
+            # thread_stats.responses[j] += 1
+            j+=1
                 # thread_stats.byte_count[j] += len( rsp.data )
             # logging.debug("SUCCESS->"+str(i)+urls[i%test_param.max_iters])
+            # i+=1
 
         except Exception as e:
             print("ERROR")
-            logging.debug( "Error while requesting: %s - %s - %s" % (str(i%test_param.max_iters), urls[i%test_param.max_iters], str(e)) )
-            if dt > test_param.ramp:
-                thread_stats.errors[j] += 1
-        i += 1
-    thread_stats.requests[j] = http_pool.num_requests
-    if thread_stats.requests[j] > 0:
-        thread_stats.avg_lat[j] = thread_stats.avg_lat[j] / float( thread_stats.requests[j] )
+            # logging.debug( "Error while requesting: %s - %s - %s" % (str(i%test_param.max_iters), urls[i%test_param.max_iters], str(e)) )
+            # if dt > test_param.ramp:
+            #     thread_stats.errors[j] += 1
+        # i += 1
+        # print(i)
+        #
+        # print(hex(id(i)))
+    conn.close()
+    thread_stats.requests[int( name )] = j-int(name)
+    # if thread_stats.requests[j] > 0:
+    #     thread_stats.avg_lat[j] = thread_stats.avg_lat[j] / float( thread_stats.requests[j] )
     logging.debug( "Exiting" )
 
     return

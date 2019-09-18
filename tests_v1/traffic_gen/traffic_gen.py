@@ -70,8 +70,8 @@ def main( ):
         ta = get_args(thread_args)
         next_name = "%03d" % ( i )
         # create http for each thread
-        http_pool = add_pool(main_args)
-        ta.append(http_pool)
+        conn = add_conn(main_args)
+        ta.append(conn)
         ta.append(start_flag)
         ta.append(stop_flag)
         next_thread = threading.Thread( name=next_name,
@@ -81,7 +81,7 @@ def main( ):
         next_thread.start()
 
 
-    init_interval = 3
+    init_interval = 5
     logging.debug( "Waiting %d s for %d threads to initialize" % (init_interval, main_args.threads) )
     time.sleep( init_interval )
     logging.debug( "Signaling threads to start test" )

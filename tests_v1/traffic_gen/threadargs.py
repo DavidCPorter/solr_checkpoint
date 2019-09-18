@@ -1,7 +1,9 @@
 import urllib3
+import http.client
 from testmodes import *
 from clparsing import *
 from benchstats import *
+
 
 #returns a list passed to the threads to append (name,urls[i],req_start,req_finish,fct) for each request
 
@@ -12,7 +14,15 @@ def add_pool(main_args):
                                                           port=main_args.port,
                                                           maxsize=(main_args.conns),
                                                           block=False)
+
     return http_pool
+
+def add_conn(main_args):
+    conn = http.client.HTTPConnection(main_args.host,main_args.port,timeout=5)
+
+    return conn
+
+
 
 def create_threadargs(main_args,start_flag, stop_flag, gauss_mean, gauss_std, poisson_lam):
     """ returns  [ test_param, thread_stats]"""
