@@ -21,7 +21,7 @@ class WebStats( object ):
         return
 
 class ThreadStats( object ):
-    def __init__( self, requests=0, responses=[], byte_count=[], errors=[],
+    def __init__( self, requests=[], responses=[], byte_count=[], errors=[],
                   avg_lat=[], duration=0.0 ):
         self.requests   = requests
         self.responses  = responses
@@ -34,6 +34,7 @@ class ThreadStats( object ):
     def init_thread_stats(self, num):
         for i in range( num ):
             self.responses.append( 0 )
+            self.requests.append( 0 )
             self.byte_count.append( 0 )
             self.errors.append( 0 )
             self.avg_lat.append( 0.0 )
@@ -54,6 +55,7 @@ def calc_web_stats( thread_stats ):
     """
     # Reorganize thread statistics for processing
     thread_stats.responses  = np.array( thread_stats.responses  )
+    thread_stats.requests   = np.array( thread_stats.requests  )
     thread_stats.byte_count = np.array( thread_stats.byte_count )
     thread_stats.errors     = np.array( thread_stats.errors     )
     thread_stats.avg_lat    = np.array( thread_stats.avg_lat    )
@@ -71,7 +73,7 @@ def calc_web_stats( thread_stats ):
     # Caclulate bandwidth
     bw           = np.divide( tot_bytes, thread_stats.duration    )
     # Calculate total number of requests
-    tot_requests = thread_stats.requests
+    tot_requests = np.sum( thread_stats.requests )
     # Calculate total number of responses
     tot_responses = np.sum( thread_stats.responses )
     # Calculate number of requests per second
@@ -140,8 +142,8 @@ def write_csv( csv_file, web_stats, main_args, return_list=None ):
     with open( csv_file, 'w' ) as output_file:
         output_file.write( header )
         output_file.write( next_line )
-        output_file.write( request_enum_header)
-        for i in range(return_list.qsize()):
-            output_file.write(str(return_list.get())[1:-1]+'\n')
+        # output_file.write( request_enum_header)
+        # for i in range(return_list.qsize()):
+        #     output_file.write(str(return_list.get())[1:-1]+'\n')
 
     return

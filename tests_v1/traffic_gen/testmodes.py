@@ -74,7 +74,7 @@ def size_based_test( test_param, thread_stats, start_flag, stop_flag ):
 
     return
 
-def duration_based_test( test_param, thread_stats, start_flag, stop_flag, request_list, http_pool ):
+def duration_based_test( test_param, thread_stats, http_pool, start_flag, stop_flag ):
     """ Duration-based test to be carried out by each thread """
     indexed_fields = ["reviewText","summary"]
     sys.stdout.flush()
@@ -125,13 +125,13 @@ def duration_based_test( test_param, thread_stats, start_flag, stop_flag, reques
         try:
             if dt > test_param.ramp:
                 rsp = http_pool.request( "GET", urls[(i%test_param.max_iters)])
-                req_finish = time.time()
-                fct = req_finish - req_start
-                thread_stats.avg_lat[j] += fct
-                # request_list.put((name,urls[i%test_param.max_iters],req_start,req_finish,fct))
-                thread_stats.avg_lat[j] += time.time() - req_start
-                thread_stats.responses[j] += 1
-                thread_stats.byte_count[j] += len( rsp.data )
+                # req_finish = time.time()
+                # fct = req_finish - req_start
+                # thread_stats.avg_lat[j] += fct
+                # # request_list.put((name,urls[i%test_param.max_iters],req_start,req_finish,fct))
+                # thread_stats.avg_lat[j] += time.time() - req_start
+                # thread_stats.responses[j] += 1
+                # thread_stats.byte_count[j] += len( rsp.data )
             # logging.debug("SUCCESS->"+str(i)+urls[i%test_param.max_iters])
 
         except Exception as e:
@@ -140,9 +140,9 @@ def duration_based_test( test_param, thread_stats, start_flag, stop_flag, reques
             if dt > test_param.ramp:
                 thread_stats.errors[j] += 1
         i += 1
-    thread_stats.requests = http_pool.num_requests
-    if thread_stats.requests > 0:
-        thread_stats.avg_lat[j] = thread_stats.avg_lat[j] / float( thread_stats.requests )
+    thread_stats.requests[j] = http_pool.num_requests
+    if thread_stats.requests[j] > 0:
+        thread_stats.avg_lat[j] = thread_stats.avg_lat[j] / float( thread_stats.requests[j] )
     logging.debug( "Exiting" )
 
     return

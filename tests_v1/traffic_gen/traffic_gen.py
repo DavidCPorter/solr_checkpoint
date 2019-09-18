@@ -57,7 +57,8 @@ def main( ):
     poisson_lam = gauss_mean
 
     # returns tuple with thread args
-    # """ returns a list -> [ test_param, thread_stats, start_flag, stop_flag, return_list ] """
+    # """ returns a list -> [ test_param, thread_stats] """
+    # return_list and the flags are main_thread lock-enabled so cannot be copied so have been removed
     thread_args = create_threadargs(main_args, start_flag, stop_flag, gauss_mean, gauss_std, poisson_lam)
 
     # ******* START TEST ********
@@ -71,6 +72,8 @@ def main( ):
         # create http for each thread
         http_pool = add_pool(main_args)
         ta.append(http_pool)
+        ta.append(start_flag)
+        ta.append(stop_flag)
         next_thread = threading.Thread( name=next_name,
                                         target=target,
                                         args=tuple(ta)
@@ -113,7 +116,9 @@ def main( ):
             next_thread.join( )
 
     # Calculate statistics
+    print(thread_stats.requests)
     web_stats = calc_web_stats( thread_stats )
+    # print(web_stats)
     web_stats = convert_units( web_stats )
 
     # Save statistics to CSV file
@@ -122,7 +127,7 @@ def main( ):
     else:
         csv_file = os.path.join( main_args.output_dir, "http_benchmark_solrj.csv" )
 # threadargs[4] = return_list
-    write_csv( csv_file, web_stats, main_args, thread_args[4])
+    write_csv( csv_file, web_stats, main_args)
     logging.debug( "Wrote %s" % (csv_file) )
 
     return 0

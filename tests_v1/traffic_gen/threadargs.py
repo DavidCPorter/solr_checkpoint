@@ -15,11 +15,11 @@ def add_pool(main_args):
     return http_pool
 
 def create_threadargs(main_args,start_flag, stop_flag, gauss_mean, gauss_std, poisson_lam):
-    """ returns 5-tuple -> ( test_param, thread_stats, start_flag, stop_flag, return_list ) """
+    """ returns  [ test_param, thread_stats]"""
 
     base_url = "http://%s:%s" % ( main_args.host, main_args.port)
-    return_list = queue.Queue()
-
+    # return_list = queue.Queue()
+    # return_list = ''
     # import pdb; pdb.set_trace()
 
     thread_stats.init_thread_stats(main_args.threads)
@@ -41,5 +41,5 @@ def create_threadargs(main_args,start_flag, stop_flag, gauss_mean, gauss_std, po
                                 max_rand_obj=main_args.max_rand_obj, req_dist=main_args.req_dist,
                                 gauss_mean=gauss_mean, gauss_std=gauss_std, poisson_lam=poisson_lam )
 
-    thread_args = [ test_param, thread_stats, start_flag, stop_flag, return_list ]
+    thread_args = [ test_param, thread_stats]
     return thread_args
