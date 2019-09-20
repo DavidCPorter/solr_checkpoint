@@ -65,15 +65,24 @@ def main( ):
     # set test function
     target = size_based_test if main_args.test_type == "size" else duration_based_test
 
+    terms = get_terms()
+
     # Spawn threads
     for i in range( main_args.threads ):
-        ta = get_args(thread_args)
         next_name = "%03d" % ( i )
+
+        # makes copy of thread_args
+        ta = get_args(thread_args)
+        # preload queries into list
+        urls = get_urls(ta[0], terms)
         # create http for each thread
         conn = add_conn(main_args)
+        # combine arguments
         ta.append(conn)
+        ta.append(urls)
         ta.append(start_flag)
         ta.append(stop_flag)
+        ta.append(next_name)
         next_thread = threading.Thread( name=next_name,
                                         target=target,
                                         args=tuple(ta)

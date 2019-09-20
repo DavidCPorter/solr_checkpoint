@@ -22,6 +22,39 @@ def add_conn(main_args):
 
     return conn
 
+def get_urls(test_param, terms):
+    indexed_fields = ["reviewText","summary"]
+    prefix_url = "%s" % (test_param.base_url)
+    urls = []
+    # port 8983 is a benchamrk using direct solr instance queries
+    if test_param.port == 8983:
+        r = random.randint(1,len(terms))
+        for i in range( test_param.max_iters ):
+            i+=r
+            term = terms[i%len(terms)].rstrip()
+            field = indexed_fields[i%len(indexed_fields)]
+            q = '/solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
+            urls.append("%s%s" % (prefix_url, q))
+
+    else:
+        # port 9111 flow -> via solrJ
+        # introduce randomness for each thread
+        r = random.randint(1,len(terms))
+        for i in range( test_param.max_iters ):
+            i+=r
+            term = terms[i%len(terms)].rstrip()
+            field = indexed_fields[i%len(indexed_fields)]
+            # q = 'solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
+            urls.append( "/%s/%s/\r" % (field, term))
+
+    return urls
+
+def get_terms():
+    f = open('../words.txt', 'r')
+    terms = f.readlines()
+    random.shuffle(terms)
+    f.close()
+    return terms
 
 
 def create_threadargs(main_args,start_flag, stop_flag, gauss_mean, gauss_std, poisson_lam):
