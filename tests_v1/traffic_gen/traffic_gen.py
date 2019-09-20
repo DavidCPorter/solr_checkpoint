@@ -132,7 +132,7 @@ def main( ):
 
     # Save statistics to CSV file
     if main_args.query == 'direct':
-        csv_file = os.path.join( main_args.output_dir, "http_benchmark_direct"+str(random.randint(0,1000))+"_"+str(main_args.host)[-1:]+".csv" )
+        csv_file = os.path.join( main_args.output_dir, "http_benchmark_direct"+str(random.randint(0,999999))+"_"+str(main_args.host)[-1:]+".csv" )
     else:
         csv_file = os.path.join( main_args.output_dir, "http_benchmark_solrj.csv" )
 # threadargs[4] = return_list

@@ -30,6 +30,10 @@ function start_experiment() {
     PAR_N="--host 127.0.0.1 --port 9333 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./"
 
 
+    echo "removing previous output from remote and local host"
+    ssh $USER@node3 "rm ~/traffic_gen/http_benchmark_${15}*"
+    rm ~/projects/solrcloud/tests_v1/profiling_data/proc_results/http_benchmark_${15}*
+
     # run pyscript no hangup 'N' processes
     if [ $PROCESSES = '1' ]; then
       echo "starting"
@@ -41,8 +45,10 @@ function start_experiment() {
     else
 
       MINUS1="$((PROCESSES - 1))"
-      # PARAMS=""
+
+
       if [ ${15} = 'local' ]; then
+        echo "***running local experiment****"
         for i in $(seq $MINUS1); do
           # PARMS will not be used in this case
           PARAMS=$(eval 'echo $PAR_'"$(($i % 3))")
@@ -54,28 +60,33 @@ function start_experiment() {
 
 
       else
+        echo "*** running remote experiment ****"
+        # clear script to run python processes
+        echo "#!/bin/bash" > ./remotescript.sh
+        # append number of $PROCESSES-1 ($MINUS1) to remotescript
         for i in $(seq $MINUS1); do
           echo "$i"
           PARAMS=$(eval 'echo $PAR_'"$(($i % 3))")
           echo "$PARAMS"
-        	nohup ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PARAMS" &
+        	echo "python3 traffic_gen.py $PARAMS> /dev/null 2>&1 &" >> ./remotescript.sh
         done
+        # create params for one process in foreground
         PARAMS=$(eval 'echo $PAR_'"$(($PROCESSES % 3))")
         echo "starting $PARAMS"
+        # run remotescript
+        scp ./remotescript.sh $USER@node3:~/traffic_gen
+        nohup ssh $USER@node3 "cd $(basename $PY_SCRIPT); bash remotescript.sh"&
+        # run foreground process
         nohup ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PARAMS"
         wait $!
         echo "finished"
       fi
 
-
-    # scp $USER@node3:~/traffic_gen/first/http_benchmark_${15}.csv profiling_data/first
-    # scp $USER@node3:~/traffic_gen/second/http_benchmark_${15}.csv profiling_data/second
-    # scp $USER@node3:~/traffic_gen/third/http_benchmark_${15}.csv profiling_data/third
-      rm ~/projects/solrcloud/tests_v1/profiling_data/http_benchmark_${15}*
       wait $!
-      sleep 2
-      scp $USER@node3:~/traffic_gen/http_benchmark_${15}* profiling_data/
-      ssh $USER@node3 "rm ~/traffic_gen/http_benchmark_${15}*"
+      scp $USER@node3:~/traffic_gen/http_benchmark_${15}* profiling_data/proc_results
+      sleep 10
+      wait $!
+      python3 ~/projects/solrcloud/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $CON $QUERY $LOOP
     fi
 }
 
@@ -122,7 +133,7 @@ function profile_experiment_dstat() {
 
 
     echo 'Stopping dstat'
-      nohup pssh -i -H "$USER@node0 $USER@node1 $USER@node2 $USER@node3" "ps aux | grep -i 'dstat*' | awk -F' ' '{print \$2}' | xargs kill -9" >/dev/null 2>&1 &
+      nohup pssh -i -H "$USER@node0 $USER@node1 $USER@node2 $USER@node3" "ps aux | grep -i 'dstat*' | awk -F' ' '{print \$2}' | xargs kill -9 >/dev/null 2>&1" &
 
     echo 'Copying the remote dstat data to local -> /profiling_data'
       for i in `seq 0 3`; do

@@ -31,8 +31,8 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
     start = time.time()
 
     # i = 0
-    # while not stop_flag.is_set():
-    while (time.time() - start) < 19:
+    while not stop_flag.is_set():
+    # while (time.time() - start) < 19:
         # dt = time.time() - start
         # req_start = time.time()
         try:
@@ -63,8 +63,8 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
         # print(hex(id(i)))
     conn.close()
     thread_stats.requests[int( name )] = j-int(name)
-    if thread_stats.requests[j] > 0:
-        thread_stats.avg_lat[j] = thread_stats.avg_lat[j] / float( thread_stats.requests[j] )
+    # if thread_stats.requests[j] > 0:
+    #     thread_stats.avg_lat[j] = thread_stats.avg_lat[j] / float( thread_stats.requests[j] )
     logging.debug( "Exiting" )
 
     return

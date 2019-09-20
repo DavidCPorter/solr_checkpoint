@@ -140,8 +140,9 @@ def write_csv( csv_file, web_stats, main_args, return_list=None ):
                            )
 
     with open( csv_file, 'w' ) as output_file:
-        output_file.write( header )
-        output_file.write( next_line )
+        # output_file.write( header )
+        # output_file.write( next_line )
+        output_file.write("%s" % str(web_stats.tot_requests))
         # output_file.write( request_enum_header)
         # for i in range(return_list.qsize()):
         #     output_file.write(str(return_list.get())[1:-1]+'\n')
