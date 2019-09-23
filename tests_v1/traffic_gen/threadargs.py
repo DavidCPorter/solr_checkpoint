@@ -45,7 +45,7 @@ def get_urls(test_param, terms):
             term = terms[i%len(terms)].rstrip()
             field = indexed_fields[i%len(indexed_fields)]
             # q = 'solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
-            urls.append( "/%s/%s/\r" % (field, term))
+            urls.append( "/%s/%s/" % (field, term))
 
     return urls
 

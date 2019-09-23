@@ -134,7 +134,7 @@ def main( ):
     if main_args.query == 'direct':
         csv_file = os.path.join( main_args.output_dir, "http_benchmark_direct"+str(random.randint(0,999999))+"_"+str(main_args.host)[-1:]+".csv" )
     else:
-        csv_file = os.path.join( main_args.output_dir, "http_benchmark_solrj.csv" )
+        csv_file = os.path.join( main_args.output_dir, "http_benchmark_solrj"+str(random.randint(0,999999))+"_"+str(main_args.port)[-1:]+".csv" )
 # threadargs[4] = return_list
     write_csv( csv_file, web_stats, main_args)
     logging.debug( "Wrote %s" % (csv_file) )

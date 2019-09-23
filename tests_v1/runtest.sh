@@ -31,7 +31,7 @@ function start_experiment() {
 
 
     echo "removing previous output from remote and local host"
-    ssh $USER@node3 "rm ~/traffic_gen/http_benchmark_${15}*"
+    ssh $USER@node3 "rm ~/traffic_gen/http_benchmark_*"
     rm ~/Desktop/solrcloud-dev/tests_v1/profiling_data/proc_results/http_benchmark_${15}*
 
     # run pyscript no hangup 'N' processes

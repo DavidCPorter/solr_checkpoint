@@ -7,7 +7,7 @@ from datetime import datetime
 def main(p, t, d, c, q, l):
     print('RUNNING READRESULTS %s%s%s' % (p, t, d))
     results = []
-    files = os.popen('ls ~/Desktop/solrcloud-dev/tests_v1/profiling_data/proc_results').read()
+    files = os.popen('ls ~/Desktop/solrcloud-dev/tests_v1/profiling_data/proc_results | grep '+q).read()
     files = files.split('\n')
     files.pop()
     for file in files:
@@ -18,9 +18,9 @@ def main(p, t, d, c, q, l):
     for i in results:
         total_queries +=int(i)
 
-    fp = open('/Users/dporter/Desktop/solrcloud-dev/tests_v1/profiling_data/exp_results/'+"proc_"+p+"threads_"+t+"dur_"+d+":::TIME->"+datetime.today().strftime('%Y-%m-%d-%H:%M:%S'), 'w+')
+    fp = open('/Users/dporter/Desktop/solrcloud-dev/tests_v1/profiling_data/exp_results/'+"query_"+q+"-->  proc_"+p+"threads_"+t+"dur_"+d+":::TIME->"+datetime.today().strftime('%Y-%m-%d-%H:%M:%S'), 'w+')
 
-    fp.write(str(total_queries)+'\n'+p+'\n'+t+'\n'+d)
+    fp.write(str(total_queries)+'\n'+p+'\n'+t+'\n'+d+'\n'+q)
     fp.close()
 
 
