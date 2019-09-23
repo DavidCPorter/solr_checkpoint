@@ -54,13 +54,10 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
 
         except Exception as e:
             print("ERROR")
-            # logging.debug( "Error while requesting: %s - %s - %s" % (str(i%test_param.max_iters), urls[i%test_param.max_iters], str(e)) )
-            # if dt > test_param.ramp:
-            #     thread_stats.errors[j] += 1
-        # i += 1
-        # print(i)
-        #
-        # print(hex(id(i)))
+            logging.debug( "Error while requesting: %s - %s - %s" % (str(i%test_param.max_iters), urls[i%test_param.max_iters], str(e)) )
+            if dt > test_param.ramp:
+                thread_stats.errors[j] += 1
+
     conn.close()
     thread_stats.requests[int( name )] = j-int(name)
     # if thread_stats.requests[j] > 0:

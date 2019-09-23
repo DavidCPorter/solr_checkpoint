@@ -3,7 +3,8 @@ hostsIps
 inventory
 inventory_gen.txt
 *.retry
-profiling_data/
+exp_results/*
+proc_results/*
 traffic_gen.log
 nohup.out
 .DS_Store

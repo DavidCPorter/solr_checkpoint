@@ -1,12 +1,12 @@
 [nodes]
-{% for host in hostsfile %}{{host}}{% if not loop.last %}{% endif %}{% endfor %}
+{% for host in host_file %}{{host}}{% if not loop.last %}{% endif %}{% endfor %}
 
 
 [generatorNode]
 {{traffic_node}}
 
 [dataServer]
-{{ hostsfile[0] }}
+{{ return_dict['node0'] }}
 
 [mylocal]
 localhost ansible_connection=local
@@ -15,9 +15,9 @@ localhost ansible_connection=local
 [all:vars]
 ansible_connection=ssh
 ansible_user={{host_user}}
-node0={{ hostsfile[0][:15] }}
-node1={{ hostsfile[1][:15] }}
-node2={{ hostsfile[2][:15] }}
+node0={{ return_dict['node0'][:15] }}
+node1={{ return_dict['node1'][:15] }}
+node2={{ return_dict['node2'][:15] }}
 node3={{ traffic_node[:15] }}
-root_path=/Users/dporter/projects/solrcloud/
+root_path=/Users/dporter/Desktop/solrcloud-dev/
 main_class=com.dporte7.solrclientserver.DistributedWebServer

@@ -32,7 +32,7 @@ function start_experiment() {
 
     echo "removing previous output from remote and local host"
     ssh $USER@node3 "rm ~/traffic_gen/http_benchmark_${15}*"
-    rm ~/projects/solrcloud/tests_v1/profiling_data/proc_results/http_benchmark_${15}*
+    rm ~/Desktop/solrcloud-dev/tests_v1/profiling_data/proc_results/http_benchmark_${15}*
 
     # run pyscript no hangup 'N' processes
     if [ $PROCESSES = '1' ]; then
@@ -52,10 +52,10 @@ function start_experiment() {
         for i in $(seq $MINUS1); do
           # PARMS will not be used in this case
           PARAMS=$(eval 'echo $PAR_'"$(($i % 3))")
-        	python3 ~/projects/solrcloud/tests_v1/traffic_gen/traffic_gen.py $PARAMS>/dev/null 2>&1 &
+        	python3 ~/Desktop/solrcloud-dev/tests_v1/traffic_gen/traffic_gen.py $PARAMS>/dev/null 2>&1 &
         done
         echo "starting"
-        python3 ~/projects/solrcloud/tests_v1/traffic_gen/traffic_gen.py $PARAMS
+        python3 ~/Desktop/solrcloud-dev/tests_v1/traffic_gen/traffic_gen.py $PARAMS
         echo "finished"
 
 
@@ -86,7 +86,7 @@ function start_experiment() {
       scp $USER@node3:~/traffic_gen/http_benchmark_${15}* profiling_data/proc_results
       sleep 10
       wait $!
-      python3 ~/projects/solrcloud/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $CON $QUERY $LOOP
+      python3 ~/Desktop/solrcloud-dev/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $CON $QUERY $LOOP
     fi
 }
 
