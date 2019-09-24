@@ -16,7 +16,7 @@ header = '<rspec xmlns="http://www.geni.net/resources/rspec/3" xmlns:emulab="htt
 
 node = '<node xmlns="http://www.geni.net/resources/rspec/3" client_id="node-%d">\n'
 
-node_interface = '<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-%d">\n'
+node_interface = '<interface xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-%d"/>\n'
 
 link = '<link xmlns="http://www.geni.net/resources/rspec/3" client_id="link-0"><link_type xmlns="http://www.geni.net/resources/rspec/3" name="lan"/>\n'
 
