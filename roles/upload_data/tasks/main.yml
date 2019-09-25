@@ -33,9 +33,9 @@
     path:  '{{data_upload_dir}}/{{collection_name}}.txt'
   register: stat_result
 
-
+# 32 shards and 3 copies
 - name: create collection
-  shell: ./bin/solr create_collection -c "{{collection_name}}" -s 3 -rf 3 -force
+  shell: ./bin/solr create_collection -c "{{collection_name}}" -s 32 -rf 3 -force
   args:
     chdir: '{{solr_install_dir}}/solr'
     creates: '{{data_upload_dir}}/{{collection_name}}.txt'

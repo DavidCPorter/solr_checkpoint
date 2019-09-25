@@ -1,12 +1,14 @@
 [nodes]
-{% for host in host_file %}{{host}}{% if not loop.last %}{% endif %}{% endfor %}
+{% for host in nodes_dict.values()%}{{host}}{% if not loop.last %}{% endif %}{% endfor %}
 
+[zookeeperNodes]
+{% for host in zoo_dict.values() %}{{host}}{% if not loop.last %}{% endif %}{% endfor %}
 
 [generatorNode]
-{{traffic_node}}
+{% for host in load_dict.values() %}{{host}}{% if not loop.last %}{% endif %}{% endfor %}
 
 [dataServer]
-{{ return_dict['node0'] }}
+{{ nodes_dict['3'] }}
 
 [mylocal]
 localhost ansible_connection=local
@@ -15,9 +17,12 @@ localhost ansible_connection=local
 [all:vars]
 ansible_connection=ssh
 ansible_user={{host_user}}
-node0={{ return_dict['node0'][:15] }}
-node1={{ return_dict['node1'][:15] }}
-node2={{ return_dict['node2'][:15] }}
-node3={{ traffic_node[:15] }}
+node0={{ zoo_dict['0'][:15] }}
+node1={{ zoo_dict['1'][:15] }}
+node2={{ zoo_dict['2'][:15] }}
+{% for key, value in nodes_dict.items() %}node{{key}}={{nodes_dict[key][:15]}}
+{% if not loop.last %}{% endif %}{% endfor %}
+{% for key, value in load_dict.items() %}node{{key}}={{load_dict[key][:15]}}
+{% if not loop.last %}{% endif %}{% endfor %}
 root_path=/Users/dporter/Desktop/solrcloud-dev/
 main_class=com.dporte7.solrclientserver.DistributedWebServer
