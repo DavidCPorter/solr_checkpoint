@@ -5,20 +5,21 @@ from datetime import datetime
 # args = $THREADS $DURATION $CON $QUERY $LOOP $PROCESSES
 
 def main(p, t, d, c, q, l):
+    proj_home = "~/projects/solrcloud"
     print('RUNNING READRESULTS %s%s%s' % (p, t, d))
     results = []
-    files = os.popen('ls ~/Desktop/solrcloud-dev/tests_v1/profiling_data/proc_results | grep '+q).read()
+    files = os.popen('ls '+proj_home+'/tests_v1/profiling_data/proc_results | grep '+q).read()
     files = files.split('\n')
     files.pop()
     for file in files:
-        f = open("/Users/dporter/Desktop/solrcloud-dev/tests_v1/profiling_data/proc_results/"+file, 'r')
+        f = open(proj_home+"/tests_v1/profiling_data/proc_results/"+file, 'r')
         results.append(f.readline())
     total_queries=0
     f.close()
     for i in results:
         total_queries +=int(i)
 
-    fp = open('/Users/dporter/Desktop/solrcloud-dev/tests_v1/profiling_data/exp_results/'+"query_"+q+"-->  proc_"+p+"threads_"+t+"dur_"+d+":::TIME->"+datetime.today().strftime('%Y-%m-%d-%H:%M:%S'), 'w+')
+    fp = open(proj_home+'/tests_v1/profiling_data/exp_results/'+"query_"+q+"-->  proc_"+p+"threads_"+t+"dur_"+d+":::TIME->"+datetime.today().strftime('%Y-%m-%d-%H:%M:%S'), 'w+')
 
     fp.write(str(total_queries)+'\n'+p+'\n'+t+'\n'+d+'\n'+q)
     fp.close()

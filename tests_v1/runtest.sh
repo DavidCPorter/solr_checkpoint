@@ -1,5 +1,7 @@
 #! /bin/bash
 
+PROJECT_HOME='~/projects/solrcloud'
+
 function start_experiment() {
 
     if [ "$#" -lt 3 ]; then
@@ -16,77 +18,92 @@ function start_experiment() {
     SIZE="${12} ${13}"
     QUERY="${14} ${15}"
     LOOP="${16} ${17}"
+    LOAD_NODES=("128.110.153.246", "128.110.154.30", "128.110.154.35", "128.110.154.16")
 
     echo 'Copying python scripts to remote machine'
     scp -r $PY_SCRIPT $USER@node3:~/
     scp $TERMS $USER@node3:~/
 
-
-    # parameters for py script running on node3
-    PAR_0="--host 127.0.0.1 --port 9111 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./"
-    PAR_1="--host 127.0.0.1 --port 9222 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./"
-    PAR_2="--host 127.0.0.1 --port 9333 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./"
-    #PAR_N == foreground process terminates when all others terminate.
-    PAR_N="--host 127.0.0.1 --port 9333 $THREADS $DURATION $CON $QUERY $LOOP --output-dir ./"
-
+    # each process in the python script will make #THREAD num of connections to a SINGLE solr instance "--host" (for --query direct)
+    # parameters for py script running on nodes 32, 33, 34, 35
+    # hosts here will either be this local for solrj since solj is running on same node, or a subnet address
+    # different ports reflect the number of solrj processes on each node running solrj
+    #  otherwise ports will be changed to 8983 since solrcloud httpserver runs there on the network
+    PAR_0="$THREADS $DURATION $CON $QUERY $LOOP --output-dir ./ --port 9111" #host appended below
+    PAR_1="$THREADS $DURATION $CON $QUERY $LOOP --output-dir ./ --port 9222" #host appended below
+    PAR_2="$THREADS $DURATION $CON $QUERY $LOOP --output-dir ./ --port 9333" #host appended below
+    PAR_3="$THREADS $DURATION $CON $QUERY $LOOP --output-dir ./ --port 9444" #host appended below
 
     echo "removing previous output from remote and local host"
-    ssh $USER@node3 "rm ~/traffic_gen/http_benchmark_*"
-    rm ~/Desktop/solrcloud-dev/tests_v1/profiling_data/proc_results/http_benchmark_${15}*
+    pssh -h $PROJECT_HOME/pssh_traffic_node_file --user $USER "rm ~/traffic_gen/http_benchmark_*"
+    rm $PROJECT_HOME/tests_v1/profiling_data/proc_results/http_benchmark_${15}*
 
-    # run pyscript no hangup 'N' processes
+
+########## EXPERIMENT LOOPS #################
+
+
+# SINGLE PROCESS
     if [ $PROCESSES = '1' ]; then
-      echo "starting"
-      ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PAR_N"
+      echo "starting a single process experiment"
+      pssh -h $PROJECT_HOME/pssh_traffic_node_file_single --user $USER "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PAR_0"
       wait $!
       echo "finished"
-      scp $USER@node3:~/traffic_gen/http_benchmark_${15}.csv profiling_data/
+      # do something better later cuz pscp is terrible
+      for i in "${LOAD_NODES[@]}"; do
+          scp $USER@$i:"~/${15}_node${i}_dstat_$PY_NAME.csv" profiling_data/
+      done
 
     else
 
       MINUS1="$((PROCESSES - 1))"
 
-
+# LOCAL EXPERIMENT
+# dont use this anymore
       if [ ${15} = 'local' ]; then
-        echo "***running local experiment****"
-        for i in $(seq $MINUS1); do
-          # PARMS will not be used in this case
-          PARAMS=$(eval 'echo $PAR_'"$(($i % 3))")
-        	python3 ~/Desktop/solrcloud-dev/tests_v1/traffic_gen/traffic_gen.py $PARAMS>/dev/null 2>&1 &
-        done
-        echo "starting"
-        python3 ~/Desktop/solrcloud-dev/tests_v1/traffic_gen/traffic_gen.py $PARAMS
-        echo "finished"
+      #   echo "***running local experiment****"
+      #   for i in $(seq $MINUS1); do
+      #     # PARMS will not be used in this case
+      #     PARAMS=$(eval 'echo $PAR_'"$(($i % 4))")
+      #   	python3 $PROJECT_HOME/tests_v1/traffic_gen/traffic_gen.py $PARAMS --host >/dev/null 2>&1 &
+      #   done
+      #   echo "starting"
+      #   python3 $PROJECT_HOME/tests_v1/traffic_gen/traffic_gen.py $PARAMS  --host
+      #   echo "finished"
 
-
+# REMOTE EXPERIMENT WITH X PROCESSES
+# have to DIVIDE the num or processes over 4 load nodes each connecting to one of 32 servers for direct 32 exp
       else
         echo "*** running remote experiment ****"
         # clear script to run python processes
         echo "#!/bin/bash" > ./remotescript.sh
+        echo "# this file is used to run processes remotely since cloudlab blacklists aggressive ssh" > ./remotescript.sh
+
         # append number of $PROCESSES-1 ($MINUS1) to remotescript
         for i in $(seq $MINUS1); do
           echo "$i"
-          PARAMS=$(eval 'echo $PAR_'"$(($i % 3))")
+          PARAMS=$(eval 'echo $PAR_'"$(($i % 4))")
           echo "$PARAMS"
-        	echo "python3 traffic_gen.py $PARAMS> /dev/null 2>&1 &" >> ./remotescript.sh
+        	echo "python3 traffic_gen.py $PARAMS --host 10.10.0.$i> /dev/null 2>&1 &" >> ./remotescript.sh
         done
         # create params for one process in foreground
-        PARAMS=$(eval 'echo $PAR_'"$(($PROCESSES % 3))")
-        echo "starting $PARAMS"
+        PARAMS=$(eval 'echo $PAR_'"$(($PROCESSES % 4))")
+        echo "starting $PARAMS --host 10.10.0.$PROCESSES"
         # run remotescript
-        scp ./remotescript.sh $USER@node3:~/traffic_gen
-        nohup ssh $USER@node3 "cd $(basename $PY_SCRIPT); bash remotescript.sh"&
+        pscp -h $PROJECT_HOME/pssh_traffic_node_file_3 ./remotescript.sh
+        nohup pssh -h $PROJECT_HOME/pssh_traffic_node_file_3 "cd $(basename $PY_SCRIPT); bash remotescript.sh"&
         # run foreground process
-        nohup ssh $USER@node3 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PARAMS"
+        nohup ssh -h $PROJECT_HOME/pssh_traffic_node_file_single "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PARAMS --host 10.10.0.$PROCESSES"
         wait $!
         echo "finished"
       fi
 
       wait $!
-      scp $USER@node3:~/traffic_gen/http_benchmark_${15}* profiling_data/proc_results
+      for i in "${LOAD_NODES[@]}"; do
+          scp $USER@$i:~/traffic_gen/http_benchmark_${15}* profiling_data/proc_results
+      done
       sleep 10
       wait $!
-      python3 ~/Desktop/solrcloud-dev/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $CON $QUERY $LOOP
+      python3 $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $CON $QUERY $LOOP
     fi
 }
 
@@ -118,13 +135,10 @@ function profile_experiment_dstat() {
     echo "q = $QUERY"
     echo "_$USER-"
     echo 'deleting node dstat remote files'
-    nohup pssh -i -H "$USER@node0 $USER@node1 $USER@node2 $USER@node3" "rm ~/${15}_node*_dstat_$PY_NAME.csv" >/dev/null 2>&1 &
+    nohup pssh -i -h $PROJECT_HOME/pssh_solr_node_file "rm ~/${15}_node*_dstat_$PY_NAME.csv" >/dev/null 2>&1 &
     sleep 1
   	echo 'Starting the dstat'
-      nohup ssh $USER@node0 "dstat $DPARAMS --output ${15}_node0_dstat_$PY_NAME.csv &>/dev/null &" >/dev/null 2>&1 &
-      nohup ssh $USER@node1 "dstat $DPARAMS --output ${15}_node1_dstat_$PY_NAME.csv &>/dev/null &" >/dev/null 2>&1 &
-      nohup ssh $USER@node2 "dstat $DPARAMS --output ${15}_node2_dstat_$PY_NAME.csv &>/dev/null &" >/dev/null 2>&1 &
-      nohup ssh $USER@node3 "dstat $DPARAMS --output ${15}_node3_dstat_$PY_NAME.csv &>/dev/null &" >/dev/null 2>&1 &
+      nohup pssh -i -h $PROJECT_HOME/pssh_solr_node_file "dstat $DPARAMS --output ${15}_node0_dstat_$PY_NAME.csv &>/dev/null &" >/dev/null 2>&1 &
 
   	echo 'Starting the experiment'
   	 start_experiment $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $CON $SIZE $QUERY $LOOP
@@ -133,14 +147,12 @@ function profile_experiment_dstat() {
 
 
     echo 'Stopping dstat'
-      nohup pssh -i -H "$USER@node0 $USER@node1 $USER@node2 $USER@node3" "ps aux | grep -i 'dstat*' | awk -F' ' '{print \$2}' | xargs kill -9 >/dev/null 2>&1" &
+      nohup pssh -i -h $PROJECT_HOME/pssh_solr_node_file "ps aux | grep -i 'dstat*' | awk -F' ' '{print \$2}' | xargs kill -9 >/dev/null 2>&1" &
 
     echo 'Copying the remote dstat data to local -> /profiling_data'
-      for i in `seq 0 3`; do
-          scp $USER@node$i:"~/${15}_node${i}_dstat_$PY_NAME.csv" profiling_data/
-      done
+    echo 'TO DO'
 
-
+    # pscp $USER@node$i:"~/${15}_node${i}_dstat_$PY_NAME.csv" profiling_data/
 
     echo 'Done'
 

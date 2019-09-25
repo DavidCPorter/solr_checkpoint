@@ -59,7 +59,7 @@ for hostname in node_dict.values():
 
 
 print("...generating inventory file with Ips -> ./inventory_gen.txt\n *** please merge ./inventory file with this output *** ")
-with open('hostfile.j2') as file_:
+with open('inventory_file_template.j2') as file_:
     template = Template(file_.read())
 template = template.render(nodes_dict=nodes_dict,zoo_dict=zoo_dict,load_dict=load_dict,host_user=user)
 
