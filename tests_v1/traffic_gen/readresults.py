@@ -14,8 +14,8 @@ def main(p, t, d, c, q, l):
     for file in files:
         f = open(proj_home+"/tests_v1/profiling_data/proc_results/"+file, 'r')
         results.append(f.readline())
+        f.close()
     total_queries=0
-    f.close()
     for i in results:
         total_queries +=int(i)
 

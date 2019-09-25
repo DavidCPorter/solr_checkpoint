@@ -1,6 +1,6 @@
 #! /bin/bash
 
-PROJECT_HOME='~/projects/solrcloud'
+PROJECT_HOME='/Users/dporter/projects/solrcloud'
 
 function start_experiment() {
 
@@ -18,11 +18,11 @@ function start_experiment() {
     SIZE="${12} ${13}"
     QUERY="${14} ${15}"
     LOOP="${16} ${17}"
-    LOAD_NODES=("128.110.153.246", "128.110.154.30", "128.110.154.35", "128.110.154.16")
-
+    LOAD_NODES=("128.110.153.246" "128.110.154.30" "128.110.154.35" "128.110.154.16")
+    echo $PROJECT_HOME
     echo 'Copying python scripts to remote machine'
-    scp -r $PY_SCRIPT $USER@node3:~/
-    scp $TERMS $USER@node3:~/
+    pscp -l $USER -r -h $PROJECT_HOME/pssh_traffic_node_file $PY_SCRIPT /users/dporte7
+    pscp -l $USER -h $PROJECT_HOME/pssh_traffic_node_file $TERMS /users/dporte7
 
     # each process in the python script will make #THREAD num of connections to a SINGLE solr instance "--host" (for --query direct)
     # parameters for py script running on nodes 32, 33, 34, 35
@@ -53,13 +53,10 @@ function start_experiment() {
           scp $USER@$i:"~/${15}_node${i}_dstat_$PY_NAME.csv" profiling_data/
       done
 
-    else
-
-      MINUS1="$((PROCESSES - 1))"
 
 # LOCAL EXPERIMENT
 # dont use this anymore
-      if [ ${15} = 'local' ]; then
+      # if [ ${15} = 'local' ]; then
       #   echo "***running local experiment****"
       #   for i in $(seq $MINUS1); do
       #     # PARMS will not be used in this case
@@ -70,41 +67,43 @@ function start_experiment() {
       #   python3 $PROJECT_HOME/tests_v1/traffic_gen/traffic_gen.py $PARAMS  --host
       #   echo "finished"
 
-# REMOTE EXPERIMENT WITH X PROCESSES
-# have to DIVIDE the num or processes over 4 load nodes each connecting to one of 32 servers for direct 32 exp
-      else
-        echo "*** running remote experiment ****"
-        # clear script to run python processes
-        echo "#!/bin/bash" > ./remotescript.sh
-        echo "# this file is used to run processes remotely since cloudlab blacklists aggressive ssh" > ./remotescript.sh
+  # REMOTE EXPERIMENT WITH X PROCESSES
+  # have to DIVIDE the num or processes over 4 load nodes each connecting to one of 32 servers for direct 32 exp
+    else
 
-        # append number of $PROCESSES-1 ($MINUS1) to remotescript
-        for i in $(seq $MINUS1); do
-          echo "$i"
-          PARAMS=$(eval 'echo $PAR_'"$(($i % 4))")
-          echo "$PARAMS"
-        	echo "python3 traffic_gen.py $PARAMS --host 10.10.0.$i> /dev/null 2>&1 &" >> ./remotescript.sh
-        done
-        # create params for one process in foreground
-        PARAMS=$(eval 'echo $PAR_'"$(($PROCESSES % 4))")
-        echo "starting $PARAMS --host 10.10.0.$PROCESSES"
-        # run remotescript
-        pscp -h $PROJECT_HOME/pssh_traffic_node_file_3 ./remotescript.sh
-        nohup pssh -h $PROJECT_HOME/pssh_traffic_node_file_3 "cd $(basename $PY_SCRIPT); bash remotescript.sh"&
-        # run foreground process
-        nohup ssh -h $PROJECT_HOME/pssh_traffic_node_file_single "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PARAMS --host 10.10.0.$PROCESSES"
-        wait $!
-        echo "finished"
-      fi
+      MINUS1="$((PROCESSES - 1))"
 
-      wait $!
-      for i in "${LOAD_NODES[@]}"; do
-          scp $USER@$i:~/traffic_gen/http_benchmark_${15}* profiling_data/proc_results
+      echo "*** running remote experiment ****"
+      # clear script to run python processes
+      echo "#!/bin/bash" > ./remotescript.sh
+      echo "# this file is used to run processes remotely since cloudlab blacklists aggressive ssh" > ./remotescript.sh
+
+      # append number of $PROCESSES-1 ($MINUS1) to remotescript
+      for i in $(seq $MINUS1); do
+        echo "$i"
+        PARAMS=$(eval 'echo $PAR_'"$(($i % 4))")
+        echo "$PARAMS"
+      	echo "python3 traffic_gen.py $PARAMS --host 10.10.0.$i> /dev/null 2>&1 &" >> ./remotescript.sh
       done
-      sleep 10
+      # create params for one process in foreground
+      PARAMS=$(eval 'echo $PAR_'"$(($PROCESSES % 4))")
+      echo "starting $PARAMS --host 10.10.0.$PROCESSES"
+      # run remotescript
+      pscp -l $USER -h $PROJECT_HOME/pssh_traffic_node_file_3 ./remotescript.sh /users/$USER/traffic_gen
+      nohup pssh -l $USER -h $PROJECT_HOME/pssh_traffic_node_file_3 "cd $(basename $PY_SCRIPT); bash remotescript.sh"&
+      # run foreground process
+      nohup ssh $USER@128.110.153.246 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PARAMS --host 10.10.0.$PROCESSES"
       wait $!
-      python3 $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $CON $QUERY $LOOP
-    fi
+      echo "finished"
+
+    wait $!
+    for i in "${LOAD_NODES[@]}"; do
+        scp $USER@$i:~/traffic_gen/http_benchmark_${15}* profiling_data/proc_results
+    done
+    sleep 10
+    wait $!
+    python3 $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $CON $QUERY $LOOP
+  fi
 }
 
 function profile_experiment_dstat() {
@@ -135,10 +134,10 @@ function profile_experiment_dstat() {
     echo "q = $QUERY"
     echo "_$USER-"
     echo 'deleting node dstat remote files'
-    nohup pssh -i -h $PROJECT_HOME/pssh_solr_node_file "rm ~/${15}_node*_dstat_$PY_NAME.csv" >/dev/null 2>&1 &
+    nohup pssh -i -l $USER -h $PROJECT_HOME/pssh_solr_node_file "rm ~/${15}_node*_dstat_$PY_NAME.csv" >/dev/null 2>&1 &
     sleep 1
   	echo 'Starting the dstat'
-      nohup pssh -i -h $PROJECT_HOME/pssh_solr_node_file "dstat $DPARAMS --output ${15}_node0_dstat_$PY_NAME.csv &>/dev/null &" >/dev/null 2>&1 &
+      nohup pssh -i -l $USER -h $PROJECT_HOME/pssh_solr_node_file "dstat $DPARAMS --output ${15}_node0_dstat_$PY_NAME.csv &>/dev/null &" >/dev/null 2>&1 &
 
   	echo 'Starting the experiment'
   	 start_experiment $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $CON $SIZE $QUERY $LOOP
@@ -147,7 +146,7 @@ function profile_experiment_dstat() {
 
 
     echo 'Stopping dstat'
-      nohup pssh -i -h $PROJECT_HOME/pssh_solr_node_file "ps aux | grep -i 'dstat*' | awk -F' ' '{print \$2}' | xargs kill -9 >/dev/null 2>&1" &
+      nohup pssh -l $USER -i -h $PROJECT_HOME/pssh_solr_node_file "ps aux | grep -i 'dstat*' | awk -F' ' '{print \$2}' | xargs kill -9 >/dev/null 2>&1" &
 
     echo 'Copying the remote dstat data to local -> /profiling_data'
     echo 'TO DO'
