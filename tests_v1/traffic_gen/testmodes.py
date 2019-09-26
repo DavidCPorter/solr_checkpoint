@@ -35,9 +35,10 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
     # while (time.time() - start) < 19:
         # dt = time.time() - start
         # req_start = time.time()
+        route = urls[random.randint(1,1000)]
         try:
             # if dt > test_param.ramp:
-            conn.request( "GET", urls[random.randint(1,1000)], headers = {'Connection':'keep-alive'})
+            conn.request( "GET", route , headers = {'Connection':'keep-alive'})
             resp = conn.getresponse()
             resp.read()
 
@@ -53,9 +54,9 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
             # i+=1
 
         except Exception as e:
-            logging.debug( "Error while requesting: %s - %s - %s" % (str(i%test_param.max_iters), urls[j%test_param.max_iters], str(e)) )
-            if dt > test_param.ramp:
-                thread_stats.errors[j] += 1
+            logging.debug( "Error while requesting: %s - %s - %s" % (str(j%test_param.max_iters), route, str(e)) )
+            # if dt > test_param.ramp:
+            #     thread_stats.errors[j] += 1
 
     conn.close()
     thread_stats.requests[int( name )] = j-int(name)

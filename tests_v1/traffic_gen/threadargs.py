@@ -18,7 +18,7 @@ def add_pool(main_args):
     return http_pool
 
 def add_conn(main_args):
-    conn = http.client.HTTPConnection(main_args.host,main_args.port,timeout=5)
+    conn = http.client.HTTPConnection(main_args.host,main_args.port,timeout=20)
 
     return conn
 

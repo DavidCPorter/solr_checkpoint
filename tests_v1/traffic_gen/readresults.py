@@ -1,6 +1,7 @@
 import os
 import sys
 from datetime import datetime
+import time
 
 # args = $THREADS $DURATION $CON $QUERY $LOOP $PROCESSES
 
@@ -11,15 +12,18 @@ def main(p, t, d, c, q, l):
     files = os.popen('ls '+proj_home+'/tests_v1/profiling_data/proc_results | grep '+q).read()
     files = files.split('\n')
     files.pop()
+    print(files)
     for file in files:
-        f = open(proj_home+"/tests_v1/profiling_data/proc_results/"+file, 'r')
+        print(file)
+        f = open("/Users/dporter/projects/solrcloud/tests_v1/profiling_data/proc_results/"+file, 'r')
         results.append(f.readline())
+        time.sleep(.5)
         f.close()
     total_queries=0
     for i in results:
         total_queries +=int(i)
 
-    fp = open(proj_home+'/tests_v1/profiling_data/exp_results/'+"query_"+q+"-->  proc_"+p+"threads_"+t+"dur_"+d+":::TIME->"+datetime.today().strftime('%Y-%m-%d-%H:%M:%S'), 'w+')
+    fp = open('/Users/dporter/projects/solrcloud/tests_v1/profiling_data/exp_results/'+"query_"+q+"-->  proc_"+p+"threads_"+t+"dur_"+d+":::TIME->"+datetime.today().strftime('%Y-%m-%d-%H:%M:%S'), 'w+')
 
     fp.write(str(total_queries)+'\n'+p+'\n'+t+'\n'+d+'\n'+q)
     fp.close()

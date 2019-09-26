@@ -83,25 +83,27 @@ function start_experiment() {
         echo "$i"
         PARAMS=$(eval 'echo $PAR_'"$(($i % 4))")
         echo "$PARAMS"
-      	echo "python3 traffic_gen.py $PARAMS --host 10.10.0.$i> /dev/null 2>&1 &" >> ./remotescript.sh
+      	echo "python3 traffic_gen.py $PARAMS --host 10.10.1.$i> /dev/null 2>&1 &" >> ./remotescript.sh
       done
       # create params for one process in foreground
       PARAMS=$(eval 'echo $PAR_'"$(($PROCESSES % 4))")
-      echo "starting $PARAMS --host 10.10.0.$PROCESSES"
+      echo "starting $PARAMS --host 10.10.1.$PROCESSES"
       # run remotescript
       pscp -l $USER -h $PROJECT_HOME/pssh_traffic_node_file_3 ./remotescript.sh /users/$USER/traffic_gen
       nohup pssh -l $USER -h $PROJECT_HOME/pssh_traffic_node_file_3 "cd $(basename $PY_SCRIPT); bash remotescript.sh"&
       # run foreground process
-      nohup ssh $USER@128.110.153.246 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PARAMS --host 10.10.0.$PROCESSES"
+      nohup ssh $USER@128.110.153.246 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PARAMS --host 10.10.1.$PROCESSES"
+      echo "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PARAMS --host 10.10.1.$PROCESSES"
       wait $!
       echo "finished"
 
-    wait $!
+# wait for slow processes to complete
+    sleep 20
     for i in "${LOAD_NODES[@]}"; do
-        scp $USER@$i:~/traffic_gen/http_benchmark_${15}* profiling_data/proc_results
+        scp $USER@$i:~/traffic_gen/http_benchmark_${15}* profiling_data/proc_results &
     done
-    sleep 10
     wait $!
+    sleep 5
     python3 $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $CON $QUERY $LOOP
   fi
 }
