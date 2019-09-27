@@ -69,7 +69,7 @@ def parse_commandline(cl_args):
 
     #just hardcoded a random generating query
     # parser.add_argument( "--query", dest="query", default="summary",
-    #                      help="query string to run on Amazon reviews_rf4" )
+    #                      help="query string to run on Amazon reviews_rf2q" )
 
     main_args = parser.parse_args(cl_args)
     return main_args

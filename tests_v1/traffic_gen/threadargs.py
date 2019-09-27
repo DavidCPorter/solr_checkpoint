@@ -33,7 +33,7 @@ def get_urls(test_param, terms):
             i+=r
             term = terms[i%len(terms)].rstrip()
             field = indexed_fields[i%len(indexed_fields)]
-            q = '/solr/reviews_rf4/select?q='+field+'%3A'+term+'&rows=10'
+            q = '/solr/reviews_rf2q/select?q='+field+'%3A'+term+'&rows=10'
             urls.append("%s%s" % (prefix_url, q))
 
     else:
@@ -44,7 +44,7 @@ def get_urls(test_param, terms):
             i+=r
             term = terms[i%len(terms)].rstrip()
             field = indexed_fields[i%len(indexed_fields)]
-            # q = 'solr/reviews_rf4/select?q='+field+'%3A'+term+'&rows=10'
+            # q = 'solr/reviews_rf2q/select?q='+field+'%3A'+term+'&rows=10'
             urls.append( "/%s/%s/" % (field, term))
 
     return urls

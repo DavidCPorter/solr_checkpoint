@@ -16,7 +16,7 @@
     listen:
       - "stop solr services"
 
-
+# q has been added to issue WARN log level only -> didnt seem to make a big difference
   - name: start solr
     shell: ./solr/bin/solr start -q -c -Dcom.sun.management.jmxremote
     args:
