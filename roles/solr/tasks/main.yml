@@ -10,7 +10,7 @@
   git:
       repo: https://github.com/DavidCPorter/lucene-solr.git
       dest: "{{solr_install_dir}}"
-      version: "{{git_branch_name}}" 
+      version: "{{git_branch_name}}"
       force: yes
   register: solr_git_status
   tags:
@@ -21,19 +21,19 @@
   shell: ant ivy-bootstrap
   args:
     chdir: "{{solr_install_dir}}"
-  when: solr_git_status.changed
+  # when: solr_git_status.changed
 
 - name: Build solr with ant.
   shell: ant compile
   args:
     chdir: '{{solr_install_dir}}'
-  when: solr_git_status.changed
+  # when: solr_git_status.changed
 
 - name: run ant server
   shell: ant server
   args:
     chdir: '{{solr_install_dir}}/solr'
-  when: solr_git_status.changed
+  # when: solr_git_status.changed
 
 - name: remove old solr.in.sh
   shell: rm -f '{{solr_install_dir}}/solr/bin/solr.in.sh'

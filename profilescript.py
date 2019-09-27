@@ -22,7 +22,7 @@ link = '<link xmlns="http://www.geni.net/resources/rspec/3" client_id="link-0"><
 
 interface_ref = '<interface_ref xmlns="http://www.geni.net/resources/rspec/3" client_id="interface-%d"/>\n'
 
-property = '<property xmlns="http://www.geni.net/resources/rspec/3" source_id="interface-%d" dest_id="interface-%d" capacity="10000000"/>\n'
+property = '<property xmlns="http://www.geni.net/resources/rspec/3" source_id="interface-%d" dest_id="interface-%d" />\n'
 
 
 footer =  '<site xmlns="http://www.protogeni.net/resources/rspec/ext/jacks/1" id="undefined"/>\n</link>\n</rspec>'
