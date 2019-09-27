@@ -13,12 +13,12 @@ def main(p, t, d, c, q, l):
     files = files.split('\n')
     files.pop()
     print(files)
+    f=''
     for file in files:
         print(file)
         f = open("/Users/dporter/projects/solrcloud/tests_v1/profiling_data/proc_results/"+file, 'r')
         results.append(f.readline())
-        time.sleep(.5)
-        f.close()
+    f.close()
     total_queries=0
     for i in results:
         total_queries +=int(i)

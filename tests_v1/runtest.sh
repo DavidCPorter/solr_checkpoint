@@ -18,7 +18,7 @@ function start_experiment() {
     SIZE="${12} ${13}"
     QUERY="${14} ${15}"
     LOOP="${16} ${17}"
-    LOAD_NODES=("128.110.153.246" "128.110.154.30" "128.110.154.35" "128.110.154.16")
+    LOAD_NODES=("128.110.153.246" "128.110.154.32" "128.110.154.35" "128.110.153.247")
     echo $PROJECT_HOME
     echo 'Copying python scripts to remote machine'
     pscp -l $USER -r -h $PROJECT_HOME/pssh_traffic_node_file $PY_SCRIPT /users/dporte7
@@ -76,29 +76,32 @@ function start_experiment() {
       echo "*** running remote experiment ****"
       # clear script to run python processes
       echo "#!/bin/bash" > ./remotescript.sh
-      echo "# this file is used to run processes remotely since cloudlab blacklists aggressive ssh" > ./remotescript.sh
+      echo "#!/bin/bash" > ./remotescript_foreground.sh
+      echo "# this file is used to run processes remotely since cloudlab blacklists aggressive ssh" >> ./remotescript.sh
 
-      # append number of $PROCESSES-1 ($MINUS1) to remotescript
+      # each server will run X processes communicating to all X nodes in cluster
       for i in $(seq $MINUS1); do
         echo "$i"
         PARAMS=$(eval 'echo $PAR_'"$(($i % 4))")
         echo "$PARAMS"
-      	echo "python3 traffic_gen.py $PARAMS --host 10.10.1.$i> /dev/null 2>&1 &" >> ./remotescript.sh
+      	echo "python3 traffic_gen.py $PARAMS --host 10.10.1.$(($i % 33)) >/dev/null 2>&1 &" >> ./remotescript.sh
+      	echo "python3 traffic_gen.py $PARAMS --host 10.10.1.$(($i % 33)) &" >> ./remotescript_foreground.sh
       done
-      # create params for one process in foreground
-      PARAMS=$(eval 'echo $PAR_'"$(($PROCESSES % 4))")
-      echo "starting $PARAMS --host 10.10.1.$PROCESSES"
-      # run remotescript
+      #  for foreground the final processes in shell scipt must be synchornized for experiment timing purposes (or we could just have this whole thing wait, but it's better to get output back for a single synch process)
+      echo "python3 traffic_gen.py $PARAMS --host 10.10.1.$(($PROCESSES % 33)) >/dev/null 2>&1 &" >> ./remotescript.sh
+      echo "python3 traffic_gen.py $PARAMS --host 10.10.1.$(($PROCESSES % 33))" >> ./remotescript_foreground.sh
+
+      # run remotescripts on all background nodes
       pscp -l $USER -h $PROJECT_HOME/pssh_traffic_node_file_3 ./remotescript.sh /users/$USER/traffic_gen
+      pscp -l $USER -h $PROJECT_HOME/pssh_traffic_node_file_single ./remotescript_foreground.sh /users/$USER/traffic_gen
       nohup pssh -l $USER -h $PROJECT_HOME/pssh_traffic_node_file_3 "cd $(basename $PY_SCRIPT); bash remotescript.sh"&
-      # run foreground process
-      nohup ssh $USER@128.110.153.246 "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PARAMS --host 10.10.1.$PROCESSES"
-      echo "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PARAMS --host 10.10.1.$PROCESSES"
+      # run foreground processes on foreground node
+      nohup ssh $USER@128.110.153.246 "cd $(basename $PY_SCRIPT); bash remotescript_foreground.sh"
       wait $!
       echo "finished"
 
-# wait for slow processes to complete
-    sleep 20
+# wait for slow processes to complete (prolly not effective)
+    sleep 5
     for i in "${LOAD_NODES[@]}"; do
         scp $USER@$i:~/traffic_gen/http_benchmark_${15}* profiling_data/proc_results &
     done
