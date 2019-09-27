@@ -90,13 +90,13 @@ def size_based_test( test_param, thread_stats, start_flag, stop_flag ):
     #         #add random query here
     #         term = terms[i%len(terms)]
     #         field = indexed_fields[i%len(indexed_fields)]
-    #         q = 'solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
+    #         q = 'solr/reviews_rf4/select?q='+field+'%3A'+term+'&rows=10'
     #         urls.append( "%s%s" % (prefix_url, q))
     # else:
     #     for i in range( test_param.max_iters ):
     #         term = terms[i%len(terms)]
     #         field = indexed_fields[i%len(indexed_fields)]
-    #         q = 'solr/reviews/select?q='+field+'%3A'+term+'&rows=10'
+    #         q = 'solr/reviews_rf4/select?q='+field+'%3A'+term+'&rows=10'
     #         urls.append( "%s%s" % (prefix_url, q))
     # # Wait for start signal
     # with start_flag:

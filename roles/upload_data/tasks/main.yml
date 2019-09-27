@@ -11,14 +11,14 @@
 #     remote_src: yes
 #     src: http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/reviews_Electronics_5.json.gz
 #     dest: '{{data_upload_dir}}'
-#     creates: "{{data_upload_dir}}/reviews_Electronics_5.json"
+#     creates: "{{data_upload_dir}}/reviews_rf4_Electronics_5.json"
 #     extra_opts: --gunzip
 #
 #   tags:
 #     - download_data
 
 - name: download data
-  shell: wget http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/reviews_Electronics_5.json.gz
+  shell: wget http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/reviews_rf4_Electronics_5.json.gz
   args:
     creates: '{{data_upload_dir}}/reviews_Electronics_5.json.gz'
   when: data_download_path_status.stat.exists == False
@@ -35,6 +35,7 @@
 
 # 32 shards and 3 copies
 - name: create collection
+# forgot to change -rf back to 3 when committed to test branch.... this branch has it set to 4 just noting since git will not pick up the change
   shell: ./bin/solr create_collection -c "{{collection_name}}" -s 32 -rf 4 -force
   args:
     chdir: '{{solr_install_dir}}/solr'

@@ -18,7 +18,7 @@
 
 
   - name: start solr
-    shell: ./solr/bin/solr start -c -Dcom.sun.management.jmxremote
+    shell: ./solr/bin/solr start -q -c -Dcom.sun.management.jmxremote
     args:
       chdir: '{{solr_install_dir}}'
     environment:

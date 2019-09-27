@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class DistributedWebServer {
 
-    private static String defaultCollection = "reviews";
+    private static String defaultCollection = "reviews_rf4";
     private static CloudSolrClient instance;
     static {
         CloudSolrClient.Builder builder = new CloudSolrClient.Builder();
