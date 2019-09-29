@@ -27,36 +27,42 @@
   shell: gunzip -f "{{data_upload_dir}}/reviews_Electronics_5.json.gz"
   args:
     creates: '{{data_upload_dir}}/reviews_Electronics_5.json'
+  when: data_download_path_status.stat.exists == False
 
-- name: Check that "{{collection_name}}" exists
-  stat:
-    path:  '{{data_upload_dir}}/{{collection_name}}.txt'
-  register: stat_result
 
 # 32 shards and 3 copies
-- name: create collection
-  shell: ./bin/solr create_collection -c "{{collection_name}}" -s 32 -rf 2 -force
+- name: create collection "{{collection_name}}"
+  shell: ./bin/solr create_collection -c "{{collection_name}}" -s "{{shards}}" -rf "{{replicas}}" -d _default -force
   args:
     chdir: '{{solr_install_dir}}/solr'
     creates: '{{data_upload_dir}}/{{collection_name}}.txt'
-  when: stat_result.stat.exists == False
+  register: command_result
+  ignore-errors: yes
+  tags:
+    - exp_mode
 
 - name: create schema
   script: ../files/schema_create.sh "{{ansible_subnet}}" "{{collection_name}}"
-  # when: stat_result.stat.exists == False
+  when: "'FAILED' not in command_result.stderr"
   tags:
     - schema
+    - exp_mode
+
 
 - name: post data
   shell: ./bin/post -c "{{collection_name}}" "{{data_upload_dir}}/reviews_Electronics_5.json"
   args:
     chdir: '{{solr_install_dir}}/solr'
-  when: stat_result.stat.exists == False
+  when:  "'FAILED' not in command_result.stderr"
+  tags:
+    - exp_mode
 
 
-- name: copy word.txt to node3
+
+- name: copy word.txt to dataServer
   copy:
     src: ../../tests_v1/words.txt
     dest: '{{data_upload_dir}}'
+    when:  "'FAILED' not in command_result.stderr"
   tags:
     - terms

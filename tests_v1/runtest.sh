@@ -14,8 +14,8 @@ function start_experiment() {
     THREADS="$4 $5"
     PROCESSES="$7"
     DURATION="$8 $9"
-    CON="${10} ${11}"
-    SIZE="${12} ${13}"
+    REPLICAS="${10} ${11}"
+    SHARDS="${12} ${13}"
     QUERY="${14} ${15}"
     LOOP="${16} ${17}"
     LOAD_NODES=("128.110.153.246" "128.110.154.32" "128.110.154.35" "128.110.153.247")
@@ -24,15 +24,15 @@ function start_experiment() {
     pscp -l $USER -r -h $PROJECT_HOME/pssh_traffic_node_file $PY_SCRIPT /users/dporte7
     pscp -l $USER -h $PROJECT_HOME/pssh_traffic_node_file $TERMS /users/dporte7
 
-    # each process in the python script will make #THREAD num of connections to a SINGLE solr instance "--host" (for --query direct)
+    # each process in the python script will make #THREAD num of REPLICASnections to a SINGLE solr instance "--host" (for --query direct)
     # parameters for py script running on nodes 32, 33, 34, 35
     # hosts here will either be this local for solrj since solj is running on same node, or a subnet address
     # different ports reflect the number of solrj processes on each node running solrj
     #  otherwise ports will be changed to 8983 since solrcloud httpserver runs there on the network
-    PAR_0="$THREADS $DURATION $CON $QUERY $LOOP --output-dir ./ --port 9111" #host appended below
-    PAR_1="$THREADS $DURATION $CON $QUERY $LOOP --output-dir ./ --port 9222" #host appended below
-    PAR_2="$THREADS $DURATION $CON $QUERY $LOOP --output-dir ./ --port 9333" #host appended below
-    PAR_3="$THREADS $DURATION $CON $QUERY $LOOP --output-dir ./ --port 9444" #host appended below
+    PAR_0="$THREADS $DURATION $REPLICAS $SHARDS $QUERY $LOOP -c 1 --output-dir ./ --port 9111" #host appended below
+    PAR_1="$THREADS $DURATION $REPLICAS $SHARDS $QUERY $LOOP -c 1 --output-dir ./ --port 9222" #host appended below
+    PAR_2="$THREADS $DURATION $REPLICAS $SHARDS $QUERY $LOOP -c 1 --output-dir ./ --port 9333" #host appended below
+    PAR_3="$THREADS $DURATION $REPLICAS $SHARDS $QUERY $LOOP -c 1 --output-dir ./ --port 9444" #host appended below
 
     echo "removing previous output from remote and local host"
     pssh -h $PROJECT_HOME/pssh_traffic_node_file --user $USER "rm ~/traffic_gen/http_benchmark_*"
@@ -68,7 +68,7 @@ function start_experiment() {
       #   echo "finished"
 
   # REMOTE EXPERIMENT WITH X PROCESSES
-  # have to DIVIDE the num or processes over 4 load nodes each connecting to one of 32 servers for direct 32 exp
+  # have to DIVIDE the num or processes over 4 load nodes each REPLICASnecting to one of 32 servers for direct 32 exp
     else
 
       MINUS1="$((PROCESSES - 1))"
@@ -107,7 +107,7 @@ function start_experiment() {
     done
     wait $!
     sleep 5
-    python3 $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $CON $QUERY $LOOP
+    python3 $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $REPLICAS $QUERY $LOOP $SHARDS
   fi
 }
 
@@ -118,7 +118,7 @@ function profile_experiment_dstat() {
     	exit
     fi
 
-    # params = $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $CON $SIZE
+    # params = $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $REPLICAS $SHARDS
 
     USER=$1
   	PY_SCRIPT=$2
@@ -126,8 +126,8 @@ function profile_experiment_dstat() {
     THREADS="$4 $5"
     PROCESSES="$6 $7"
     DURATION="$8 $9"
-    CON="${10} ${11}"
-    SIZE="${12} ${13}"
+    REPLICAS="${10} ${11}"
+    SHARDS="${12} ${13}"
     QUERY="${14} ${15}"
 	  #PARAMETERS=$3
 
@@ -145,7 +145,7 @@ function profile_experiment_dstat() {
       nohup pssh -i -l $USER -h $PROJECT_HOME/pssh_solr_node_file "dstat $DPARAMS --output ${15}_node0_dstat_$PY_NAME.csv &>/dev/null &" >/dev/null 2>&1 &
 
   	echo 'Starting the experiment'
-  	 start_experiment $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $CON $SIZE $QUERY $LOOP
+  	 start_experiment $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $REPLICAS $SHARDS $QUERY $LOOP
 
     # start_experiment returns after requests
 
@@ -164,7 +164,7 @@ function profile_experiment_dstat() {
 
 
 if [ "$#" -lt 3 ]; then
-    echo "Usage: runtest.sh <python scripts dir> <search term list> [ -u | --user ] [ -p | --processes ] [ -t | ---threads ] [ -d | --duration ] [ -c | --connections ]"
+    echo "Usage: runtest.sh <python scripts dir> <search term list> [ -u | --user ] [ -p | --processes ] [ -t | ---threads ] [ -d | --duration ] [ -c | --REPLICASnections ]"
 	exit
 fi
 # initialize to ensure absent params don't mess the local var order up.
@@ -175,8 +175,8 @@ TERMS="x"
 THREADS="x x"
 PROCESSES="x x"
 DURATION="x x"
-CON="x x"
-SIZE="x x"
+REPLICAS="x x" 
+SHARDS="x x"
 QUERY="x x"
 LOOP="x x"
 
@@ -194,12 +194,14 @@ while (( "$#" )); do
       DURATION="--duration $2"
       shift 2
       ;;
-    -c|--connections)
-      CON="--connections $2"
+    -rf|--replicas)
+      REPLICAS="-rf $2"
+      REPLICA_PARAM=$2
       shift 2
       ;;
-    -s|--size)
-      SIZE="--size $2"
+    -s|--shards)
+      SHARDS="--shards $2"
+      SHARD_PARAM=$2
       shift 2
       ;;
     -u|--user)
@@ -237,10 +239,13 @@ TERMS="words.txt"
 
 #PARAMETERS=$3
 
+echo "checking if cores exist for reviews_ $SHARDS $REPLICAS"
+cd ~/projects/solrcloud; ansible-playbook -i inventory post_data.yml --tags exp_mode --extra-vars "replicas=${REPLICA_PARAM} shards=${SHARD_PARAM}"
+wait $!
 echo 'Starting the experiment'
 # start_experiment $USER $PY_SCRIPT
 
-profile_experiment_dstat $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $CON $SIZE $QUERY $LOOP
+profile_experiment_dstat $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $REPLICAS $SHARDS $QUERY $LOOP
 
 #start_experiment $USER $PY_SCRIPT "\"$PARAMETERS\""
 

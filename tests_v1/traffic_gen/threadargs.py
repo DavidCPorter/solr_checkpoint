@@ -22,7 +22,7 @@ def add_conn(main_args):
 
     return conn
 
-def get_urls(test_param, terms):
+def get_urls(test_param, terms, shards, replicas):
     indexed_fields = ["reviewText","summary"]
     prefix_url = "%s" % (test_param.base_url)
     urls = []
@@ -33,7 +33,7 @@ def get_urls(test_param, terms):
             i+=r
             term = terms[i%len(terms)].rstrip()
             field = indexed_fields[i%len(indexed_fields)]
-            q = '/solr/reviews_rf2q/select?q='+field+'%3A'+term+'&rows=10'
+            q = '/solr/reviews_rf'+str(replicas)+'_s'+str(shards)+'/select?q='+field+'%3A'+term+'&rows=10'
             urls.append("%s%s" % (prefix_url, q))
 
     else:

@@ -75,7 +75,7 @@ def main( ):
         # makes copy of thread_args
         ta = get_args(thread_args)
         # preload queries into list
-        urls = get_urls(ta[0], terms)
+        urls = get_urls(ta[0], terms, main_args.shards, main_args.replicas)
         # create http for each thread
         conn = add_conn(main_args)
         # combine arguments
@@ -119,6 +119,9 @@ def main( ):
     thread_stats.duration = time.time() - start
     logging.debug( "Test completed" )
 
+    # wait for slow requests to finish
+    time.sleep(5)
+
     # Join on threads
     main_thread = threading.currentThread()
     for next_thread in threading.enumerate():
@@ -133,7 +136,7 @@ def main( ):
 
     # Save statistics to CSV file
     if main_args.query == 'direct':
-        csv_file = os.path.join( main_args.output_dir, "http_benchmark_direct"+str(random.randint(0,999999))+"_"+str(main_args.host)+".csv" )
+        csv_file = os.path.join( main_args.output_dir, "http_benchmark_direct"+str(random.randint(0,99999999))+"_"+str(main_args.host)+".csv" )
     else:
         csv_file = os.path.join( main_args.output_dir, "http_benchmark_solrj"+str(random.randint(0,999999))+"_"+str(main_args.port)+".csv" )
 # threadargs[4] = return_list

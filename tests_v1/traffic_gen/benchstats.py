@@ -122,7 +122,7 @@ def write_csv( csv_file, web_stats, main_args, return_list=None ):
     # mode = "w"
     # if os.path.isfile( csv_file ):
     #     mode = "a"
-    request_enum_header = "thread_num,url_request,req_start,req_finish,fct\n"
+    # request_enum_header = "thread_num,url_request,req_start,req_finish,fct\n"
 
     body_fmt = "%s - %s,%.2f,%d,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n"
     next_line = body_fmt % ( main_args.threads,
@@ -139,12 +139,11 @@ def write_csv( csv_file, web_stats, main_args, return_list=None ):
                              web_stats.bw,
                            )
 
-    with open( csv_file, 'w' ) as output_file:
-        # output_file.write( header )
-        # output_file.write( next_line )
+    with open( csv_file, 'w+' ) as output_file:
+        output_file.write( header )
+        output_file.write( next_line )
+        # to make reading total requests aka througput easier
         output_file.write("%s" % str(web_stats.tot_requests))
-        # output_file.write( request_enum_header)
-        # for i in range(return_list.qsize()):
-        #     output_file.write(str(return_list.get())[1:-1]+'\n')
+        output_file.write( request_enum_header)
 
     return

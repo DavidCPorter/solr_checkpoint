@@ -5,7 +5,7 @@ import time
 
 # args = $THREADS $DURATION $CON $QUERY $LOOP $PROCESSES
 
-def main(p, t, d, c, q, l):
+def main(p, t, d, rf, q, l, shards):
     proj_home = "~/projects/solrcloud"
     print('RUNNING READRESULTS %s%s%s' % (p, t, d))
     results = []
@@ -17,6 +17,7 @@ def main(p, t, d, c, q, l):
     for file in files:
         print(file)
         f = open("/Users/dporter/projects/solrcloud/tests_v1/profiling_data/proc_results/"+file, 'r')
+        # read first line which is the request total
         results.append(f.readline())
     f.close()
     total_queries=0

@@ -45,6 +45,11 @@ def parse_commandline(cl_args):
     parser.add_argument( "--connections", dest="conns", type=int, default=10,
                          help="Number of connections to use per thread" )
 
+    parser.add_argument( "--shards", dest="shards", type=int, default=4,
+                         help="Number of connections to use per thread" )
+
+    parser.add_argument( "--replicas", dest="replicas", type=int, default=3,
+                         help="Number of connections to use per thread" )
 
     parser.add_argument( "--test-type", dest="test_type", choices=["duration","size"], default="duration",
                          help="Type of test to perform" )
