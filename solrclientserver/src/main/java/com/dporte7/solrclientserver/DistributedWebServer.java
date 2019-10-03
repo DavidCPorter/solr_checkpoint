@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class DistributedWebServer {
 
-    private static String defaultCollection = "reviews_rf2q";
+    private static String defaultCollection = "reviews";
     private static CloudSolrClient instance;
     static {
         CloudSolrClient.Builder builder = new CloudSolrClient.Builder();
@@ -40,13 +40,15 @@ public class DistributedWebServer {
         MultiThreadedServer server1 = new MultiThreadedServer(9111, instance);
         MultiThreadedServer server2 = new MultiThreadedServer(9222, instance);
         MultiThreadedServer server3 = new MultiThreadedServer(9333, instance);
+        MultiThreadedServer server4 = new MultiThreadedServer(9444, instance);
 
         new Thread(server1).start();
         new Thread(server2).start();
         new Thread(server3).start();
+        new Thread(server4).start();
 
         try {
-            Thread.sleep(200 * 1000);
+            Thread.sleep(20000 * 1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -55,7 +57,7 @@ public class DistributedWebServer {
         server1.stop();
         server2.stop();
         server3.stop();
-
+        server4.stop();
     }
 
 }

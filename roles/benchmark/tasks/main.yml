@@ -8,9 +8,9 @@
 # - name: stop dstat
 #   shell: "ps aux | grep -i 'dstat*' | awk -F' ' '{print $2}' | xargs kill -9"
 
-- name: copy solrj source to node3
+- name: copy solrj source to load nodes
   copy:
-    src: /Users/dporter/Desktop/solrcloud-dev/solrclientserver
+    src: /Users/dporter/projects/solrcloud/solrclientserver
     dest: "/users/{{ansible_user}}/"
     owner: '{{ansible_user}}'
   tags:

@@ -11,8 +11,11 @@ import org.apache.solr.client.solrj.SolrRequest;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.solr.common.util.NamedList;
 
 /**
  *
@@ -28,17 +31,21 @@ public class WorkerRunnable implements Runnable {
     private String http_request;
     private BufferedReader bf;
     private BufferedWriter bw;
-
+    private int sample_count;
+    private int iter_counter;
     private InputStream input_stream;
     private OutputStream output;
     private long time;
     private boolean isStopped;
+    //    we should be checking what solr responds with even tho we send default response to client each time.
+    private List solr_response_list;
 
     public WorkerRunnable(boolean isStopped, Socket clientSocket, CloudSolrClient solrAPI, String serverText) {
         this.pySocket = clientSocket;
         this.serverText = serverText;
         this.solrAPI = solrAPI;
         this.isStopped = isStopped;
+        this.iter_counter = 0;
     }
 
     public void run() {
@@ -47,49 +54,71 @@ public class WorkerRunnable implements Runnable {
             input_stream = pySocket.getInputStream();
             output = pySocket.getOutputStream();
             bf = new BufferedReader(new InputStreamReader(input_stream));
-            int counter=0;
-            while (!isStopped){
-                counter+=1;
-                while (!bf.ready()) {
+            while (!bf.ready()){
+            }
+            while (true){
+                if (!readBuffer(output, input_stream)){
+                    return;
                 }
-                readBuffer(counter);
+                if (this.iter_counter == 0){
+                    this.pySocket.setSoTimeout(4000);
+                    this.iter_counter = 1;
+                }
                 writeResponse();
             }
-            output.close();
-            input_stream.close();
         } catch (IOException e) {
+            try {
+                this.pySocket.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
             e.printStackTrace();
         }
     }
-    private void readBuffer(int counter) throws IOException {
+    private boolean readBuffer(OutputStream out, InputStream is) throws IOException {
+
         try{
             String line = null;
             int count = 0;
+            while (!bf.ready()){
+            }
             while (bf.ready()) {
-                if (count == 0) {
+                if (count == 0){
                     line = bf.readLine();
+                    if (line.equalsIgnoreCase("bye")){
+                        this.pySocket.close();
+                        return false;
+                    }
                     http_request = line;
                     callSolrAPI(http_request);
-                    count += 1;
-                    line = this.bf.readLine();
-
+                    count +=1;
+                    line = bf.readLine();
                 }else{
                     line = this.bf.readLine();
+                    if (line.equalsIgnoreCase("bye")){
+                        this.pySocket.close();
+                        return false;
+                    }
                 }
             }
+            return true;
         }
         catch (IOException e) {
+            this.pySocket.close();
             e.printStackTrace();
+            return false;
         }
     }
 
     private void writeResponse() throws IOException {
         try{
-            time = System.currentTimeMillis();
+            // time = System.currentTimeMillis();
             output.write(("HTTP/1.1 200 OK\nContent-Type: application/json;charset=utf-8\nContent-Length:0"+ "\n\n").getBytes());
         }
         catch (IOException e) {
-            e.printStackTrace();
+          this.pySocket.close();
+
+          e.printStackTrace();
         }
     }
 
@@ -97,7 +126,8 @@ public class WorkerRunnable implements Runnable {
     private void callSolrAPI(String query) {
         try {
             String[] query_parsed = query.split("/");
-            doSearch(solrAPI, query_parsed[1] + ':' + query_parsed[2]);
+            String[] col = query_parsed[3].split(" ");
+            doSearch(solrAPI, query_parsed[1] + ':' + query_parsed[2], col[0] );
 
         }
         catch (Exception e) {
@@ -105,19 +135,22 @@ public class WorkerRunnable implements Runnable {
         }
     }
 
-    private void doSearch(CloudSolrClient cloudSolrClient, String q) throws Exception {
+    private void doSearch(CloudSolrClient cloudSolrClient, String q, String collection) throws Exception {
         try {
 
             SolrQuery query = new SolrQuery();
             query.setRows(10);
             query.setQuery(q);
-            QueryResponse response = cloudSolrClient.query("reviews_rf2q", query);
+            QueryResponse response = cloudSolrClient.query(collection, query);
+
+            // SolrDocumentList ret = response.getResults();
+//            System.out.println(ret);
             // SolrDocumentList docs = response.getResults();
             // bw = new BufferedWriter(
             //         new FileWriter("/users/dporte7/output.txt", true)  //Set true for append mode
             // );
             // bw.newLine();
-            // bw.write("#results：" + docs.getNumFound());
+            // bw.write("#results：" + ret.getNumFound());
             // bw.close();
 
         } catch (Exception e) {

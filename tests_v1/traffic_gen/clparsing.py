@@ -5,7 +5,7 @@ import os
 class TestParam( object ):
     def __init__( self, host="", port=0, threads=1, http_pool=None, base_url="", ramp=1,
                   duration=1, conns=1, rand_req=False, max_rand_obj=1, req_dist="", poisson_lam=1.0,
-                  gauss_mean=1.0, gauss_std=1.0, max_iters=1310, loop='closed' ):
+                  gauss_mean=1.0, gauss_std=1.0, max_iters=5000, loop='closed' ):
         self.host         = host
         self.port         = port
         self.threads      = threads
@@ -36,7 +36,7 @@ def parse_commandline(cl_args):
                          help="Web server port number" )
     parser.add_argument( "--duration", dest="duration", type=float, default=20,
                          help="Duration of test in seconds" )
-    parser.add_argument( "--ramp", dest="ramp", type=float, default=3.0,
+    parser.add_argument( "--ramp", dest="ramp", type=float, default=1,
                          help="Ramp time for duration-based testing" )
 
     parser.add_argument( "--size", dest="transfer_size", type=int, default=1024,
@@ -46,10 +46,10 @@ def parse_commandline(cl_args):
                          help="Number of connections to use per thread" )
 
     parser.add_argument( "--shards", dest="shards", type=int, default=4,
-                         help="Number of connections to use per thread" )
+                         help="Number of shards for collection" )
 
     parser.add_argument( "--replicas", dest="replicas", type=int, default=3,
-                         help="Number of connections to use per thread" )
+                         help="Number of replicas for collection" )
 
     parser.add_argument( "--test-type", dest="test_type", choices=["duration","size"], default="duration",
                          help="Type of test to perform" )
@@ -70,6 +70,8 @@ def parse_commandline(cl_args):
                          help="queries made directly to solr http server OR solrJ" )
     parser.add_argument( "--loop", dest="loop", choices=["open", "closed"], default="closed",
                          help="run open or closed loop experiment")
+    parser.add_argument( "--solrnum", dest="clustersize", default="4",
+                        help="number of nodes running solr")
 
 
     #just hardcoded a random generating query

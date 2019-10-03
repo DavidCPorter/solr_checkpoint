@@ -1,4 +1,4 @@
-curl http://$1:8983/solr/$2/schema -X POST -H 'Content-type:application/json' --data-binary '{
+curl http://$1:8983/solr/${2}/schema -X POST -H 'Content-type:application/json' --data-binary '{
     "add-field" : {
         "name":"reviewerID",
         "type":"text_general",

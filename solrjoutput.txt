@@ -1,0 +1,1312 @@
+[1] 22:34:25 [FAILURE] 128.110.153.246 Timed out, Killed by signal 9
+starting Server
+org.apache.solr.client.solrj.impl.CloudSolrClient@8e0379d
+listening for new connections
+listening for new connections
+listening for new connections
+listening for new connections
+accepted connection.9111
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+accepted connection.9333
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+listening for new connections
+accepted connection.9222
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+listening for new connections
+accepted connection.9222
+accepted connection.9111
+listening for new connections
+accepted connection.9111
+listening for new connections
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+accepted connection.9333
+listening for new connections
+accepted connection.9111
+listening for new connections
+listening for new connections
+accepted connection.9444
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+listening for new connections
+listening for new connections
+listening for new connections
+accepted connection.9111
+accepted connection.9222
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+accepted connection.9111
+listening for new connections
+listening for new connections
+accepted connection.9444
+accepted connection.9222
+listening for new connections
+listening for new connections
+accepted connection.9111
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+listening for new connections
+accepted connection.9222
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+listening for new connections
+accepted connection.9222
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+listening for new connections
+listening for new connections
+listening for new connections
+accepted connection.9222
+accepted connection.9333
+accepted connection.9111
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+listening for new connections
+accepted connection.9111
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+listening for new connections
+listening for new connections
+accepted connection.9444
+accepted connection.9222
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+listening for new connections
+accepted connection.9444
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+listening for new connections
+accepted connection.9444
+listening for new connections
+Stderr: ERROR StatusLogger No Log4j 2 configuration file found. Using default configuration (logging only errors to the console), or user programmatically provided configurations. Set system property 'log4j2.debug' to show Log4j 2 internal initialization logging. See https://logging.apache.org/log4j/2.x/manual/configuration.html for instructions on how to configure Log4j 2
+[2] 22:34:25 [FAILURE] 128.110.154.32 Timed out, Killed by signal 9
+starting Server
+org.apache.solr.client.solrj.impl.CloudSolrClient@8e0379d
+listening for new connections
+listening for new connections
+listening for new connections
+listening for new connections
+accepted connection.9333
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+accepted connection.9111
+listening for new connections
+listening for new connections
+accepted connection.9222
+accepted connection.9333
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9111
+listening for new connections
+listening for new connections
+listening for new connections
+listening for new connections
+accepted connection.9222
+accepted connection.9111
+accepted connection.9444
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+listening for new connections
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+accepted connection.9111
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+listening for new connections
+accepted connection.9333
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+listening for new connections
+accepted connection.9333
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+listening for new connections
+listening for new connections
+listening for new connections
+accepted connection.9333
+accepted connection.9444
+accepted connection.9222
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+listening for new connections
+accepted connection.9444
+accepted connection.9333
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+listening for new connections
+accepted connection.9222
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9111
+listening for new connections
+listening for new connections
+listening for new connections
+listening for new connections
+accepted connection.9333
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+Stderr: ERROR StatusLogger No Log4j 2 configuration file found. Using default configuration (logging only errors to the console), or user programmatically provided configurations. Set system property 'log4j2.debug' to show Log4j 2 internal initialization logging. See https://logging.apache.org/log4j/2.x/manual/configuration.html for instructions on how to configure Log4j 2
+[3] 22:34:25 [FAILURE] 128.110.154.35 Timed out, Killed by signal 9
+starting Server
+org.apache.solr.client.solrj.impl.CloudSolrClient@8e0379d
+listening for new connections
+listening for new connections
+listening for new connections
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9333
+listening for new connections
+listening for new connections
+accepted connection.9222
+accepted connection.9111
+accepted connection.9333
+accepted connection.9444
+listening for new connections
+listening for new connections
+accepted connection.9222
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+listening for new connections
+accepted connection.9111
+accepted connection.9444
+listening for new connections
+listening for new connections
+accepted connection.9222
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+listening for new connections
+listening for new connections
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9111
+accepted connection.9333
+accepted connection.9222
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+listening for new connections
+accepted connection.9222
+accepted connection.9333
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+listening for new connections
+listening for new connections
+listening for new connections
+accepted connection.9222
+accepted connection.9444
+accepted connection.9111
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9222
+listening for new connections
+Stderr: ERROR StatusLogger No Log4j 2 configuration file found. Using default configuration (logging only errors to the console), or user programmatically provided configurations. Set system property 'log4j2.debug' to show Log4j 2 internal initialization logging. See https://logging.apache.org/log4j/2.x/manual/configuration.html for instructions on how to configure Log4j 2
+[4] 22:34:26 [FAILURE] 128.110.153.247 Timed out, Killed by signal 9
+starting Server
+org.apache.solr.client.solrj.impl.CloudSolrClient@8e0379d
+listening for new connections
+listening for new connections
+listening for new connections
+listening for new connections
+accepted connection.9222
+accepted connection.9111
+accepted connection.9444
+listening for new connections
+listening for new connections
+accepted connection.9222
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+listening for new connections
+accepted connection.9111
+accepted connection.9444
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+accepted connection.9333
+listening for new connections
+listening for new connections
+accepted connection.9222
+accepted connection.9111
+listening for new connections
+listening for new connections
+listening for new connections
+listening for new connections
+accepted connection.9444
+accepted connection.9222
+accepted connection.9111
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+listening for new connections
+accepted connection.9111
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+accepted connection.9444
+listening for new connections
+listening for new connections
+accepted connection.9111
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+listening for new connections
+accepted connection.9444
+accepted connection.9333
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+listening for new connections
+listening for new connections
+listening for new connections
+accepted connection.9111
+accepted connection.9444
+accepted connection.9333
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+listening for new connections
+accepted connection.9222
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+listening for new connections
+accepted connection.9111
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9444
+listening for new connections
+listening for new connections
+accepted connection.9333
+accepted connection.9444
+listening for new connections
+accepted connection.9111
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+listening for new connections
+listening for new connections
+accepted connection.9222
+accepted connection.9333
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9444
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+listening for new connections
+accepted connection.9444
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+listening for new connections
+accepted connection.9333
+listening for new connections
+accepted connection.9222
+listening for new connections
+listening for new connections
+accepted connection.9222
+listening for new connections
+Stderr: ERROR StatusLogger No Log4j 2 configuration file found. Using default configuration (logging only errors to the console), or user programmatically provided configurations. Set system property 'log4j2.debug' to show Log4j 2 internal initialization logging. See https://logging.apache.org/log4j/2.x/manual/configuration.html for instructions on how to configure Log4j 2

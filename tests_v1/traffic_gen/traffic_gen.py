@@ -67,6 +67,7 @@ def main( ):
     target = size_based_test if main_args.test_type == "size" else duration_based_test
 
     terms = get_terms()
+    fct_list_main = []
 
     # Spawn threads
     for i in range( main_args.threads ):
@@ -75,7 +76,7 @@ def main( ):
         # makes copy of thread_args
         ta = get_args(thread_args)
         # preload queries into list
-        urls = get_urls(ta[0], terms, main_args.shards, main_args.replicas)
+        urls = get_urls(ta[0], terms, main_args.shards, main_args.replicas, main_args.clustersize)
         # create http for each thread
         conn = add_conn(main_args)
         # combine arguments
@@ -84,6 +85,7 @@ def main( ):
         ta.append(start_flag)
         ta.append(stop_flag)
         ta.append(next_name)
+        ta.append(fct_list_main)
         next_thread = threading.Thread( name=next_name,
                                         target=target,
                                         args=tuple(ta)
@@ -129,8 +131,8 @@ def main( ):
             next_thread.join( )
 
     # Calculate statistics
-    print(thread_stats.requests)
-    web_stats = calc_web_stats( thread_stats )
+    print(thread_stats.responses)
+    web_stats = calc_web_stats( main_args, thread_stats )
     # print(web_stats)
     web_stats = convert_units( web_stats )
 
@@ -140,8 +142,9 @@ def main( ):
     else:
         csv_file = os.path.join( main_args.output_dir, "http_benchmark_solrj"+str(random.randint(0,999999))+"_"+str(main_args.port)+".csv" )
 # threadargs[4] = return_list
-    write_csv( csv_file, web_stats, main_args)
+    write_csv( csv_file, web_stats, main_args, fct_list_main)
     logging.debug( "Wrote %s" % (csv_file) )
+
 
     return 0
 

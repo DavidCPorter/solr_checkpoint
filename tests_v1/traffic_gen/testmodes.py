@@ -10,7 +10,7 @@ import numpy as np
 
 
 
-def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_flag, name ):
+def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_flag, name, fct_list ):
     """ Duration-based test to be carried out by each thread """
     sys.stdout.flush()
     j = int( name )
@@ -25,9 +25,10 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
     #     sleep_times = np.random.poisson( lam=test_param.poisson_lam, size=test_param.max_iters )
 
     # [(fct, timestamp), ...]
-    fct_stamps = []
+    # fct_stamps = []
     lat = 0
     responses = 0
+    fct_return = []
 
     # Wait for start signal
     logging.debug( "Waiting for start event %s" % name )
@@ -35,46 +36,55 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
     logging.debug( "Event %s: Starting" , event_start )
     start = time.time()
 
-
+    # wait ramp time
+    while (time.time() - start < test_param.ramp):
+        continue
     # i = 0
     while not stop_flag.is_set():
-    # while (time.time() - start) < 19:
-        # dt = time.time() - start
+
         req_start = time.time()
-        route = urls[random.randint(1,1000)]
+        route = urls[random.randint(1,4990)]
         try:
-            # if dt > test_param.ramp:
             conn.request( "GET", route , headers = {'Connection':'keep-alive'})
             resp = conn.getresponse()
-            resp.read()
-
+            r = resp.read()
             req_finish = time.time()
             fct = req_finish - req_start
-            fct_stamps.append((fct, req_finish))
-            lat += fct
-            # thread_stats.avg_lat[j] += fct
-            # request_list.put((name,urls[i%test_param.max_iters],req_start,req_finish,fct))
-            # thread_stats.avg_lat[j] += time.time() - req_start
+            # log 20% of queries
+            # if responses%5 == 0:
+            fct_return.append(fct)
             responses += 1
             j+=1
-                # thread_stats.byte_count[j] += len( rsp.data )
-            # logging.debug("SUCCESS->"+str(i)+urls[i%test_param.max_iters])
-            # i+=1
 
         except Exception as e:
             logging.debug( "Error while requesting: %s - %s - %s" % (str(j%test_param.max_iters), route, str(e)) )
             # if dt > test_param.ramp:
             #     thread_stats.errors[j] += 1
-
+    if test_param.port != 8983:
+        conn.send(b'bye\n')
     conn.close()
-    thread_stats.requests[int( name )] = j-int(name)
-    thread_stats.responses[int(name)] = responses
-    thread-stats.avg_lat[int(name)] = lat/responses
-    # incorporate later
-    # request_list.append(fct_stamps)
+    fct_return.sort()
+    length = len(fct_return)
+    # get index for 90% tail latency
+    tail_nine_index = int(length/10)
+    # get 95% tail_index
+    tail_nine_five_index = int(length/20)
 
-    # if thread_stats.requests[j] > 0:
-    #     thread_stats.avg_lat[j] = thread_stats.avg_lat[j] / float( thread_stats.requests[j] )
+    median_index = int(length/2)
+
+    # log median latency
+    median = fct_return[median_index]
+    # log 90->100% latency numbers
+    tail_nine_list = fct_return[-tail_nine_index:]
+    # log 95% tail latency
+    tail = fct_return[-tail_nine_five_index]
+
+
+    # throughput in qps
+    thread_stats.responses[int(name)] = responses/test_param.duration
+    thread_stats.requests[int(name)] = tail
+    thread_stats.avg_lat[int(name)] = median
+    fct_list.append((median,tail,tail_nine_list))
     logging.debug( "Exiting" )
 
     return

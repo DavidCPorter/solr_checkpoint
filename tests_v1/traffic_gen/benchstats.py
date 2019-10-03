@@ -41,7 +41,7 @@ class ThreadStats( object ):
 
 
 
-def calc_web_stats( thread_stats ):
+def calc_web_stats( main_args, thread_stats ):
     """ Calculate:
         Average latency per thread
         Minimum latency over all threads
@@ -73,15 +73,15 @@ def calc_web_stats( thread_stats ):
     # Caclulate bandwidth
     bw           = np.divide( tot_bytes, thread_stats.duration    )
     # Calculate total number of requests
-    tot_requests = np.sum( thread_stats.requests )
-    # Calculate total number of responses
-    tot_responses = np.sum( thread_stats.responses )
-    # Calculate number of requests per second
-    req_p_s      = np.divide( float(tot_requests), thread_stats.duration )
+    tot_requests = np.average( thread_stats.requests )
+    # sum across threads of total number of responses per second
+    tot_res_proc = np.sum( thread_stats.responses )
+    # tot_res_proc = qps per processes
+    # tot_res_proc = np.divide(main_args.threads, tot_responses)
     # Calculate total number of errors
     tot_errors   = np.sum( thread_stats.errors )
 
-    web_stats = WebStats( tot_bytes=tot_bytes, tot_requests=tot_requests, tot_responses=tot_responses, tot_errors=tot_errors,
+    web_stats = WebStats( tot_bytes=tot_bytes, tot_requests=tot_requests, tot_responses=tot_res_proc, tot_errors=tot_errors,
                           avg_lat=avg_lat, stddev_lat=stddev_lat, min_lat=min_lat, max_lat=max_lat,
                           duration=thread_stats.duration, bw=bw )
 
@@ -94,7 +94,7 @@ def convert_units( web_stats ):
     bits_p_B = 8
 
     web_stats.tot_bytes /= MB_p_B
-
+    web_stats.tot_requests *= ms_p_s
     web_stats.avg_lat *= ms_p_s
     web_stats.min_lat *= ms_p_s
     web_stats.max_lat *= ms_p_s
@@ -103,7 +103,7 @@ def convert_units( web_stats ):
 
     return web_stats
 
-def write_csv( csv_file, web_stats, main_args, return_list=None ):
+def write_csv( csv_file, web_stats, main_args, fct_list=None ):
     """ Generate CSV file """
     hdr_fmt = "%s - %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n"
     header = hdr_fmt %  ( "Threads",
@@ -140,10 +140,14 @@ def write_csv( csv_file, web_stats, main_args, return_list=None ):
                            )
 
     with open( csv_file, 'w+' ) as output_file:
-        output_file.write( header )
-        output_file.write( next_line )
         # to make reading total requests aka througput easier
-        output_file.write("%s" % str(web_stats.tot_requests))
-        output_file.write( request_enum_header)
-
+        output_file.write('QPS:\n')
+        output_file.write("%s" % str(web_stats.tot_responses)+'\n')
+        output_file.write('Median Latency:\n')
+        output_file.write("%s" % str(web_stats.avg_lat)+'\n')
+        output_file.write('95% Tail Latency:\n')
+        output_file.write("%s" % str(web_stats.tot_requests)+'\n\n')
+        output_file.write('(median for each thread, 95% lat for each thread, lists of fct 90%->100% tail on 20% of results):\n')
+        for i in fct_list:
+            output_file.write(str(i)+'\n')
     return

@@ -29,6 +29,12 @@
     creates: '{{data_upload_dir}}/reviews_Electronics_5.json'
   when: data_download_path_status.stat.exists == False
 
+- name: check if schema exists first
+  script: ../files/schema_check.sh "{{ansible_subnet}}" "{{collection_name}}"
+  register: check_result
+  tags:
+    - schema
+    - exp_mode
 
 # 32 shards and 3 copies
 - name: create collection "{{collection_name}}"
@@ -37,13 +43,14 @@
     chdir: '{{solr_install_dir}}/solr'
     creates: '{{data_upload_dir}}/{{collection_name}}.txt'
   register: command_result
-  ignore-errors: yes
+  ignore_errors: yes
+  when: "'Error 404 Not Found' in check_result.stdout"
   tags:
     - exp_mode
 
 - name: create schema
   script: ../files/schema_create.sh "{{ansible_subnet}}" "{{collection_name}}"
-  when: "'FAILED' not in command_result.stderr"
+  when: "'Error 404 Not Found' in check_result.stdout"
   tags:
     - schema
     - exp_mode
@@ -53,7 +60,7 @@
   shell: ./bin/post -c "{{collection_name}}" "{{data_upload_dir}}/reviews_Electronics_5.json"
   args:
     chdir: '{{solr_install_dir}}/solr'
-  when:  "'FAILED' not in command_result.stderr"
+  when: "'Error 404 Not Found' in check_result.stdout"
   tags:
     - exp_mode
 
@@ -63,6 +70,6 @@
   copy:
     src: ../../tests_v1/words.txt
     dest: '{{data_upload_dir}}'
-    when:  "'FAILED' not in command_result.stderr"
+    when: data_download_path_status.stat.exists == False
   tags:
     - terms
