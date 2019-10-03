@@ -24,7 +24,7 @@ def display_chart(clustersize,query):
     #     print(files)
 
     # for f in files:
-    df = pd.read_csv('/Users/dporter/projects/solrcloud/chart/totals/total_'+str(clustersize)+query+'.csv')
+    df = pd.read_csv('/Users/dporter/projects/solrcloud/chart/totals/total_'+str(clustersize)+query+'_18:38:43-2019-10-03-.csv')
     fig1 = px.line(df, x = 'parallel_requests', y = 'QPS', color='rfshards',title=str(clustersize)+" solr nodes using loadbalancer_type->"+query)
     fig2 = px.line(df, x = 'parallel_requests', y = 'tail_lat', color='rfshards',title=str(clustersize)+" solr nodes using loadbalancer_type->"+query)
     fig1.show()
@@ -35,5 +35,5 @@ def display_chart(clustersize,query):
 
 if __name__ == "__main__":
     sys.exit(
-    display_chart(32,'direct')
+    display_chart(32,'solrj')
     )

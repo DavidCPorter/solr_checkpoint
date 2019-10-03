@@ -15,6 +15,7 @@ def main(clustersize,query):
     dirs = os.popen('ls '+proj_home+'/tests_v1/profiling_data/exp_results | grep clustersize'+str(clustersize)).read()
     dirs = dirs.split('\n')
     dirs.pop()
+    timestamp = datetime.today().strftime('%H:%M:%S-%Y-%m-%d-')
     try:
         os.makedirs('/Users/dporter/projects/solrcloud/chart/totals')
     except FileExistsError:
@@ -23,7 +24,7 @@ def main(clustersize,query):
         pass
 
 # this is for total file
-    fm = open('/Users/dporter/projects/solrcloud/chart/totals/total_'+str(clustersize)+query+'.csv', "w+")
+    fm = open('/Users/dporter/projects/solrcloud/chart/totals/total_'+str(clustersize)+query+'_'+timestamp+'.csv', "w+")
     fm.write('parallel_requests,QPS,median_lat,tail_lat,clustersize,query,rfshards\n')
 
     for d in dirs:
@@ -42,7 +43,7 @@ def main(clustersize,query):
 
 
         # add table headers
-        fp = open('/Users/dporter/projects/solrcloud/chart/'+d+'/query'+query+'/'+d+'query'+query+'_chartdata.csv', "a+")
+        fp = open('/Users/dporter/projects/solrcloud/chart/'+d+'/query'+query+'/'+d+'query'+query+'_chartdata_'+timestamp+'.csv', "a+")
         fp.write('parallel_requests,QPS,median_lat,tail_lat,clustersize,query,rfshards\n')
         fp.close()
 
@@ -52,10 +53,10 @@ def main(clustersize,query):
             f = open("/Users/dporter/projects/solrcloud/tests_v1/profiling_data/exp_results/"+d+'/'+exp_output, 'r')
             data = f.readline()
             f.close()
-            fp = open('/Users/dporter/projects/solrcloud/chart/'+d+'/query'+query+'/'+d+'query'+query+'_chartdata.csv', "a+")
+            fp = open('/Users/dporter/projects/solrcloud/chart/'+d+'/query'+query+'/'+d+'query'+query+'_chartdata_'+timestamp+'.csv', "a+")
             fp.write(data+','+str(clustersize)+','+query+','+d[:8]+'\n')
             fp.close()
-            fm = open('/Users/dporter/projects/solrcloud/chart/totals/total_'+str(clustersize)+query+'.csv', "a+")
+            fm = open('/Users/dporter/projects/solrcloud/chart/totals/total_'+str(clustersize)+query+'_'+timestamp+'.csv', "a+")
             fm.write(data+','+str(clustersize)+','+query+','+d[:8]+'\n')
             fm.close()
 
@@ -75,5 +76,5 @@ if __name__ == "__main__":
     # shards = sys.argv[13]
     # solrnum = sys.argv[15]
     sys.exit(
-    main(32,'direct')
+    main(32,'solrj')
     )
