@@ -37,8 +37,13 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
     start = time.time()
 
     # wait ramp time
-    while (time.time() - start < test_param.ramp):
-        continue
+    # while (time.time() - start < test_param.ramp):
+    #     route = urls[random.randint(1,4990)]
+    #     print(route)
+    #     conn.request( "GET", route , headers = {'Connection':'keep-alive'})
+    #     resp = conn.getresponse()
+    #     r = resp.read()
+    #     continue
     # i = 0
     while not stop_flag.is_set():
 
