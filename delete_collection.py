@@ -6,7 +6,7 @@ import json
 
 
 def add_conn():
-    conn = http.client.HTTPConnection("128.110.154.12",8983,timeout=5)
+    conn = http.client.HTTPConnection("128.110.154.12",8983,timeout=10)
     return conn
 
 

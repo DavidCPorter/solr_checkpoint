@@ -42,7 +42,7 @@ function start_experiment() {
     echo "removing previous output from remote and local host"
     pssh -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file --user $USER "rm ~/traffic_gen/http_benchmark_*"
     rm $PROJECT_HOME/tests_v1/profiling_data/proc_results/http_benchmark_*
-    MINUS1="$((PROCESSES - 1))"
+    # MINUS1="$((PROCESSES - 1))"
 
 
 ########## EXPERIMENT LOOPS #################
@@ -53,13 +53,14 @@ function start_experiment() {
       echo "#!/bin/bash" > ./remotescript_foreground.sh
       echo "# this file is used to run processes remotely since cloudlab blacklists aggressive ssh" >> ./remotescript.sh
       # this will allocate the processes connections accross the ports open for each solr instance on server 1
-      for i in $(seq $MINUS1); do
-        echo "$i"
-        # take care of the port in traffic_gen.py
-        echo "python3 traffic_gen.py $SINGLE_PAR --port $(($i % $INSTANCES)) >/dev/null 2>&1 &" >> ./remotescript.sh
-        echo "python3 traffic_gen.py $SINGLE_PAR --port $(($i % $INSTANCES)) &" >> ./remotescript_foreground.sh
-      done
+      # for i in $(seq $MINUS1); do
+      #   echo "$i"
+      #   # take care of the port in traffic_gen.py
+      #   echo "python3 traffic_gen.py $SINGLE_PAR --port $(($i % $INSTANCES)) >/dev/null 2>&1 &" >> ./remotescript.sh
+      #   echo "python3 traffic_gen.py $SINGLE_PAR --port $(($i % $INSTANCES)) &" >> ./remotescript_foreground.sh
+      # done
       echo "python3 traffic_gen.py $SINGLE_PAR --port $(($PROCESSES % $INSTANCES)) >/dev/null 2>&1 &" >> ./remotescript.sh
+      # see if changing this will affect solrj
       echo "python3 traffic_gen.py $SINGLE_PAR --port $(($PROCESSES % $INSTANCES)) " >> ./remotescript_foreground.sh
       # run remotescripts on all background nodes
       pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_3 ./remotescript.sh /users/$USER/traffic_gen
@@ -81,78 +82,10 @@ function start_experiment() {
       DATE=$(date '+%Y-%m-%d_%H:%M:%S')
       # for reference
       zip -r ${DATE}_query${15}_rf${11}_s${13}_clustersize${19}_threads${5}_proc${7}.zip profiling_data/proc_results
-
-
-# SINGLE PROCESS
     else
-        if [ $PROCESSES = '1' ]; then
-          echo "starting a single process experiment"
-          pssh -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_single --user $USER "cd $(basename $PY_SCRIPT); python3 traffic_gen.py $PAR_0"
-          wait $!
-          echo "finished"
-          # do something better later cuz pscp is terrible
-          # for i in "${LOAD_NODES[@]}"; do
-          #     scp $USER@$i:"~/${15}_node${i}_dstat_$PY_NAME.csv" profiling_data/
-          # done
+      echo "ERROR -> invalid solrnum"
 
 
-# LOCAL EXPERIMENT
-# dont use this anymore
-      # if [ ${15} = 'local' ]; then
-      #   echo "***running local experiment****"
-      #   for i in $(seq $MINUS1); do
-      #     # PARMS will not be used in this case
-      #     PARAMS=$(eval 'echo $PAR_'"$(($i % 4))")
-      #   	python3 $PROJECT_HOME/tests_v1/traffic_gen/traffic_gen.py $PARAMS --host >/dev/null 2>&1 &
-      #   done
-      #   echo "starting"
-      #   python3 $PROJECT_HOME/tests_v1/traffic_gen/traffic_gen.py $PARAMS  --host
-      #   echo "finished"
-
-  # REMOTE EXPERIMENT WITH X PROCESSES
-  # have to DIVIDE the num or processes over 4 load nodes each REPLICASnecting to one of 32 servers for direct 32 exp
-        else
-
-          echo "*** running remote experiment ****"
-          # clear script to run python processes
-          echo "#!/bin/bash" > ./remotescript.sh
-          echo "#!/bin/bash" > ./remotescript_foreground.sh
-          echo "# this file is used to run processes remotely since cloudlab blacklists aggressive ssh" >> ./remotescript.sh
-
-          # each server will run X processes communicating to all X nodes in cluster
-          for i in $(seq $MINUS1); do
-            echo "$i"
-            PARAMS=$(eval 'echo $PAR_'"$(($i % 4))")
-            echo "$PARAMS"
-          	echo "python3 traffic_gen.py $PARAMS --host 10.10.1.$(($i % (${19})+1)) >/dev/null 2>&1 &" >> ./remotescript.sh
-          	echo "python3 traffic_gen.py $PARAMS --host 10.10.1.$(($i % (${19})+1)) &" >> ./remotescript_foreground.sh
-          done
-          #  for foreground the final processes in shell scipt must be synchornized for experiment timing purposes (or we could just have this whole thing wait, but it's better to get output back for a single synch process)
-    # ${19}+1 the plus one is because arg 19 is num of nodes, and the nodes start at 1
-          echo "python3 traffic_gen.py $PARAMS --host 10.10.1.$(($PROCESSES % (${19})+1)) >/dev/null 2>&1 &" >> ./remotescript.sh
-          echo "python3 traffic_gen.py $PARAMS --host 10.10.1.$(($PROCESSES % (${19})+1))" >> ./remotescript_foreground.sh
-
-          # run remotescripts on all background nodes
-          pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_3 ./remotescript.sh /users/$USER/traffic_gen
-          pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_single ./remotescript_foreground.sh /users/$USER/traffic_gen
-          nohup pssh -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_3 "cd $(basename $PY_SCRIPT); bash remotescript.sh"&
-          # run foreground processes on foreground node
-          nohup ssh $USER@128.110.153.246 "cd $(basename $PY_SCRIPT); bash remotescript_foreground.sh"
-          wait $!
-          echo "finished"
-
-    # wait for slow processes to complete (prolly not effective)
-        sleep 5
-        for i in "${LOAD_NODES[@]}"; do
-            scp $USER@$i:~/traffic_gen/http_benchmark_${15}* profiling_data/proc_results &
-        done
-        wait $!
-        sleep 5
-        python3 $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $REPLICAS $QUERY $LOOP $SHARDS $SOLRNUM
-        DATE=$(date '+%Y-%m-%d_%H:%M:%S')
-        # for reference
-        zip -r ${DATE}_query${15}_rf${11}_s${13}_clustersize${19}_threads${5}_proc${7}.zip profiling_data/proc_results
-        fi
   fi
 }
 

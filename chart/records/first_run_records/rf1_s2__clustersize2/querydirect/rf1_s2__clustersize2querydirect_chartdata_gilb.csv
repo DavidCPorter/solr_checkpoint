@@ -1,0 +1,7 @@
+parallel_requests,QPS,median_lat,tail_lat,clustersize,query,rfshards
+88,4702.5,14,31,2,direct,rf1_s2__
+128,4727.7,22,80,2,direct,rf1_s2__
+8,1612.6,3,6,2,direct,rf1_s2__
+168,4816.7,29,90,2,direct,rf1_s2__
+208,4673.2,37,104,2,direct,rf1_s2__
+48,4604.1,7,15,2,direct,rf1_s2__

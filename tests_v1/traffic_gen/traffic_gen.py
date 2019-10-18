@@ -25,19 +25,18 @@ def main( ):
     print(sys.argv[1:])
     main_args = parse_commandline(sys.argv[1:])
     if main_args.query == 'direct':
-        if int(main_args.clustersize) > 1:
-            main_args.port = 8983
-        elif (int(main_args.port) == 0 ):
-            main_args.port = 8983
-        else:
-            main_args.port = 9990
-
-
-    elif main_args.query == 'direct' and int(main_args.clustersize) > 1:
+        # if int(main_args.clustersize) > 1:
         main_args.port = 8983
+        # elif (int(main_args.port) == 0 ):
+        #     main_args.port = 8983
+        # else:
+        #     main_args.port = 9990
+
 
     elif main_args.query == 'solrj':
         main_args.host = '127.0.0.1'
+        if int(main_args.clustersize) == 1:
+            main_args.port = 9111
 
     else:
         # for single server mode host and ports are good

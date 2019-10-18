@@ -1,0 +1,4 @@
+# playbook
+- hosts: zookeeperNodes, thirtyNode
+  roles:
+    - solr

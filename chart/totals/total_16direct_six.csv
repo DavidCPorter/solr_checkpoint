@@ -1,0 +1,17 @@
+parallel_requests,QPS,median_lat,tail_lat,clustersize,query,rfshards
+704,147233.5,3,22,16,direct,rf16_s1_
+896,147293.0,4,31,16,direct,rf16_s1_
+1088,144284.9,5,40,16,direct,rf16_s1_
+1280,147020.5,6,51,16,direct,rf16_s1_
+1472,110729.7,16,53,16,direct,rf16_s1_
+128,73272.6,1,4,16,direct,rf16_s1_
+320,124012.9,2,8,16,direct,rf16_s1_
+512,145047.8,3,13,16,direct,rf16_s1_
+704,141551.0,4,23,16,direct,rf32_s1_
+896,142420.2,4,32,16,direct,rf32_s1_
+1088,142008.9,5,42,16,direct,rf32_s1_
+1280,141906.4,6,53,16,direct,rf32_s1_
+1472,133827.6,8,61,16,direct,rf32_s1_
+128,76190.6,1,3,16,direct,rf32_s1_
+320,120943.7,2,8,16,direct,rf32_s1_
+512,139588.9,3,14,16,direct,rf32_s1_

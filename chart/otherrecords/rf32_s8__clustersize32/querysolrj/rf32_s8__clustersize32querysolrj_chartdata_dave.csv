@@ -1,0 +1,7 @@
+parallel_requests,QPS,median_lat,tail_lat,clustersize,query,rfshards
+128,5336.2,9,132,32,solrj,rf32_s8_
+256,7142.5,11,159,32,solrj,rf32_s8_
+384,8126.5,14,192,32,solrj,rf32_s8_
+512,8993.5,18,224,32,solrj,rf32_s8_
+640,9592.4,28,252,32,solrj,rf32_s8_
+768,10215.4,40,277,32,solrj,rf32_s8_

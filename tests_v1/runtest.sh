@@ -19,7 +19,7 @@ function start_experiment() {
     QUERY="${14} ${15}"
     LOOP="${16} ${17}"
     SOLRNUM="${18} ${19}"
-    LOAD_NODES=("128.110.153.246" "128.110.154.32" "128.110.154.35" "128.110.153.247")
+    LOAD_NODES=("128.110.153.246" "128.110.154.32" "128.110.154.35" "128.110.153.247" "128.110.154.21" "128.110.154.4")
     echo $PROJECT_HOME
     echo 'Copying python scripts to remote machine'
     pscp -l $USER -r -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file $PY_SCRIPT /users/dporte7
@@ -142,7 +142,7 @@ function start_experiment() {
     # wait for slow processes to complete (prolly not effective)
         sleep 5
         for i in "${LOAD_NODES[@]}"; do
-            scp $USER@$i:~/traffic_gen/http_benchmark_${15}* profiling_data/proc_results &
+            scp $USER@$i:~/traffic_gen/http_benchmark_${15}* $PROJECT_HOME/tests_v1/profiling_data/proc_results &
         done
         wait $!
         sleep 5

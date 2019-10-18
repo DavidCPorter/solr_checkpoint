@@ -143,8 +143,7 @@ public class WorkerRunnable implements Runnable {
             query.setQuery(q);
             QueryResponse response = cloudSolrClient.query(collection, query);
 
-            // SolrDocumentList ret = response.getResults();
-//            System.out.println(ret);
+            SolrDocumentList ret = response.getResults();
             // SolrDocumentList docs = response.getResults();
             // bw = new BufferedWriter(
             //         new FileWriter("/users/dporte7/output.txt", true)  //Set true for append mode
