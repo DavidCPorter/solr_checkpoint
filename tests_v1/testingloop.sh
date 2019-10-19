@@ -1,102 +1,121 @@
 #!/bin/bash
 
-python3 /Users/dporter/projects/solrcloud/delete_collection.py
-sleep 8
-source /Users/dporter/projects/solrcloud/utils.sh
 
+if [ "$#" -lt 2 ]; then
+    echo "Usage: scale.sh [ size1 size2 size3 ... ] (default 32)"
+	exit
+fi
+
+# load sugar
+source /Users/dporter/projects/solrcloud/utils.sh
 shopt -s expand_aliases
 
-play zoo_configure.yml --tags zoo_stop
-wait $!
+# for 8 or less solr nodes
+LOADSIZE=8
 
-sleep 5
-play solr_configure.yml --tags solr_stop
-wait $!
+delete_collections
+sleep 8
 
-sleep 5
-#
-cd /Users/dporter/projects/solrcloud/tests_v1;cp -rf profiling_data/exp_results ~/exp_results/$(date '+%Y-%m-%d_%H:%M');rm -rf profiling_data/exp_results/*
+############
 
-cd /Users/dporter/projects/solrcloud/tests_v1;cp -rf *.zip ~/exp_results/$(date '+%Y-%m-%d_%H:%M');rm -rf *.zip
+# ARCHIVE PREVIOUS EXPs
+archive_prev
+archive_fcts
 
+############  BEGIN EXP  ###################
 
-# outer loop iterates through 2,4,8,16,32
-# next loop iterates shards 1,2,4
-# inner most loop iterates threads 2,4,6 ... 12
+SHARDS=( 1 2 4 )
+T1=1
+STEP=2
+TN=24
 
-for j in `seq 3 5`; do
-  SERVERS=$((2**$j))
+# Outer loop is servernode size, next loop is for shards and exp types, inner loops for threads
+# required since changing any shard, replica, or SERVERNODE size requires a full reindex.
+# deleting previous collections is also required since disk space is limited.
+# economical insofar as if solrj and direct is requested then it will not need to reindex between those.
+# - also, only restart zookeeper and solrcloud after completing all exp loops for servernode size.
 
-  if [ $j == "5" ]; then
-    SERVERS=30
-  fi
+for SERVERNODE in "$@"; do
+  ###### restart zoo and solr ######
+  play zoo_configure.yml --tags zoo_stop
+  wait $!
+  sleep 5
+
+  play solr_configure.yml --tags solr_stop
+  wait $!
+  sleep 5
+
   killsolrj
   wait $1
   sleep 4
+
   play zoo_configure.yml --tags zoo_start
   wait $!
   sleep 5
-  play solr_configure_$SERVERS.yml --tags solr_start
+  play solr_configure_$SERVERNODE.yml --tags solr_start
   wait $!
   sleep 5
+
   runsolrj
   wait $!
   sleep 5
+  ######### DONE ##############
 
-  SHARDS=1
 
 
-  # s*r == SERVERS
-  # constraint -> shards remain 1,2,4
+  LOADHOSTS=ssh_files/pssh_traffic_node_file_8
 
-  for i in `seq 5 5 45`; do
-    cd ~/projects/solrcloud/tests_v1; bash runtest_6loads.sh traffic_gen words.txt --user dporte7 -rf $(($SERVERS)) -s $SHARDS -t ${i} -d 10 -p $SERVERS --solrnum $SERVERS --query direct --loop open
+  # constraint -> shards are 1, 2, or 4
+
+  for SHARD in $SHARDS; do
+    ######## EXP LOOP = r*s = 2(num of SERVERNODES) ##########
+
+    # no fractional divison
+    if [[ $SHARD -eq 4 ]] && [[ $SERVERNODE = '1' ]];then
+      continue
+    fi
+
+    RF=$(((2*$SERVERNODE)/$SHARD))
+
+    for t in `seq $T1 $STEP $TN`; do
+      cd ~/projects/solrcloud/tests_v1; bash runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t ${t} -d 10 -p $SERVERNODE --solrnum $SERVERNODE --query direct --loop open
+      wait $!
+      cd ~/projects/solrcloud;pssh -l dporte7 -h $LOADHOSTS "echo ''>traffic_gen/traffic_gen.log"
+      sleep 2
+    done
+    cd ~/projects/solrcloud;pssh -l dporte7 -h $LOADHOSTS "echo ''>/users/dporte7/solrclientserver/solrjoutput.txt"
+    sleep 2
+    python3 /Users/dporter/projects/solrcloud/delete_collection.py
     wait $!
-    cd ~/projects/solrcloud;pssh -l dporte7 -h ssh_files/pssh_traffic_node_file_6 "echo ''>traffic_gen/traffic_gen.log"
     sleep 8
-  done
-  cd ~/projects/solrcloud;pssh -l dporte7 -h ssh_files/pssh_traffic_node_file_6 "echo ''>/users/dporte7/solrclientserver/solrjoutput.txt"
-  sleep 2
+    clearout
 
-  python3 /Users/dporter/projects/solrcloud/delete_collection.py
-  wait $!
-  sleep 15
-  clearout
+    ######## END ##########
 
 
-  # s*r == SERVERS*2
-  # constraint -> shards remain 1,2,4
-  for i in `seq 5 5 45`; do
-    cd ~/projects/solrcloud/tests_v1; bash runtest_6loads.sh traffic_gen words.txt --user dporte7 -rf $((2*$SERVERS)) -s $SHARDS -t ${i} -d 10 -p $SERVERS --solrnum $SERVERS --query direct --loop open
+
+    ######## EXP LOOP = r*s = 1(num of SERVERNODES) ##########
+
+    if [[ $SHARD -eq 4 ]] && ($SERVERNODE = '1' || $SERVERNODE = '2') ]] ;then
+      continue
+    fi
+
+    RF=$(($SERVERNODE/$SHARD))
+
+    for t in `seq $T1 $STEP $TN`; do
+      cd ~/projects/solrcloud/tests_v1; bash runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t ${t} -d 10 -p $SERVERNODE --solrnum $SERVERNODE --query direct --loop open
+      wait $!
+      cd ~/projects/solrcloud;pssh -l dporte7 -h $LOADHOSTS "echo ''>traffic_gen/traffic_gen.log"
+      sleep 2
+    done
+
+    cd ~/projects/solrcloud;pssh -l dporte7 -h $LOADHOSTS "echo ''>/users/dporte7/solrclientserver/solrjoutput.txt"
+    sleep 2
+    python3 /Users/dporter/projects/solrcloud/delete_collection.py
     wait $!
-    cd ~/projects/solrcloud;pssh -l dporte7 -h ssh_files/pssh_traffic_node_file_6 "echo ''>traffic_gen/traffic_gen.log"
     sleep 8
+    clearout
+    ######## END ##########
+
   done
-  cd ~/projects/solrcloud;pssh -l dporte7 -h ssh_files/pssh_traffic_node_file_6 "echo ''>/users/dporte7/solrclientserver/solrjoutput.txt"
-  sleep 2
-
-  clearout
-
-  # for i in `seq 12 3 24`; do
-  #   cd ~/projects/solrcloud/tests_v1; bash runtest_6loads.sh traffic_gen words.txt --user dporte7 -rf $((2*$SERVERS/$SHARDS)) -s $SHARDS -t ${i} -d 10 -p $SERVERS --solrnum $SERVERS --query solrj --loop open
-  #   wait $!
-  #   cd ~/projects/solrcloud;pssh -l dporte7 -h ssh_files/pssh_traffic_node_file "echo ''>traffic_gen/traffic_gen.log"
-  #   sleep 8
-  # done
-  # sleep 8
-  # cd ~/projects/solrcloud;pssh -l dporte7 -h ssh_files/pssh_traffic_node_file "echo ''>/users/dporte7/solrclientserver/solrjoutput.txt"
-
-  python3 /Users/dporter/projects/solrcloud/delete_collection.py
-  wait $!
-  sleep 15
-  clearout
-
-  play zoo_configure.yml --tags zoo_stop
-  wait $!
-
-  sleep 10
-  play solr_configure_$SERVERS.yml --tags solr_stop
-  #
-  wait $!
-  sleep 10
 done

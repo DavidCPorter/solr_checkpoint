@@ -16,3 +16,6 @@ alias viewout="cd ~/projects/solrcloud/tests_v1; tail -n 1000 nohup.out"
 alias checksolrj='cd ~/projects/solrcloud;pssh -P -i -h ssh_files/pssh_traffic_node_file -l dporte7 $CHECKARGS'
 export CHECKARGS="ps aux | grep -i solrclientserver"
 alias prime="cd /Users/dporter/projects/solrcloud/tests_v1;cp -rf profiling_data/exp_results ~/exp_results/$(date '+%Y-%m-%d_%H:%M');rm -rf profiling_data/exp_results/*;cd /Users/dporter/projects/solrcloud/tests_v1;cp -rf *.zip ~/exp_results/$(date '+%Y-%m-%d_%H:%M');rm -rf *.zip"
+alias delete_collections="python3 /Users/dporter/projects/solrcloud/delete_collection.py"
+alias archive_prev="cd /Users/dporter/projects/solrcloud/tests_v1;cp -rf profiling_data/exp_results ~/exp_results/$(date '+%Y-%m-%d_%H:%M');rm -rf profiling_data/exp_results/*"
+alias archive_fcts="cd /Users/dporter/projects/solrcloud/tests_v1;cp -rf *.zip ~/exp_results/$(date '+%Y-%m-%d_%H:%M');rm -rf *.zip"
