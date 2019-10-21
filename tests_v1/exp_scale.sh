@@ -61,7 +61,7 @@ archive_fcts
 SHARDS=( 1 2 4 )
 T1=1
 STEP=2
-TN=24
+TN=10
 
 # Outer loop is servernode size, next loop is for shards and exp types, inner loops for threads
 # required since changing any shard, replica, or SERVERNODE size requires a full reindex.

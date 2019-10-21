@@ -6,7 +6,7 @@ import gzip
 
 # args = $THREADS $DURATION $CON $QUERY $LOOP $PROCESSES
 
-def main(p, t, d, rf, q, l, shards, solrnum):
+def main(p, t, d, rf, q, l, shards, solrnum, loadnodes):
     proj_home = "~/projects/solrcloud"
     print('RUNNING READRESULTS %s%s%s' % (p, t, d))
     QPS = []
@@ -59,7 +59,7 @@ def main(p, t, d, rf, q, l, shards, solrnum):
     fp = open('/Users/dporter/projects/solrcloud/tests_v1/profiling_data/exp_results/rf'+rf+'_s'+shards+'__clustersize'+solrnum+'/rf'+rf+'_s'+shards+'__clustersize'+solrnum+"::query="+q+"::proc="+p+"::threads="+t+"::dur="+d+":::TIME->"+datetime.today().strftime('%Y-%m-%d-%H:%M:%S'), 'w+')
 # for charting
 #  writes -> total outstanding requests, QPS, median LAT, Tail LAT
-    fp.write(str((int(t)*int(p)*4))+','+str(total_qps)+','+str(total_med_lat)+','+str(total_tail_lat))
+    fp.write(str((int(t)*int(p)*int(loadnodes)))+','+str(total_qps)+','+str(total_med_lat)+','+str(total_tail_lat))
     fp.close()
 
 
