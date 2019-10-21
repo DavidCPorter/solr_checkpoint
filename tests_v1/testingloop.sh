@@ -1,10 +1,44 @@
 #!/bin/bash
 
+containsElement () {
+  local e match="$1"
+  shift
+  for e; do [[ "$e" == "$match" ]] && return 0; done
+  return 1
+}
 
-if [ "$#" -lt 2 ]; then
-    echo "Usage: scale.sh [ size1 size2 size3 ... ] (default 32)"
+
+if [ "$#" -gt 5 ]; then
+    echo "Usage: scale.sh [ nodesize1 nodesize2 ... nodesize5 ] (default/max 32)"
+    echo " ERROR : TOO MANY ARGUMENTS"
+    echo " Example -> bash scale.sh 2 4 8"
 	exit
 fi
+if [ "$#" -eq 0 ]; then
+    echo "Usage: scale.sh [ size1 size2 ... size5 ] (default/max 32)"
+    echo " this program requires at least 1 argument "
+	exit
+fi
+
+accepted_nodes=(1 2 4 8 16 32 )
+
+####### validate arguments
+
+for SERVERNODE in "$@"; do
+  containsElement $SERVERNODE ${accepted_nodes[@]}
+  if [ $? -eq 1 ]; then
+    echo "nodesizes must be 1,2,4,8,16, or 32"
+    exit
+  fi
+done
+
+echo "running experiment for these solrnode cluster sizes:"
+for SERVERNODE in "$@"; do
+  $SERVERNODE
+done
+######## VALIDATION COMPLETE
+
+
 
 # load sugar
 source /Users/dporter/projects/solrcloud/utils.sh
@@ -68,6 +102,8 @@ for SERVERNODE in "$@"; do
   # constraint -> shards are 1, 2, or 4
 
   for SHARD in $SHARDS; do
+
+
     ######## EXP LOOP = r*s = 2(num of SERVERNODES) ##########
 
     # no fractional divison
@@ -96,6 +132,7 @@ for SERVERNODE in "$@"; do
 
     ######## EXP LOOP = r*s = 1(num of SERVERNODES) ##########
 
+    # no fractional divison
     if [[ $SHARD -eq 4 ]] && ($SERVERNODE = '1' || $SERVERNODE = '2') ]] ;then
       continue
     fi
