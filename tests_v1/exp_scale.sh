@@ -71,6 +71,14 @@ TN=24
 
 for SERVERNODE in "$@"; do
   ###### restart zoo and solr ######
+
+
+# temp solution for limited node resources
+  if [ $SERVERNODE = "32"]; then
+    SERVERNODE="28"
+  fi
+
+
   play zoo_configure.yml --tags zoo_stop
   wait $!
   sleep 5
