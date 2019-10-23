@@ -4,89 +4,92 @@ PROJECT_HOME='/Users/dporter/projects/solrcloud'
 
 function start_experiment() {
 
-    if [ "$#" -lt 3 ]; then
-        echo "Usage: start_experiment <username> <python scripts dir> <term list textfile>"
-    	exit
-    fi
-    USER=$1
-  	PY_SCRIPT=$2
-    TERMS=$3
-    THREADS="$4 $5"
-    PROCESSES="$7"
-    DURATION="$8 $9"
-    REPLICAS="${10} ${11}"
-    SHARDS="${12} ${13}"
-    QUERY="${14} ${15}"
-    LOOP="${16} ${17}"
-    SOLRNUM="${18} ${19}"
-    INSTANCES="${21}"
+  if [ "$#" -lt 3 ]; then
+      echo "Usage: start_experiment <username> <python scripts dir> <term list textfile>"
+  	exit
+  fi
+  USER=$1
+	PY_SCRIPT=$2
+  TERMS=$3
+  THREADS="$4 $5"
+  PROCESSES="$7"
+  DURATION="$8 $9"
+  REPLICAS="${10} ${11}"
+  SHARDS="${12} ${13}"
+  QUERY="${14} ${15}"
+  LOOP="${16} ${17}"
+  SOLRNUM="${18} ${19}"
+  INSTANCES="${21}"
 
-    LOAD_NODES=("128.110.153.246" "128.110.154.32" "128.110.154.35" "128.110.153.247")
-    echo $PROJECT_HOME
-    echo 'Copying python scripts to remote machine'
-    pscp -l $USER -r -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file $PY_SCRIPT /users/dporte7
-    pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file $TERMS /users/dporte7
+  # these correlate the order in the ssh_files
+  LOAD_NODES=("128.110.153.246" "128.110.154.32" "128.110.154.35" "128.110.153.247")
+  # loadsize = num of load servers
+  LOADSIZE=4
 
-    # each process in the python script will make #THREAD num of REPLICASnections to a SINGLE solr instance "--host" (for --query direct)
-    # parameters for py script running on nodes 32, 33, 34, 35
-    # hosts here will either be this local for solrj since solj is running on same node, or a subnet address
-    # different ports reflect the number of solrj processes on each node running solrj
-    #  otherwise ports will be changed to 8983 since solrcloud httpserver runs there on the network
-    PAR_0="$THREADS $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --port 9111" #host appended below
-    PAR_1="$THREADS $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --port 9222" #host appended below
-    PAR_2="$THREADS $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --port 9333" #host appended below
-    PAR_3="$THREADS $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --port 9444" #host appended below
+  echo "LOAD_NODES = $LOAD_NODES"
+  echo 'Copying python scripts to remote machine'
+  pscp -l $USER -r -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_8 $PY_SCRIPT /users/dporte7
+  pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_8 $TERMS /users/dporte7
 
-    SINGLE_PAR="$THREADS $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --host 10.10.1.1"
 
-    echo "removing previous output from remote and local host"
-    pssh -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file --user $USER "rm ~/traffic_gen/http_benchmark_*"
-    rm $PROJECT_HOME/tests_v1/profiling_data/proc_results/http_benchmark_*
-    # MINUS1="$((PROCESSES - 1))"
+  SINGLE_PAR="$THREADS $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --instances $INSTANCES --connections 1 --output-dir ./ --host 10.10.1.1"
+
+  echo "removing previous output from remote and local host"
+  pssh -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_8 --user $USER "rm ~/traffic_gen/http_benchmark_*"
+  rm $PROJECT_HOME/tests_v1/profiling_data/proc_results/http_benchmark_*
+  MINUS1="$(($PROCESSES - 1))"
 
 
 ########## EXPERIMENT LOOPS #################
 
-    if [ ${19} = '1' ]; then
-      echo "running on single solr server"
-      echo "#!/bin/bash" > ./remotescript.sh
-      echo "#!/bin/bash" > ./remotescript_foreground.sh
-      echo "# this file is used to run processes remotely since cloudlab blacklists aggressive ssh" >> ./remotescript.sh
-      # this will allocate the processes connections accross the ports open for each solr instance on server 1
-      # for i in $(seq $MINUS1); do
-      #   echo "$i"
-      #   # take care of the port in traffic_gen.py
-      #   echo "python3 traffic_gen.py $SINGLE_PAR --port $(($i % $INSTANCES)) >/dev/null 2>&1 &" >> ./remotescript.sh
-      #   echo "python3 traffic_gen.py $SINGLE_PAR --port $(($i % $INSTANCES)) &" >> ./remotescript_foreground.sh
-      # done
-      echo "python3 traffic_gen.py $SINGLE_PAR --port $(($PROCESSES % $INSTANCES)) >/dev/null 2>&1 &" >> ./remotescript.sh
-      # see if changing this will affect solrj
-      echo "python3 traffic_gen.py $SINGLE_PAR --port $(($PROCESSES % $INSTANCES)) " >> ./remotescript_foreground.sh
-      # run remotescripts on all background nodes
-      pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_3 ./remotescript.sh /users/$USER/traffic_gen
-      pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_single ./remotescript_foreground.sh /users/$USER/traffic_gen
-      nohup pssh -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_3 "cd $(basename $PY_SCRIPT); bash remotescript.sh"&
-      # run foreground processes on foreground node
-      nohup ssh $USER@128.110.153.246 "cd $(basename $PY_SCRIPT); bash remotescript_foreground.sh"
-      wait $!
-      echo "finished"
+  echo "running on single solr server"
+  echo "#!/bin/bash" > ./remotescript.sh
+  echo "#!/bin/bash" > ./remotescript_foreground.sh
+  echo "# this file is used to run processes remotely since cloudlab blacklists aggressive ssh" >> ./remotescript.sh
+
+  # this will allocate the processes connections accross the ports open for each solr instance on server 1
+  for i in `seq $MINUS1`; do
+    echo "$i"
+    temp=$i
+    echo "python3 traffic_gen.py $SINGLE_PAR --port 99$temp$temp >/dev/null 2>&1 &" >> ./remotescript.sh
+    echo "python3 traffic_gen.py $SINGLE_PAR --port 99$temp$temp &" >> ./remotescript_foreground.sh
+  done
+
+  echo "python3 traffic_gen.py $SINGLE_PAR --port 8983 >/dev/null 2>&1 &" >> ./remotescript.sh
+  # see if changing this will affect solrj
+  echo "python3 traffic_gen.py $SINGLE_PAR --port 8983" >> ./remotescript_foreground.sh
+  # run remotescripts on all background nodes
+  pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_3 ./remotescript.sh /users/$USER/traffic_gen
+  pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_single ./remotescript_foreground.sh /users/$USER/traffic_gen
+
+
+  #### RUNNING EXPERIMENTS #####
+  echo "RUNNING THIS REMOTE SHELL SCRIPT ON LOAD NODES"
+  cat ./remotescript_foreground.sh
+  # BACKGROUND LOAD GEN NODES
+  nohup pssh -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_3 "cd $(basename $PY_SCRIPT); bash remotescript.sh"&
+  # FOREGROUND LOAD GEN NODE
+  nohup ssh $USER@128.110.153.246 "cd $(basename $PY_SCRIPT); bash remotescript_foreground.sh"
+  wait $!
+  echo "finished EXP"
+  #### FINISHED #####
+
+
+  echo "copying results... "
 
   # wait for slow processes to complete (prolly not effective)
-      sleep 5
-      for i in "${LOAD_NODES[@]}"; do
-          scp $USER@$i:~/traffic_gen/http_benchmark_${15}* profiling_data/proc_results &
-      done
-      wait $!
-      sleep 5
-      python3 $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $REPLICAS $QUERY $LOOP $SHARDS $SOLRNUM
-      DATE=$(date '+%Y-%m-%d_%H:%M:%S')
-      # for reference
-      zip -r ${DATE}_query${15}_rf${11}_s${13}_clustersize${19}_threads${5}_proc${7}.zip profiling_data/proc_results
-    else
-      echo "ERROR -> invalid solrnum"
+  sleep 5
+  for i in "${LOAD_NODES[@]}"; do
+      scp $USER@$i:~/traffic_gen/http_benchmark_${15}* profiling_data/proc_results &
+  done
+  wait $!
+  sleep 5
+  python3 $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $REPLICAS $QUERY $LOOP $SHARDS $SOLRNUM $LOADSIZE
+  DATE=$(date '+%Y-%m-%d_%H:%M:%S')
+  # for reference
+  zip -r ${DATE}_query${15}_rf${11}_s${13}_clustersize${19}_threads${5}_proc${7}.zip profiling_data/proc_results
+  printf "\n\n DONE with $(($THREADS*$LOADSIZE)) outstanding requests in \n python3 traffic_gen.py $SINGLE_PAR --port $(($PROCESSES % $INSTANCES)) \n\n\n\n\n "
 
-
-  fi
 }
 
 function profile_experiment_dstat() {
@@ -142,7 +145,7 @@ function profile_experiment_dstat() {
 
 
 if [ "$#" -lt 3 ]; then
-    echo "Usage: runtest.sh <python scripts dir> <search term list> [ -u | --user ] [ -p | --processes ] [ -t | ---threads ] [ -d | --duration ] [ -c | --REPLICASnections ]"
+    echo "Usage: runtest_single.sh <python scripts dir> <search term list> [ -u | --user ] [ -p | --processes ] [ -t | ---threads ] [ -d | --duration ] [--instances] [--solrnum]"
 	exit
 fi
 # initialize to ensure absent params don't mess the local var order up.
@@ -228,10 +231,10 @@ PY_SCRIPT="traffic_gen"
 TERMS="words.txt"
 
 #PARAMETERS=$3
-
-echo "checking if cores exist for reviews_ $SHARDS $REPLICAS"
-cd ~/projects/solrcloud; ansible-playbook -i inventory post_data.yml --tags exp_mode --extra-vars "replicas=${REPLICA_PARAM} shards=${SHARD_PARAM} clustersize=${SOLRNUM_PARAM}"
-wait $!
+# this should be done in the exp loop script after loop finishes, not for each exp.
+  # echo "checking if cores exist for reviews_ $SHARDS $REPLICAS"
+  # cd ~/projects/solrcloud; ansible-playbook -i inventory post_data.yml --tags exp_mode --extra-vars "replicas=${REPLICA_PARAM} shards=${SHARD_PARAM} clustersize=${SOLRNUM_PARAM}"
+  # wait $!
 
 cd ~/projects/solrcloud/tests_v1;
 echo 'Starting the experiment'

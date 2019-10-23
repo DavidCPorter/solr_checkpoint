@@ -3,8 +3,10 @@ hostsIps
 inventory
 inventory_gen.txt
 *.retry
-exp_results/*
-proc_results/*
+exp_results/
+proc_results/
 traffic_gen.log
 nohup.out
 .DS_Store
+*.zip
+records*

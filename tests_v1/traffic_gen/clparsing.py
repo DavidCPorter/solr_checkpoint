@@ -72,7 +72,8 @@ def parse_commandline(cl_args):
                          help="run open or closed loop experiment")
     parser.add_argument( "--solrnum", dest="clustersize", default="4",
                         help="number of nodes running solr")
-
+    parser.add_argument( "--instances", dest="instances", default=None,
+                        help="number of solr instances running in each node")
 
     #just hardcoded a random generating query
     # parser.add_argument( "--query", dest="query", default="summary",

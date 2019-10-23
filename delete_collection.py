@@ -5,13 +5,13 @@ import http.client
 import json
 
 
-def add_conn():
-    conn = http.client.HTTPConnection("128.110.154.12",8983,timeout=10)
+def add_conn(port):
+    conn = http.client.HTTPConnection("128.110.154.12",port,timeout=10)
     return conn
 
 
-def delete_collections():
-    con = add_conn()
+def delete_collections(port):
+    con = add_conn(port)
     try:
         con.request( "GET", "/solr/admin/collections?action=LIST")
         resp = con.getresponse()
@@ -35,6 +35,10 @@ def delete_collections():
 
 
 if __name__ == "__main__":
-    delete_collections()
+    if sys.argv[1] == None:
+        port=8983
+    else:
+        port = sys.argv[1]
+    delete_collections(port)
     # delete_collections(c)
     sys.exit()

@@ -76,6 +76,8 @@ if __name__ == "__main__":
     loop = sys.argv[11]
     shards = sys.argv[13]
     solrnum = sys.argv[15]
+    loadnodes = sys.argv[16]
+
     sys.exit(
-    main(processes,threads,duration,replicas,query,loop, shards, solrnum)
+    main(processes,threads,duration,replicas,query,loop, shards, solrnum, loadnodes)
     )

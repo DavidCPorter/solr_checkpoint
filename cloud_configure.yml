@@ -1,7 +1,7 @@
 # playbook for cloudconfig
-# - hosts: all,!localhost
-#   roles:
-#     - cloud-env
+- hosts: all,!localhost
+  roles:
+    - cloud-env
 
 - hosts: generatorNodeEight
   tasks:
@@ -9,5 +9,3 @@
       pip:
         name: numpy
         executable: /usr/bin/pip3
-      tags:
-        - eight

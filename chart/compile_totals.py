@@ -12,7 +12,7 @@ def main(query, codename):
     QPS = []
     median_lat = []
     tail_lat = []
-    dirs = os.popen('ls '+proj_home+'/chart/totals | grep '+query).read()
+    dirs = os.popen('ls '+proj_home+'/chart/totals | grep '+codename).read()
     print(dirs)
     dirs = dirs.split('\n')
     dirs.pop()

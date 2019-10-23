@@ -25,18 +25,21 @@ def main( ):
     print(sys.argv[1:])
     main_args = parse_commandline(sys.argv[1:])
     if main_args.query == 'direct':
-        # if int(main_args.clustersize) > 1:
-        main_args.port = 8983
-        # elif (int(main_args.port) == 0 ):
-        #     main_args.port = 8983
-        # else:
-        #     main_args.port = 9990
+        # distributed solrcloud scenario
+        if main_args.instances == None:
+            main_args.port = 8983
+        else:
+            pass
 
+        # NOTE: clustersize of 1 and instance of N already configged host and port correctly
 
     elif main_args.query == 'solrj':
         main_args.host = '127.0.0.1'
-        if int(main_args.clustersize) == 1:
+        if main_args.instances != None:
             main_args.port = 9111
+        # NOTE: ports for solrj are already passed in correctly
+        else:
+            pass
 
     else:
         # for single server mode host and ports are good
@@ -84,7 +87,7 @@ def main( ):
         # makes copy of thread_args
         ta = get_args(thread_args)
         # preload queries into list
-        urls = get_urls(ta[0], terms, main_args.shards, main_args.replicas, main_args.clustersize)
+        urls = get_urls(ta[0], terms, main_args.shards, main_args.replicas, main_args.clustersize, main_args.instances, main_args.query)
         # create http for each thread
         conn = add_conn(main_args)
         # combine arguments

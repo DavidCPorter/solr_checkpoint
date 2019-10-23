@@ -22,21 +22,31 @@ def add_conn(main_args):
 
     return conn
 
-def get_urls(test_param, terms, shards, replicas, clustersize):
+def get_urls(test_param, terms, shards, replicas, clustersize, instances, query):
     indexed_fields = ["reviewText","summary"]
     prefix_url = "%s" % (test_param.base_url)
     urls = []
     # port 8983 is a benchamrk using direct solr instance queries
-    if test_param.port == 8983:
+# single cluster
+    csize = str(clustersize)
+
+    if instances != None:
+        csize = '9'+csize
+
+    if query == "direct":
         r = random.randint(1,len(terms))
+
         for i in range( test_param.max_iters ):
             i+=r
             term = terms[i%len(terms)].rstrip()
             field = indexed_fields[i%len(indexed_fields)]
-            q = '/solr/reviews_rf'+str(replicas)+'_s'+str(shards)+'_clustersize'+str(clustersize)+'/select?q='+field+'%3A'+term+'&rows=10'
+            q = '/solr/reviews_rf'+str(replicas)+'_s'+str(shards)+'_clustersize'+csize+'/select?q='+field+'%3A'+term+'&rows=10'
             urls.append("%s%s" % (prefix_url, q))
 
+
+# either solrj normal or any of the other
     else:
+        col = 'reviews_rf'+str(replicas)+'_s'+str(shards)+'_clustersize'+csize
         # port 9111 flow -> via solrJ
         # introduce randomness for each thread
         r = random.randint(1,len(terms))
@@ -45,7 +55,7 @@ def get_urls(test_param, terms, shards, replicas, clustersize):
             term = terms[i%len(terms)].rstrip()
             field = indexed_fields[i%len(indexed_fields)]
             # q = 'solr/reviews_rf2q/select?q='+field+'%3A'+term+'&rows=10'
-            urls.append( "/%s/%s/%s" % (field, term, 'reviews_rf'+str(replicas)+'_s'+str(shards)+'_clustersize'+str(clustersize)))
+            urls.append( "/%s/%s/%s" % (field, term, col))
 
     return urls
 

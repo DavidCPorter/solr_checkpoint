@@ -23,9 +23,11 @@ function start_experiment() {
     LOAD_NODES=("128.110.153.246" "128.110.154.32" "128.110.154.35" "128.110.153.247" "128.110.154.21" "128.110.154.4" "128.110.154.9" "128.110.154.7")
     # loadsize = num of load servers
     LOADSIZE=8
-    if [ ${19} -lt 16];then
+    if [ ${19} -lt 16 ];then
       LOADSIZE=4
-      LOAD_NODES=("${LOAD_NODES[@]:1:4}")
+      LOAD_NODES=("128.110.153.246" "128.110.154.32" "128.110.154.35" "128.110.153.247")
+    fi
+
     echo "LOAD_NODES = $LOAD_NODES"
     echo 'Copying python scripts to remote machine'
     pscp -l $USER -r -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_8 $PY_SCRIPT /users/dporte7
@@ -46,7 +48,7 @@ function start_experiment() {
     echo "removing previous output from remote and local host"
     pssh -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_8 --user $USER "rm ~/traffic_gen/http_benchmark_*"
     rm $PROJECT_HOME/tests_v1/profiling_data/proc_results/http_benchmark_*
-    MINUS1="$((PROCESSES - 1))"
+    MINUS1="$(($PROCESSES - 1))"
 
 
 ########## EXPERIMENTS #################
@@ -89,9 +91,13 @@ function start_experiment() {
     echo "finished EXP"
 #### FINISHED #####
 
+
+    echo "copying results... "
+
     # wait for slow processes to complete (prolly not effective)
     sleep 5
     for i in "${LOAD_NODES[@]}"; do
+        echo "$i"
         scp $USER@$i:~/traffic_gen/http_benchmark_${15}* $PROJECT_HOME/tests_v1/profiling_data/proc_results &
     done
     wait $!
@@ -100,6 +106,10 @@ function start_experiment() {
     DATE=$(date '+%Y-%m-%d_%H:%M:%S')
     # for reference
     zip -r ${DATE}_query${15}_rf${11}_s${13}_clustersize${19}_threads${5}_proc${7}.zip profiling_data/proc_results
+    printf "\n\n\n "
+    echo "DONE with $THREADS X $LOADSIZE outstanding requests in"
+    printf "\n python3 traffic_gen.py $PARAMS --host 10.10.1.N \n\n\n\n\n "
+
 }
 
 function profile_experiment_dstat() {
