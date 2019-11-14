@@ -38,14 +38,21 @@
 
 - name: remove old solr.in.sh
   shell: rm -f '{{solr_install_dir}}/solr/bin/solr.in.sh'
+  tags:
+    - solrinsh
 
 # not the best convention here...
-- name: copy solr config file to hosts
+- name: copy solr init file to hosts
   copy:
     src: ./roles/solr/files/solr.in.sh
     dest: '{{solr_install_dir}}/solr/bin'
   tags:
     - config
+    - solrinsh
+
+
+
+
 
 - name: create and grant log dir permissions for solr
   file:
@@ -63,7 +70,7 @@
     line: '<slowQueryThresholdMillis>500</slowQueryThresholdMillis>'
   tags:
     - slow_query
-#  decided to completely disable logging for experiments. 
+#  decided to completely disable logging for experiments.
 - name: add slow query logging for queries > .5s to default solrconfig.xml
   lineinfile:
     path: '{{solr_install_dir}}/solr/server/solr/configsets/_default/conf/solrconfig.xml'
@@ -79,6 +86,9 @@
     line: 'REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname={{globalIP}}")'
   tags:
     - rmi
+
+
+
 
 - name: calling handler for stopping solr
   command: echo "stopping solr..."

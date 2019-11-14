@@ -10,19 +10,35 @@
   tags:
     - zookeeper_unpack
 
-- name: remove zoo_sample.config
-  shell: rm -f '{{zoo_conf_dir}}/zoo_sample.cfg'
+- name: remove zoo_sample.cfg
+  file:
+    path: '{{zoo_conf_dir}}/zoo_sample.cfg'
+    state: absent
+  ignore_errors: yes
+  tags:
+    - zoo_conf
 
+- name: remove zoo.cfg
+  file:
+    path: '{{zoo_conf_dir}}/zoo.cfg'
+    state: absent
+  ignore_errors: yes
+  tags:
+    - zoo_conf
 
 - name: copy zoo.cfg file to hosts
   copy:
     src: ./roles/zookeeper/files/zoo.cfg
     dest: '{{zoo_conf_dir}}/zoo.cfg'
+  tags:
+    - zoo_conf
 
 - name: copy zoo.sh file to conf dir
   copy:
     src: ./roles/zookeeper/files/zookeeper-env.sh
     dest: '{{zoo_conf_dir}}/zookeeper-env.sh'
+  tags:
+    - zoo_conf
 
 - name: create zookeeper data dir
   file:

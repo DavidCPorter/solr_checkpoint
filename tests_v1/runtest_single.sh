@@ -21,10 +21,20 @@ function start_experiment() {
   SOLRNUM="${18} ${19}"
   INSTANCES="${21}"
 
+  node16="128.110.153.163"
+  node17="128.110.153.154"
+  node18="128.110.153.167"
+  node19="128.110.153.189"
+  node20="128.110.153.188"
+  node21="128.110.153.217"
+  node22="128.110.153.176"
+  node23="128.110.153.172"
+
+
   # these correlate the order in the ssh_files
-  LOAD_NODES=("128.110.153.246" "128.110.154.32" "128.110.154.35" "128.110.153.247")
+  LOAD_NODES=( $node16 $node17 $node18 $node19 $node20 $node21 $node22 $node23 )
   # loadsize = num of load servers
-  LOADSIZE=4
+  LOADSIZE=8
 
   echo "LOAD_NODES = $LOAD_NODES"
   echo 'Copying python scripts to remote machine'
@@ -49,17 +59,22 @@ function start_experiment() {
 
   # this will allocate the processes connections accross the ports open for each solr instance on server 1
   for i in `seq $MINUS1`; do
+    if [ $INSTANCES = "1" ]; then
+      echo "ONLY SINGLE INSTANCE"
+      break
+    fi
+
     echo "$i"
     temp=$i
     echo "python3 traffic_gen.py $SINGLE_PAR --port 99$temp$temp >/dev/null 2>&1 &" >> ./remotescript.sh
-    echo "python3 traffic_gen.py $SINGLE_PAR --port 99$temp$temp &" >> ./remotescript_foreground.sh
+    echo "python3 traffic_gen.py $SINGLE_PAR --port 99$temp$temp >/dev/null 2>&1 &" >> ./remotescript_foreground.sh
   done
 
   echo "python3 traffic_gen.py $SINGLE_PAR --port 8983 >/dev/null 2>&1 &" >> ./remotescript.sh
   # see if changing this will affect solrj
   echo "python3 traffic_gen.py $SINGLE_PAR --port 8983" >> ./remotescript_foreground.sh
   # run remotescripts on all background nodes
-  pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_3 ./remotescript.sh /users/$USER/traffic_gen
+  pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_7 ./remotescript.sh /users/$USER/traffic_gen
   pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_single ./remotescript_foreground.sh /users/$USER/traffic_gen
 
 
@@ -67,9 +82,9 @@ function start_experiment() {
   echo "RUNNING THIS REMOTE SHELL SCRIPT ON LOAD NODES"
   cat ./remotescript_foreground.sh
   # BACKGROUND LOAD GEN NODES
-  nohup pssh -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_3 "cd $(basename $PY_SCRIPT); bash remotescript.sh"&
+  nohup pssh -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_7 "cd $(basename $PY_SCRIPT); bash remotescript.sh"&
   # FOREGROUND LOAD GEN NODE
-  nohup ssh $USER@128.110.153.246 "cd $(basename $PY_SCRIPT); bash remotescript_foreground.sh"
+  nohup ssh $USER@$node20 "cd $(basename $PY_SCRIPT); bash remotescript_foreground.sh"
   wait $!
   echo "finished EXP"
   #### FINISHED #####
@@ -84,7 +99,7 @@ function start_experiment() {
   done
   wait $!
   sleep 5
-  python3 $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $REPLICAS $QUERY $LOOP $SHARDS $SOLRNUM $LOADSIZE
+  python3 $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $REPLICAS $QUERY $LOOP $SHARDS $SOLRNUM $LOADSIZE $INSTANCES
   DATE=$(date '+%Y-%m-%d_%H:%M:%S')
   # for reference
   zip -r ${DATE}_query${15}_rf${11}_s${13}_clustersize${19}_threads${5}_proc${7}.zip profiling_data/proc_results

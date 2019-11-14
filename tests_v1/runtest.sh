@@ -19,14 +19,22 @@ function start_experiment() {
     QUERY="${14} ${15}"
     LOOP="${16} ${17}"
     SOLRNUM="${18} ${19}"
+    INSTANCES="0"
     # these correlate the order in the ssh_files
-    LOAD_NODES=("128.110.153.246" "128.110.154.32" "128.110.154.35" "128.110.153.247" "128.110.154.21" "128.110.154.4" "128.110.154.9" "128.110.154.7")
+    node16="128.110.153.163"
+    node17="128.110.153.154"
+    node18="128.110.153.167"
+    node19="128.110.153.189"
+    node20="128.110.153.188"
+    node21="128.110.153.217"
+    node22="128.110.153.176"
+    node23="128.110.153.172"
+
+
+    # these correlate the order in the ssh_files
+    LOAD_NODES=( $node16 $node17 $node18 $node19 $node20 $node21 $node22 $node23 )
     # loadsize = num of load servers
     LOADSIZE=8
-    if [ ${19} -lt 16 ];then
-      LOADSIZE=4
-      LOAD_NODES=("128.110.153.246" "128.110.154.32" "128.110.154.35" "128.110.153.247")
-    fi
 
     echo "LOAD_NODES = $LOAD_NODES"
     echo 'Copying python scripts to remote machine'
@@ -42,8 +50,6 @@ function start_experiment() {
     PAR_1="$THREADS $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --port 9222" #host appended below
     PAR_2="$THREADS $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --port 9333" #host appended below
     PAR_3="$THREADS $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --port 9444" #host appended below
-
-    SINGLE_PAR="$THREADS $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --host 10.10.1.1"
 
     echo "removing previous output from remote and local host"
     pssh -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_8 --user $USER "rm ~/traffic_gen/http_benchmark_*"
@@ -65,10 +71,12 @@ function start_experiment() {
     for i in $(seq $MINUS1); do
       PARAMS=$(eval 'echo $PAR_'"$(($i % 4))")
     	echo "python3 traffic_gen.py $PARAMS --host 10.10.1.$(($i % (${19})+1)) >/dev/null 2>&1 &" >> ./remotescript.sh
-    	echo "python3 traffic_gen.py $PARAMS --host 10.10.1.$(($i % (${19})+1)) &" >> ./remotescript_foreground.sh
+    	echo "python3 traffic_gen.py $PARAMS --host 10.10.1.$(($i % (${19})+1)) >/dev/null 2>&1 &" >> ./remotescript_foreground.sh
     done
     #  for foreground the final processes in shell scipt must be synchornized for experiment timing purposes (or we could just have this whole thing wait, but it's better to get output back for a single synch process)
   # ${19}+1 the plus one is because arg 19 is num of nodes, and the nodes start at 1
+  # use +2 now because we killed 10.10.1.1 due to malware
+
     PARAMS=$(eval 'echo $PAR_'"$(($PROCESSES % 4))")
     echo "python3 traffic_gen.py $PARAMS --host 10.10.1.$(($PROCESSES % (${19})+1)) >/dev/null 2>&1 &" >> ./remotescript.sh
     echo "python3 traffic_gen.py $PARAMS --host 10.10.1.$(($PROCESSES % (${19})+1))" >> ./remotescript_foreground.sh
@@ -86,7 +94,7 @@ function start_experiment() {
     nohup pssh -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_$(($LOADSIZE-1)) "cd $(basename $PY_SCRIPT); bash remotescript.sh"&
 
     # FOREGROUND LOAD GEN NODE
-    nohup ssh $USER@128.110.153.246 "cd $(basename $PY_SCRIPT); bash remotescript_foreground.sh"
+    nohup ssh $USER@$node20 "cd $(basename $PY_SCRIPT); bash remotescript_foreground.sh"
     wait $!
     echo "finished EXP"
 #### FINISHED #####
@@ -102,7 +110,7 @@ function start_experiment() {
     done
     wait $!
     sleep 5
-    python3 $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $REPLICAS $QUERY $LOOP $SHARDS $SOLRNUM $LOADSIZE
+    python3 $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $REPLICAS $QUERY $LOOP $SHARDS $SOLRNUM $LOADSIZE $INSTANCES
     DATE=$(date '+%Y-%m-%d_%H:%M:%S')
     # for reference
     zip -r ${DATE}_query${15}_rf${11}_s${13}_clustersize${19}_threads${5}_proc${7}.zip profiling_data/proc_results

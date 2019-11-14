@@ -1,0 +1,11 @@
+parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards
+176,9160.0,10,61,94,direct,rf4_s1__
+208,9158.3,11,81,94,direct,rf4_s1__
+240,9252.3,12,95,94,direct,rf4_s1__
+272,9235.7,13,117,94,direct,rf4_s1__
+304,9214.7,13,147,94,direct,rf4_s1__
+16,3138.8,2,11,94,direct,rf4_s1__
+48,8625.0,3,12,94,direct,rf4_s1__
+80,9043.3,5,23,94,direct,rf4_s1__
+112,9195.1,6,36,94,direct,rf4_s1__
+144,9165.9,8,49,94,direct,rf4_s1__

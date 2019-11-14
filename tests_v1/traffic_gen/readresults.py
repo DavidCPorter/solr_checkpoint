@@ -6,7 +6,7 @@ import gzip
 
 # args = $THREADS $DURATION $CON $QUERY $LOOP $PROCESSES
 
-def main(p, t, d, rf, q, l, shards, solrnum, loadnodes):
+def main(p, t, d, rf, q, l, shards, solrnum, loadnodes, instances=None):
     proj_home = "~/projects/solrcloud"
     print('RUNNING READRESULTS %s%s%s' % (p, t, d))
     QPS = []
@@ -48,6 +48,10 @@ def main(p, t, d, rf, q, l, shards, solrnum, loadnodes):
     total_med_lat = int(sum_median_lat/int(processes))
     total_tail_lat = int(sum_tail_lat/int(processes))
 
+# simply to denote this is a single node cluster record
+    if instances != "0":
+        print("SUPPOSED TO BE SINGLE")
+        solrnum='9'+str(solrnum)
 
     try:
         os.makedirs('/Users/dporter/projects/solrcloud/tests_v1/profiling_data/exp_results/rf'+rf+'_s'+shards+'__clustersize'+solrnum)
@@ -77,7 +81,8 @@ if __name__ == "__main__":
     shards = sys.argv[13]
     solrnum = sys.argv[15]
     loadnodes = sys.argv[16]
+    instances = sys.argv[17]
 
     sys.exit(
-    main(processes,threads,duration,replicas,query,loop, shards, solrnum, loadnodes)
+    main(processes,threads,duration,replicas,query,loop, shards, solrnum, loadnodes, instances)
     )

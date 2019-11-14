@@ -4,3 +4,4 @@ data_upload_dir: /users/dporte7
 # collection name is passed in now
 collection_name: "reviews_rf{{replicas}}_s{{shards}}_clustersize{{clustersize}}"
 solr_install_dir: /users/dporte7/solr-8_0
+ansible_files: /Users/dporter/projects/solrcloud/roles/upload_data/files

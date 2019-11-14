@@ -1,11 +1,11 @@
 # playbook for cloudconfig
-- hosts: all,!localhost
+- hosts: nodes, zookeeperNodes
   roles:
     - cloud-env
 
 - hosts: generatorNodeEight
   tasks:
-    - name: pip install numpy
-      pip:
-        name: numpy
-        executable: /usr/bin/pip3
+  - name: pip install numpy
+    pip:
+      name: numpy
+      executable: /usr/bin/pip3

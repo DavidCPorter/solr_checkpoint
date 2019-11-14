@@ -1,0 +1,270 @@
+[nodes]
+128.110.154.33   globalIP=128.110.154.33   ansible_subnet=10.10.1.5
+128.110.154.8   globalIP=128.110.154.8   ansible_subnet=10.10.1.6
+128.110.154.15   globalIP=128.110.154.15   ansible_subnet=10.10.1.7
+128.110.154.19   globalIP=128.110.154.19   ansible_subnet=10.10.1.8
+128.110.154.6   globalIP=128.110.154.6   ansible_subnet=10.10.1.9
+128.110.154.23   globalIP=128.110.154.23   ansible_subnet=10.10.1.10
+128.110.154.11   globalIP=128.110.154.11   ansible_subnet=10.10.1.11
+128.110.154.20   globalIP=128.110.154.20   ansible_subnet=10.10.1.12
+128.110.154.14   globalIP=128.110.154.14   ansible_subnet=10.10.1.13
+128.110.154.27   globalIP=128.110.154.27   ansible_subnet=10.10.1.14
+128.110.154.2   globalIP=128.110.154.2   ansible_subnet=10.10.1.15
+128.110.154.16   globalIP=128.110.154.16   ansible_subnet=10.10.1.16
+128.110.154.25   globalIP=128.110.154.25   ansible_subnet=10.10.1.17
+128.110.154.3   globalIP=128.110.154.3   ansible_subnet=10.10.1.18
+128.110.153.253   globalIP=128.110.153.253   ansible_subnet=10.10.1.19
+128.110.154.22   globalIP=128.110.154.22   ansible_subnet=10.10.1.20
+128.110.154.30   globalIP=128.110.154.30   ansible_subnet=10.10.1.21
+128.110.153.248   globalIP=128.110.153.248   ansible_subnet=10.10.1.22
+128.110.154.17   globalIP=128.110.154.17   ansible_subnet=10.10.1.23
+128.110.154.24   globalIP=128.110.154.24   ansible_subnet=10.10.1.24
+128.110.154.26   globalIP=128.110.154.26   ansible_subnet=10.10.1.25
+128.110.154.31   globalIP=128.110.154.31   ansible_subnet=10.10.1.26
+128.110.154.36   globalIP=128.110.154.36   ansible_subnet=10.10.1.27
+128.110.153.249   globalIP=128.110.153.249   ansible_subnet=10.10.1.28
+128.110.154.9   globalIP=128.110.154.9   ansible_subnet=10.10.1.29
+128.110.154.7   globalIP=128.110.154.7   ansible_subnet=10.10.1.30
+128.110.154.21   globalIP=128.110.154.21   ansible_subnet=10.10.1.31
+128.110.154.4   globalIP=128.110.154.4   ansible_subnet=10.10.1.32
+
+[thirtyNode]
+128.110.154.21   globalIP=128.110.154.21   ansible_subnet=10.10.1.31
+128.110.154.33   globalIP=128.110.154.33   ansible_subnet=10.10.1.5
+128.110.154.8   globalIP=128.110.154.8   ansible_subnet=10.10.1.6
+128.110.154.15   globalIP=128.110.154.15   ansible_subnet=10.10.1.7
+128.110.154.19   globalIP=128.110.154.19   ansible_subnet=10.10.1.8
+128.110.154.6   globalIP=128.110.154.6   ansible_subnet=10.10.1.9
+128.110.154.23   globalIP=128.110.154.23   ansible_subnet=10.10.1.10
+128.110.154.11   globalIP=128.110.154.11   ansible_subnet=10.10.1.11
+128.110.154.20   globalIP=128.110.154.20   ansible_subnet=10.10.1.12
+128.110.154.14   globalIP=128.110.154.14   ansible_subnet=10.10.1.13
+128.110.154.27   globalIP=128.110.154.27   ansible_subnet=10.10.1.14
+128.110.154.2   globalIP=128.110.154.2   ansible_subnet=10.10.1.15
+128.110.154.16   globalIP=128.110.154.16   ansible_subnet=10.10.1.16
+128.110.154.25   globalIP=128.110.154.25   ansible_subnet=10.10.1.17
+128.110.154.3   globalIP=128.110.154.3   ansible_subnet=10.10.1.18
+128.110.153.253   globalIP=128.110.153.253   ansible_subnet=10.10.1.19
+128.110.154.22   globalIP=128.110.154.22   ansible_subnet=10.10.1.20
+128.110.154.30   globalIP=128.110.154.30   ansible_subnet=10.10.1.21
+128.110.153.248   globalIP=128.110.153.248   ansible_subnet=10.10.1.22
+128.110.154.17   globalIP=128.110.154.17   ansible_subnet=10.10.1.23
+128.110.154.24   globalIP=128.110.154.24   ansible_subnet=10.10.1.24
+128.110.154.26   globalIP=128.110.154.26   ansible_subnet=10.10.1.25
+128.110.154.31   globalIP=128.110.154.31   ansible_subnet=10.10.1.26
+128.110.154.36   globalIP=128.110.154.36   ansible_subnet=10.10.1.27
+128.110.153.249   globalIP=128.110.153.249   ansible_subnet=10.10.1.28
+128.110.154.9   globalIP=128.110.154.9   ansible_subnet=10.10.1.29
+128.110.154.7   globalIP=128.110.154.7   ansible_subnet=10.10.1.30
+
+[twentyEightNode]
+128.110.154.9   globalIP=128.110.154.9   ansible_subnet=10.10.1.29
+128.110.154.33   globalIP=128.110.154.33   ansible_subnet=10.10.1.5
+128.110.154.8   globalIP=128.110.154.8   ansible_subnet=10.10.1.6
+128.110.154.15   globalIP=128.110.154.15   ansible_subnet=10.10.1.7
+128.110.154.19   globalIP=128.110.154.19   ansible_subnet=10.10.1.8
+128.110.154.6   globalIP=128.110.154.6   ansible_subnet=10.10.1.9
+128.110.154.23   globalIP=128.110.154.23   ansible_subnet=10.10.1.10
+128.110.154.11   globalIP=128.110.154.11   ansible_subnet=10.10.1.11
+128.110.154.20   globalIP=128.110.154.20   ansible_subnet=10.10.1.12
+128.110.154.14   globalIP=128.110.154.14   ansible_subnet=10.10.1.13
+128.110.154.27   globalIP=128.110.154.27   ansible_subnet=10.10.1.14
+128.110.154.2   globalIP=128.110.154.2   ansible_subnet=10.10.1.15
+128.110.154.16   globalIP=128.110.154.16   ansible_subnet=10.10.1.16
+128.110.154.25   globalIP=128.110.154.25   ansible_subnet=10.10.1.17
+128.110.154.3   globalIP=128.110.154.3   ansible_subnet=10.10.1.18
+128.110.153.253   globalIP=128.110.153.253   ansible_subnet=10.10.1.19
+128.110.154.22   globalIP=128.110.154.22   ansible_subnet=10.10.1.20
+128.110.154.30   globalIP=128.110.154.30   ansible_subnet=10.10.1.21
+128.110.153.248   globalIP=128.110.153.248   ansible_subnet=10.10.1.22
+128.110.154.17   globalIP=128.110.154.17   ansible_subnet=10.10.1.23
+128.110.154.24   globalIP=128.110.154.24   ansible_subnet=10.10.1.24
+128.110.154.26   globalIP=128.110.154.26   ansible_subnet=10.10.1.25
+128.110.154.31   globalIP=128.110.154.31   ansible_subnet=10.10.1.26
+128.110.154.36   globalIP=128.110.154.36   ansible_subnet=10.10.1.27
+128.110.153.249   globalIP=128.110.153.249   ansible_subnet=10.10.1.28
+
+[thirtyTwoNode]
+128.110.153.247   globalIP=128.110.153.247   ansible_subnet=10.10.1.33
+128.110.154.33   globalIP=128.110.154.33   ansible_subnet=10.10.1.5
+128.110.154.8   globalIP=128.110.154.8   ansible_subnet=10.10.1.6
+128.110.154.15   globalIP=128.110.154.15   ansible_subnet=10.10.1.7
+128.110.154.19   globalIP=128.110.154.19   ansible_subnet=10.10.1.8
+128.110.154.6   globalIP=128.110.154.6   ansible_subnet=10.10.1.9
+128.110.154.23   globalIP=128.110.154.23   ansible_subnet=10.10.1.10
+128.110.154.11   globalIP=128.110.154.11   ansible_subnet=10.10.1.11
+128.110.154.20   globalIP=128.110.154.20   ansible_subnet=10.10.1.12
+128.110.154.14   globalIP=128.110.154.14   ansible_subnet=10.10.1.13
+128.110.154.27   globalIP=128.110.154.27   ansible_subnet=10.10.1.14
+128.110.154.2   globalIP=128.110.154.2   ansible_subnet=10.10.1.15
+128.110.154.16   globalIP=128.110.154.16   ansible_subnet=10.10.1.16
+128.110.154.25   globalIP=128.110.154.25   ansible_subnet=10.10.1.17
+128.110.154.3   globalIP=128.110.154.3   ansible_subnet=10.10.1.18
+128.110.153.253   globalIP=128.110.153.253   ansible_subnet=10.10.1.19
+128.110.154.22   globalIP=128.110.154.22   ansible_subnet=10.10.1.20
+128.110.154.30   globalIP=128.110.154.30   ansible_subnet=10.10.1.21
+128.110.153.248   globalIP=128.110.153.248   ansible_subnet=10.10.1.22
+128.110.154.17   globalIP=128.110.154.17   ansible_subnet=10.10.1.23
+128.110.154.24   globalIP=128.110.154.24   ansible_subnet=10.10.1.24
+128.110.154.26   globalIP=128.110.154.26   ansible_subnet=10.10.1.25
+128.110.154.31   globalIP=128.110.154.31   ansible_subnet=10.10.1.26
+128.110.154.36   globalIP=128.110.154.36   ansible_subnet=10.10.1.27
+128.110.153.249   globalIP=128.110.153.249   ansible_subnet=10.10.1.28
+128.110.154.9   globalIP=128.110.154.9   ansible_subnet=10.10.1.29
+128.110.154.7   globalIP=128.110.154.7   ansible_subnet=10.10.1.30
+128.110.154.21   globalIP=128.110.154.21   ansible_subnet=10.10.1.31
+128.110.154.4   globalIP=128.110.154.4   ansible_subnet=10.10.1.32
+
+[twentyFourNode]
+128.110.154.26   globalIP=128.110.154.26   ansible_subnet=10.10.1.25
+128.110.154.33   globalIP=128.110.154.33   ansible_subnet=10.10.1.5
+128.110.154.8   globalIP=128.110.154.8   ansible_subnet=10.10.1.6
+128.110.154.15   globalIP=128.110.154.15   ansible_subnet=10.10.1.7
+128.110.154.19   globalIP=128.110.154.19   ansible_subnet=10.10.1.8
+128.110.154.6   globalIP=128.110.154.6   ansible_subnet=10.10.1.9
+128.110.154.23   globalIP=128.110.154.23   ansible_subnet=10.10.1.10
+128.110.154.11   globalIP=128.110.154.11   ansible_subnet=10.10.1.11
+128.110.154.20   globalIP=128.110.154.20   ansible_subnet=10.10.1.12
+128.110.154.14   globalIP=128.110.154.14   ansible_subnet=10.10.1.13
+128.110.154.27   globalIP=128.110.154.27   ansible_subnet=10.10.1.14
+128.110.154.2   globalIP=128.110.154.2   ansible_subnet=10.10.1.15
+128.110.154.16   globalIP=128.110.154.16   ansible_subnet=10.10.1.16
+128.110.154.25   globalIP=128.110.154.25   ansible_subnet=10.10.1.17
+128.110.154.3   globalIP=128.110.154.3   ansible_subnet=10.10.1.18
+128.110.153.253   globalIP=128.110.153.253   ansible_subnet=10.10.1.19
+128.110.154.22   globalIP=128.110.154.22   ansible_subnet=10.10.1.20
+128.110.154.30   globalIP=128.110.154.30   ansible_subnet=10.10.1.21
+128.110.153.248   globalIP=128.110.153.248   ansible_subnet=10.10.1.22
+128.110.154.17   globalIP=128.110.154.17   ansible_subnet=10.10.1.23
+128.110.154.24   globalIP=128.110.154.24   ansible_subnet=10.10.1.24
+
+[sixteenNode]
+128.110.154.25   globalIP=128.110.154.25   ansible_subnet=10.10.1.17
+128.110.154.33   globalIP=128.110.154.33   ansible_subnet=10.10.1.5
+128.110.154.8   globalIP=128.110.154.8   ansible_subnet=10.10.1.6
+128.110.154.15   globalIP=128.110.154.15   ansible_subnet=10.10.1.7
+128.110.154.19   globalIP=128.110.154.19   ansible_subnet=10.10.1.8
+128.110.154.6   globalIP=128.110.154.6   ansible_subnet=10.10.1.9
+128.110.154.23   globalIP=128.110.154.23   ansible_subnet=10.10.1.10
+128.110.154.11   globalIP=128.110.154.11   ansible_subnet=10.10.1.11
+128.110.154.20   globalIP=128.110.154.20   ansible_subnet=10.10.1.12
+128.110.154.14   globalIP=128.110.154.14   ansible_subnet=10.10.1.13
+128.110.154.27   globalIP=128.110.154.27   ansible_subnet=10.10.1.14
+128.110.154.2   globalIP=128.110.154.2   ansible_subnet=10.10.1.15
+128.110.154.16   globalIP=128.110.154.16   ansible_subnet=10.10.1.16
+
+[twelveNode]
+128.110.154.14   globalIP=128.110.154.14   ansible_subnet=10.10.1.13
+128.110.154.33   globalIP=128.110.154.33   ansible_subnet=10.10.1.5
+128.110.154.8   globalIP=128.110.154.8   ansible_subnet=10.10.1.6
+128.110.154.15   globalIP=128.110.154.15   ansible_subnet=10.10.1.7
+128.110.154.19   globalIP=128.110.154.19   ansible_subnet=10.10.1.8
+128.110.154.6   globalIP=128.110.154.6   ansible_subnet=10.10.1.9
+128.110.154.23   globalIP=128.110.154.23   ansible_subnet=10.10.1.10
+128.110.154.11   globalIP=128.110.154.11   ansible_subnet=10.10.1.11
+128.110.154.20   globalIP=128.110.154.20   ansible_subnet=10.10.1.12
+
+[sixNode]
+128.110.154.15   globalIP=128.110.154.15   ansible_subnet=10.10.1.7
+128.110.154.33   globalIP=128.110.154.33   ansible_subnet=10.10.1.5
+128.110.154.8   globalIP=128.110.154.8   ansible_subnet=10.10.1.6
+
+[eightNode]
+128.110.154.6   globalIP=128.110.154.6   ansible_subnet=10.10.1.9
+128.110.154.33   globalIP=128.110.154.33   ansible_subnet=10.10.1.5
+128.110.154.8   globalIP=128.110.154.8   ansible_subnet=10.10.1.6
+128.110.154.15   globalIP=128.110.154.15   ansible_subnet=10.10.1.7
+128.110.154.19   globalIP=128.110.154.19   ansible_subnet=10.10.1.8
+
+[singleNode]
+128.110.153.252   globalIP=128.110.153.252   ansible_subnet=10.10.1.4
+
+[fourNode]
+128.110.154.33   globalIP=128.110.154.33   ansible_subnet=10.10.1.5
+
+[twoNode]
+128.110.153.252   globalIP=128.110.153.252   ansible_subnet=10.10.1.4
+128.110.154.5   globalIP=128.110.154.5   ansible_subnet=10.10.1.2
+
+[zookeeperNodes]
+128.110.154.5   globalIP=128.110.154.5   ansible_subnet=10.10.1.2  zoo_id=2
+128.110.154.13   globalIP=128.110.154.13   ansible_subnet=10.10.1.3  zoo_id=3
+128.110.153.252   globalIP=128.110.153.252   ansible_subnet=10.10.1.4 zoo_id=1
+
+
+[generatorNode]
+128.110.153.247   globalIP=128.110.153.247   ansible_subnet=10.10.1.33
+128.110.154.32   globalIP=128.110.154.32   ansible_subnet=10.10.1.34
+128.110.154.35   globalIP=128.110.154.35   ansible_subnet=10.10.1.35
+128.110.153.246   globalIP=128.110.153.246   ansible_subnet=10.10.1.36
+
+
+[generatorNodeSix]
+128.110.153.247   globalIP=128.110.153.247   ansible_subnet=10.10.1.33
+128.110.154.32   globalIP=128.110.154.32   ansible_subnet=10.10.1.34
+128.110.154.35   globalIP=128.110.154.35   ansible_subnet=10.10.1.35
+128.110.153.246   globalIP=128.110.153.246   ansible_subnet=10.10.1.36
+128.110.154.21   globalIP=128.110.154.21   ansible_subnet=10.10.1.31
+128.110.154.4   globalIP=128.110.154.4   ansible_subnet=10.10.1.32
+
+[generatorNodeEight]
+128.110.153.247   globalIP=128.110.153.247   ansible_subnet=10.10.1.33
+128.110.154.32   globalIP=128.110.154.32   ansible_subnet=10.10.1.34
+128.110.154.35   globalIP=128.110.154.35   ansible_subnet=10.10.1.35
+128.110.153.246   globalIP=128.110.153.246   ansible_subnet=10.10.1.36
+128.110.154.21   globalIP=128.110.154.21   ansible_subnet=10.10.1.31
+128.110.154.4   globalIP=128.110.154.4   ansible_subnet=10.10.1.32
+128.110.154.9   globalIP=128.110.154.9   ansible_subnet=10.10.1.29
+128.110.154.7   globalIP=128.110.154.7   ansible_subnet=10.10.1.30
+
+[dataServer]
+128.110.153.252   globalIP=128.110.153.252   ansible_subnet=10.10.1.4
+
+
+[mylocal]
+localhost ansible_connection=local
+
+
+[all:vars]
+ansible_connection=ssh
+ansible_user=dporte7
+node0=128.110.153.252
+node1=128.110.154.5
+node2=128.110.154.13
+node3=128.110.153.252
+node4=128.110.154.33
+node5=128.110.154.8
+node6=128.110.154.15
+node7=128.110.154.19
+node8=128.110.154.6
+node9=128.110.154.23
+node10=128.110.154.11
+node11=128.110.154.20
+node12=128.110.154.14
+node13=128.110.154.27
+node14=128.110.154.2
+node15=128.110.154.16
+node16=128.110.154.25
+node17=128.110.154.3
+node18=128.110.153.253
+node19=128.110.154.22
+node20=128.110.154.30
+node21=128.110.153.248
+node22=128.110.154.17
+node23=128.110.154.24
+node24=128.110.154.26
+node25=128.110.154.31
+node26=128.110.154.36
+node27=128.110.153.249
+node28=128.110.154.9
+node29=128.110.154.7
+node30=128.110.154.21
+node31=128.110.154.4
+
+node32=128.110.153.247
+node33=128.110.154.32
+node34=128.110.154.35
+node35=128.110.153.246
+
+root_path=/Users/dporter/Desktop/solrcloud-dev/
+main_class=com.dporte7.solrclientserver.DistributedWebServer

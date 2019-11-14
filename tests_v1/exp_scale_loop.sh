@@ -1,5 +1,62 @@
 #!/bin/bash
 
+CLOUDHOME="/users/dporte7"
+USER="dporte7"
+# load sugar
+source /Users/dporter/projects/solrcloud/utils.sh
+
+restartSolrZoo () {
+  printf "\n\n"
+  echo "restarting zookeeper and solr "
+  printf "\n\n"
+
+  play solr_configure.yml --tags solr_stop
+  wait $!
+  sleep 5
+
+  play zoo_configure.yml --tags zoo_stop
+  wait $!
+  sleep 5
+
+
+  play zoo_configure.yml --tags zoo_start
+  wait $!
+  sleep 5
+  play solr_configure_$1.yml --tags solr_start
+  wait $!
+  sleep 5
+}
+
+
+resetExperiment () {
+  printf "\n\n"
+  echo "resetting experiment..."
+  delete_collections 8983
+  sleep 5
+
+}
+
+
+restartSolrJ () {
+  echo "restarting SOLRJ"
+  printf "\n\n"
+  echo "stopping SOLRJ"
+  killsolrj
+  wait $!
+  sleep 6
+
+  printf "\n\n"
+  echo "starting SOLRJ"
+  printf "\n\n"
+  runsolrj
+  wait $!
+  sleep 4
+
+}
+
+
+
+
 containsElement () {
   local e match="$1"
   shift
@@ -42,8 +99,8 @@ done
 
 
 # load sugar
-source /Users/dporter/projects/solrcloud/utils.sh
-shopt -s expand_aliases
+# source /Users/dporter/projects/solrcloud/utils.sh
+# shopt -s expand_aliases
 
 ############
 
@@ -51,12 +108,20 @@ shopt -s expand_aliases
 archive_prev
 archive_fcts
 
-############  BEGIN EXP  ###################
+#########  PARAMS
 
-SHARDS=( 1 2 4 )
+SHARDS=( 1 2 )
+QUERY="direct"
+RF=4
+secondRF=2
+
+
+# loop_args
 T1=1
-STEP=3
-TN=30
+STEP=1
+TN=8
+
+#########  PARAMS END
 
 # Outer loop is servernode size, next loop is for shards and exp types, inner loops for threads
 # required since changing any shard, replica, or SERVERNODE size requires a full reindex.
@@ -67,41 +132,19 @@ TN=30
 
 
 for SERVERNODE in "$@"; do
-  ###### restart zoo and solr ######
 
-  echo "deleting previous collections"
-  delete_collections
+  ############# OPTIONAL HELPER FUNCTIONS ###################
 
-# temp solution for limited node resources
-  if [ $SERVERNODE = "32" ]; then
-    SERVERNODE="28"
-  fi
+    resetExperiment
+    restartSolrZoo $SERVERNODE
+    # restartSolrJ
 
-  echo "starting experiment for clustersize -> $SERVERNODE"
+    # instance -1 becuase ansible already launched a single instance and we are just adding nodes to that cluster
+    # createInstances $INSTANCES
 
-  play zoo_configure.yml --tags zoo_stop
-  wait $!
-  sleep 5
+  ############# OPTIONAL HELPER FUNCTIONS DONE ###################
 
-  play solr_configure.yml --tags solr_stop
-  wait $!
-  sleep 5
 
-  killsolrj
-  wait $1
-  sleep 4
-
-  play zoo_configure.yml --tags zoo_start
-  wait $!
-  sleep 5
-  play solr_configure_$SERVERNODE.yml --tags solr_start
-  wait $!
-  sleep 5
-
-  runsolrj
-  wait $!
-  sleep 5
-  ######### DONE ##############
 
 # since this var is only used to delete logs, just keep at all 8
   LOADHOSTS=ssh_files/pssh_traffic_node_file_8
@@ -118,26 +161,26 @@ for SERVERNODE in "$@"; do
       continue
     fi
 
-    RF=$(((2*$SERVERNODE)/$SHARD))
+    RF=$(((4*$SERVERNODE)/$SHARD))
 
     echo "checking if cores exist for reviews_rf$RF _s$SHARD _clustersize$SERVERNODE"
     echo "will create collection if cores do not exist"
-    cd ~/projects/solrcloud; ansible-playbook -i inventory post_data.yml --tags exp_mode --extra-vars "replicas=$RF shards=$SHARD clustersize=$SERVERNODE"
+    play post_data.yml --tags exp_mode --extra-vars "replicas=$RF shards=$SHARD clustersize=$SERVERNODE"
     wait $!
 
     for t in `seq $T1 $STEP $TN`; do
       # keep last log
       cd ~/projects/solrcloud;pssh -l dporte7 -h $LOADHOSTS "echo ''>traffic_gen/traffic_gen.log"
-      cd ~/projects/solrcloud/tests_v1; bash runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t ${t} -d 10 -p $SERVERNODE --solrnum $SERVERNODE --query direct --loop open
+      cd ~/projects/solrcloud/tests_v1; bash runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t ${t} -d 10 -p $SERVERNODE --solrnum $SERVERNODE --query $QUERY --loop open
       wait $!
       sleep 2
     done
 
-    cd ~/projects/solrcloud;pssh -l dporte7 -h $LOADHOSTS "echo ''>/users/dporte7/solrclientserver/solrjoutput.txt"
-    delete_collections
-    wait $!
-    sleep 8
-    clearout
+    # cd ~/projects/solrcloud;pssh -l dporte7 -h $LOADHOSTS "echo ''>/users/dporte7/solrclientserver/solrjoutput.txt"
+    # delete_collections
+    # wait $!
+    # sleep 8
+    # clearout
 
     ######## END ##########
 
@@ -146,28 +189,28 @@ for SERVERNODE in "$@"; do
     ######## EXP LOOP = r*s = 1(num of SERVERNODES) ##########
 
     # no fractional divison
-    if [[ $SHARD -eq 4 ]] && [[ $SERVERNODE = '1' || $SERVERNODE = '2' ]] ;then
-      continue
-    fi
-
-    RF=$(($SERVERNODE/$SHARD))
-    echo "checking if cores exist for reviews_rf$RF _s$SHARD _clustersize$SERVERNODE"
-    echo "will create collection if cores do not exist"
-    cd ~/projects/solrcloud; ansible-playbook -i inventory post_data.yml --tags exp_mode --extra-vars "replicas=$RF shards=$SHARD clustersize=$SERVERNODE"
-    wait $!
-
-    for t in `seq $T1 $STEP $TN`; do
-      # keep last log
-      cd ~/projects/solrcloud;pssh -l dporte7 -h $LOADHOSTS "echo ''>traffic_gen/traffic_gen.log"
-      cd ~/projects/solrcloud/tests_v1; bash runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t ${t} -d 10 -p $SERVERNODE --solrnum $SERVERNODE --query direct --loop open
-      wait $!
-      sleep 2
-    done
-
-    cd ~/projects/solrcloud;pssh -l dporte7 -h $LOADHOSTS "echo ''>/users/dporte7/solrclientserver/solrjoutput.txt"
-    wait $!
-    sleep 8
-    clearout
+    # if [[ $SHARD -eq 4 ]] && [[ $SERVERNODE = '1' || $SERVERNODE = '2' ]] ;then
+    #   continue
+    # fi
+    #
+    # RF=$(($SERVERNODE/$SHARD))
+    # echo "checking if cores exist for reviews_rf$RF _s$SHARD _clustersize$SERVERNODE"
+    # echo "will create collection if cores do not exist"
+    # cd ~/projects/solrcloud; ansible-playbook -i inventory post_data.yml --tags exp_mode --extra-vars "replicas=$RF shards=$SHARD clustersize=$SERVERNODE"
+    # wait $!
+    #
+    # for t in `seq $T1 $STEP $TN`; do
+    #   # keep last log
+    #   cd ~/projects/solrcloud;pssh -l dporte7 -h $LOADHOSTS "echo ''>traffic_gen/traffic_gen.log"
+    #   cd ~/projects/solrcloud/tests_v1; bash runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t ${t} -d 10 -p $SERVERNODE --solrnum $SERVERNODE --query $QUERY --loop open
+    #   wait $!
+    #   sleep 2
+    # done
+    #
+    # cd ~/projects/solrcloud;pssh -l dporte7 -h $LOADHOSTS "echo ''>/users/dporte7/solrclientserver/solrjoutput.txt"
+    # wait $!
+    # sleep 8
+    # clearout
     ######## END ##########
 
   done

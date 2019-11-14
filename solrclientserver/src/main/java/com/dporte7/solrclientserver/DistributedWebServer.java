@@ -11,9 +11,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.impl.CloudSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+
+import java.util.*;
+
 /**
  *
  * @author dporter
@@ -21,11 +21,13 @@ import java.util.List;
 public class DistributedWebServer {
 
     private static String defaultCollection = "reviews";
-    private static CloudSolrClient instance;
+    protected static CloudSolrClient instance;
+    private static final Optional<String> empty = Optional.empty();
+
     static {
-        CloudSolrClient.Builder builder = new CloudSolrClient.Builder();
-        builder.withZkHost(Arrays.asList("10.10.1.1:2181","10.10.1.2:2181","10.10.1.3:2181"));
-        instance = builder.build();
+        List<String> zesty = new ArrayList<>(Arrays.asList("10.10.1.1:2181","10.10.1.2:2181","10.10.1.3:2181"));
+
+        instance = new CloudSolrClient.Builder(zesty, empty).build();
         final int zkClientTimeout = 9999;
         final int zkConnectTimeout = 9999;
         instance.setDefaultCollection(defaultCollection);

@@ -36,7 +36,11 @@ def main( ):
     elif main_args.query == 'solrj':
         main_args.host = '127.0.0.1'
         if main_args.instances != None:
-            main_args.port = 9111
+            if main_args.port == 8983:
+                main_args.port = 9444
+            # changes 9911 -> 9111 e.g.
+            else:
+                main_args.port = int(str(main_args.port)[1:]+str(main_args.port)[-1:])
         # NOTE: ports for solrj are already passed in correctly
         else:
             pass
@@ -79,6 +83,14 @@ def main( ):
 
     terms = get_terms()
     fct_list_main = []
+    tas = get_args(thread_args)
+
+    f = open("/users/dporte7/goodlord.txt", "w+")
+
+    ur = get_urls(tas[0], terms, main_args.shards, main_args.replicas, main_args.clustersize, main_args.instances, main_args.query)
+    for item in ur:
+        f.write("%s\n" % item)
+    f.close()
 
     # Spawn threads
     for i in range( main_args.threads ):
@@ -91,6 +103,7 @@ def main( ):
         # create http for each thread
         conn = add_conn(main_args)
         # combine arguments
+
         ta.append(conn)
         ta.append(urls)
         ta.append(start_flag)

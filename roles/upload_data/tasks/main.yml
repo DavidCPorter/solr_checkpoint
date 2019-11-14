@@ -29,12 +29,21 @@
     creates: '{{data_upload_dir}}/reviews_Electronics_5.json'
   when: data_download_path_status.stat.exists == False
 
+- name: copy solrconfig to nodes
+  copy:
+    src: "{{ansible_files}}/solrconfig.xml"
+    dest: solr-8_0/solr/server/solr/configsets/_default/conf/solrconfig.xml
+  tags:
+    - exp_mode
+    - solrconfig
+
 - name: check if schema exists first
   script: ../files/schema_check.sh "{{ansible_subnet}}" "{{collection_name}}"
   register: check_result
   tags:
     - schema
     - exp_mode
+
 
 # 32 shards and 3 copies
 - name: create collection "{{collection_name}}"
@@ -64,12 +73,29 @@
   tags:
     - exp_mode
 
+# - name: update solrconfig to use RAM index
+#   script: ../files/update_solrconfig.sh "{{ansible_subnet}}" "{{collection_name}}"
+#   when: "'Error 404 Not Found' in check_result.stdout"
+#   tags:
+#     - update_config
+#     - exp_mode
+
+- name: update Query Cache configs
+  script: ../files/update_query_cache.sh "{{ansible_subnet}}" "{{collection_name}}"
+  tags:
+    - update_query
+    - exp_mode
+
+- name: update Doc Cache configs
+  script: ../files/update_doc_cache.sh "{{ansible_subnet}}" "{{collection_name}}"
+  tags:
+    - update_doc
+    - exp_mode
 
 
 - name: copy word.txt to dataServer
   copy:
     src: /Users/dporter/projects/solrcloud/tests_v1/words.txt
     dest: '{{data_upload_dir}}'
-    when: data_download_path_status.stat.exists == False
   tags:
     - terms

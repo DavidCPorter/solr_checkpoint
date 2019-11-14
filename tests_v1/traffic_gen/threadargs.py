@@ -31,7 +31,7 @@ def get_urls(test_param, terms, shards, replicas, clustersize, instances, query)
     csize = str(clustersize)
 
     if instances != None:
-        csize = '9'+csize
+        csize = '9'+str(instances)
 
     if query == "direct":
         r = random.randint(1,len(terms))
