@@ -59,8 +59,25 @@
   shell: "{{zoo_bin_dir}}/zkServer.sh stop"
   tags:
     - zoo_stop
+    - burn_zoo
 
 - name: start ZooKeeper
   shell: "{{zoo_bin_dir}}/zkServer.sh start"
   tags:
     - zoo_start
+
+- name: delete zookeeper data
+  file:
+    path: /var/lib/zookeeper
+    state: absent
+  become: yes
+  become_user: root
+  tags:
+    - burn_zoo
+
+- name: delete zookeeper dir
+  file:
+    path: "{{zoo_root_dir}}"
+    state: absent
+  tags:
+    - burn_zoo

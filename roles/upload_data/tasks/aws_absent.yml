@@ -1,0 +1,45 @@
+# 32 shards and 3 copies
+
+- name: include the vars
+  include_vars: /Users/dporter/projects/solrcloud/roles/upload_data/defaults/main.yml
+
+- name: check if aws has the index
+# aws s3 ls s3://solr-8-dporte7/10.10.1.12/reviews_rf32_s1_clustersize12
+  shell: aws s3 ls "s3://solr-8-dporte7/{{ansible_subnet}}/{{collection_name}}"
+  register: index_result
+  ignore_errors: yes
+
+
+- name: include reviews download task
+  include_tasks: /Users/dporter/projects/solrcloud/roles/upload_data/tasks/download_reviews.yml
+  when: "'PRE' not in index_result.stdout"
+
+
+
+- name: copy solrconfig to nodes
+  copy:
+    src: "{{ansible_files}}/solrconfig.xml"
+    dest: solr-8_0/solr/server/solr/configsets/_default/conf/solrconfig.xml
+  when: "'PRE' not in index_result.stdout"
+
+
+
+- name: create collection "{{collection_name}}"
+  shell: ./bin/solr create_collection -c "{{collection_name}}" -s "{{shards}}" -rf "{{replicas}}" -d _default -force
+  args:
+    chdir: '{{solr_install_dir}}/solr'
+    creates: '{{data_upload_dir}}/{{collection_name}}.txt'
+  ignore_errors: yes
+  when: "'PRE' not in index_result.stdout"
+
+
+- name: create schema
+  script: ../files/schema_create.sh "{{ansible_subnet}}" "{{collection_name}}"
+  when: "'PRE' not in index_result.stdout"
+
+
+- name: post data
+  shell: ./bin/post -c "{{collection_name}}" "{{data_upload_dir}}/reviews_Electronics_5.json"
+  args:
+    chdir: '{{solr_install_dir}}/solr'
+  when: "'PRE' not in index_result.stdout"

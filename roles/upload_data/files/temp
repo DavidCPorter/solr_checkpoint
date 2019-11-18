@@ -72,4 +72,15 @@
     dest: '{{data_upload_dir}}'
     when: data_download_path_status.stat.exists == False
   tags:
-    - terms
+    - terms]
+
+
+
+
+
+    - name: copy word.txt to dataServer
+      copy:
+        src: /Users/dporter/projects/solrcloud/tests_v1/words.txt
+        dest: '{{data_upload_dir}}'
+      tags:
+        - terms

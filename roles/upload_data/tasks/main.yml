@@ -1,77 +1,26 @@
 ---
-# tasks file for upload_data
-- name: Check if data has been downloaded already.
-  stat:
-    path: '{{data_upload_dir}}/reviews_Electronics_5.json'
-  register: data_download_path_status
-
-# unarchive module maintainers argued about .gz file support https://github.com/ansible/ansible-modules-core/issues/3241
-# - name: Download data set
-#   unarchive:
-#     remote_src: yes
-#     src: http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/reviews_Electronics_5.json.gz
-#     dest: '{{data_upload_dir}}'
-#     creates: "{{data_upload_dir}}/reviews_rf2q_Electronics_5.json"
-#     extra_opts: --gunzip
-#
-#   tags:
-#     - download_data
-
-- name: download data
-  shell: wget http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/reviews_Electronics_5.json.gz
-  args:
-    creates: '{{data_upload_dir}}/reviews_Electronics_5.json.gz'
-  when: data_download_path_status.stat.exists == False
-
-- name: unzip data
-  shell: gunzip -f "{{data_upload_dir}}/reviews_Electronics_5.json.gz"
-  args:
-    creates: '{{data_upload_dir}}/reviews_Electronics_5.json'
-  when: data_download_path_status.stat.exists == False
-
-- name: copy solrconfig to nodes
-  copy:
-    src: "{{ansible_files}}/solrconfig.xml"
-    dest: solr-8_0/solr/server/solr/configsets/_default/conf/solrconfig.xml
-  tags:
-    - exp_mode
-    - solrconfig
-
-- name: check if schema exists first
-  script: ../files/schema_check.sh "{{ansible_subnet}}" "{{collection_name}}"
-  register: check_result
-  tags:
-    - schema
-    - exp_mode
 
 
-# 32 shards and 3 copies
-- name: create collection "{{collection_name}}"
-  shell: ./bin/solr create_collection -c "{{collection_name}}" -s "{{shards}}" -rf "{{replicas}}" -d _default -force
-  args:
-    chdir: '{{solr_install_dir}}/solr'
-    creates: '{{data_upload_dir}}/{{collection_name}}.txt'
-  register: command_result
+- name: check if aws has the index
+# aws s3 ls s3://solr-8-dporte7/10.10.1.12/reviews_rf32_s1_clustersize12
+  shell: aws s3 ls "s3://solr-8-dporte7/{{ansible_subnet}}/{{collection_name}}"
+  register: index_result
   ignore_errors: yes
-  when: "'Error 404 Not Found' in check_result.stdout"
-  tags:
-    - exp_mode
-
-- name: create schema
-  script: ../files/schema_create.sh "{{ansible_subnet}}" "{{collection_name}}"
-  when: "'Error 404 Not Found' in check_result.stdout"
-  tags:
-    - schema
-    - exp_mode
 
 
-- name: post data
-  shell: ./bin/post -c "{{collection_name}}" "{{data_upload_dir}}/reviews_Electronics_5.json"
-  args:
-    chdir: '{{solr_install_dir}}/solr'
-  when: "'Error 404 Not Found' in check_result.stdout"
-  tags:
-    - exp_mode
+- name: include tasks when index is there
+  include_tasks:
+    file: 'tasks/aws_pull.yml'
+    apply:
+      tags:
+        - aws_pull
+  when: "'PRE' in index_result.stdout"
+
+
+# COMPLETE after second playbook step
+
+
+
 
 # - name: update solrconfig to use RAM index
 #   script: ../files/update_solrconfig.sh "{{ansible_subnet}}" "{{collection_name}}"
@@ -79,23 +28,3 @@
 #   tags:
 #     - update_config
 #     - exp_mode
-
-- name: update Query Cache configs
-  script: ../files/update_query_cache.sh "{{ansible_subnet}}" "{{collection_name}}"
-  tags:
-    - update_query
-    - exp_mode
-
-- name: update Doc Cache configs
-  script: ../files/update_doc_cache.sh "{{ansible_subnet}}" "{{collection_name}}"
-  tags:
-    - update_doc
-    - exp_mode
-
-
-- name: copy word.txt to dataServer
-  copy:
-    src: /Users/dporter/projects/solrcloud/tests_v1/words.txt
-    dest: '{{data_upload_dir}}'
-  tags:
-    - terms

@@ -1,7 +1,7 @@
 ---
 # handlers file for solr
   - name: stop solr
-    shell: ./solr/bin/solr stop -c
+    shell: ./solr/bin/solr stop -c -all
     register: solr_stop_result
     ignore_errors: yes
     args:
@@ -9,6 +9,7 @@
     environment:
       SOLR_HOST: "{{ansible_subnet}}"
       GLOBALIP: "{{hostvars[inventory_hostname]['ansible_default_ipv4']['address']}}"
+      CHROOT: sixteenNode
 
     listen:
       - "stop solr services"
@@ -33,6 +34,7 @@
     environment:
       SOLR_HOST: "{{ansible_subnet}}"
       GLOBALIP: "{{hostvars[inventory_hostname]['ansible_default_ipv4']['address']}}"
+      CHROOT: sixteenNode
     listen:
       - "start solr services"
 

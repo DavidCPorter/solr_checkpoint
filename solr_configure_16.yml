@@ -1,4 +1,4 @@
 # playbook
-- hosts: zookeeperNodes, sixteenNode
+- hosts: sixteenNode
   roles:
     - solr

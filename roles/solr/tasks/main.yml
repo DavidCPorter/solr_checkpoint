@@ -5,6 +5,8 @@
   stat:
     path: "{{ solr_install_dir }}"
   register: solr_install_path_status
+  # tags:
+    # - solr_update
 
 - name: 'Download Solr to -> "{{solr_install_dir}}"'
   git:
@@ -13,9 +15,17 @@
       version: "{{git_branch_name}}"
       force: yes
   register: solr_git_status
-  when: solr_install_path_status.stat.exists == False
+  # when: solr_install_path_status.stat.exists == False
   tags:
     - solr_update
+
+- name: delete /users/dporte7/solr-8_0/solr/server/solr/configsets/sample_techproducts_configs
+  file:
+    path: /users/dporte7/solr-8_0/solr/server/solr/configsets/sample_techproducts_configs
+    state: absent
+  tags:
+  - rm_sample
+  - solr_update
 
 
 - name: Run ant-ivy.
@@ -36,6 +46,8 @@
     chdir: '{{solr_install_dir}}/solr'
   when: solr_install_path_status.stat.exists == False
 
+
+
 - name: remove old solr.in.sh
   shell: rm -f '{{solr_install_dir}}/solr/bin/solr.in.sh'
   tags:
@@ -49,9 +61,6 @@
   tags:
     - config
     - solrinsh
-
-
-
 
 
 - name: create and grant log dir permissions for solr
@@ -88,14 +97,26 @@
     - rmi
 
 
+- name: restart solr
+  shell: ./solr/bin/solr restart -c
+  register: solr_stop_result
+  args:
+    chdir: '{{solr_install_dir}}'
+  environment:
+    SOLR_HOST: "{{ansible_subnet}}"
+    GLOBALIP: "{{hostvars[inventory_hostname]['ansible_default_ipv4']['address']}}"
+    CHROOT: sixteenNode
 
+  tags:
+    - never
+    - solr_restart
 
 - name: calling handler for stopping solr
   command: echo "stopping solr..."
   notify:
     - "stop solr services"
   tags:
-    - solr_restart
+    - never
     - solr_stop
 
 - name: calling handler for starting solr
@@ -103,5 +124,5 @@
   notify:
     - "start solr services"
   tags:
-    - solr_restart
+    - never
     - solr_start

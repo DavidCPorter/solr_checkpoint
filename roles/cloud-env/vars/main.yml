@@ -3,6 +3,7 @@
 
 rem_user: dporte7
 packages:
+- awscli
 - python3-pip
 - python3-dev
 - htop

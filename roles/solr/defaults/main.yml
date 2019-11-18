@@ -14,3 +14,4 @@
 solr_install_dir: /users/dporte7/solr-8_0
 solr_log_dir: /var/solr/logs
 git_branch_name: dporter
+solr_home: /users/dporte7/solr-8_0/solr/server/solr

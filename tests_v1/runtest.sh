@@ -19,6 +19,7 @@ function start_experiment() {
     QUERY="${14} ${15}"
     LOOP="${16} ${17}"
     SOLRNUM="${18} ${19}"
+    LOAD="${21}"
     INSTANCES="0"
     # these correlate the order in the ssh_files
     node16="128.110.153.163"
@@ -30,12 +31,18 @@ function start_experiment() {
     node22="128.110.153.176"
     node23="128.110.153.172"
 
+    # loadsize = num of load servers
+    LOADSIZE=$LOAD
+
+    echo "LOAD"
+    echo $(($LOADSIZE-1))
 
     # these correlate the order in the ssh_files
-    LOAD_NODES=( $node16 $node17 $node18 $node19 $node20 $node21 $node22 $node23 )
-    # loadsize = num of load servers
-    LOADSIZE=8
-
+    if [ $LOADSIZE = '4' ]; then
+      LOAD_NODES=( $node20 $node21 $node22 $node23 )
+    else
+      LOAD_NODES=( $node16 $node17 $node18 $node19 $node20 $node21 $node22 $node23 )
+    fi
     echo "LOAD_NODES = $LOAD_NODES"
     echo 'Copying python scripts to remote machine'
     pscp -l $USER -r -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_8 $PY_SCRIPT /users/dporte7
@@ -139,6 +146,7 @@ function profile_experiment_dstat() {
 
     LOOP="${16} ${17}"
     SOLRNUM="${18} ${19}"
+    LOAD="${20} ${21}"
 
     DPARAMS='-t --cpu --mem --disk --io --net --int --sys --swap --tcp'
 
@@ -152,7 +160,7 @@ function profile_experiment_dstat() {
     # nohup pssh -i -l $USER -h $PROJECT_HOME/ssh_files/pssh_solr_node_file "dstat $DPARAMS --output ${15}_node_dstat_$PY_NAME.csv >/dev/null 2>&1" &
     # nohup pssh -i -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file "cd solrclientserver;java -cp target/solrclientserver-1.0-SNAPSHOT.jar com.dporte7.solrclientserver.DistributedWebServer" &
   	echo 'Starting the experiment'
-  	 start_experiment $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM
+  	 start_experiment $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM $LOAD
 
     # start_experiment returns after requests
 
@@ -234,6 +242,11 @@ while (( "$#" )); do
       shift 2
       ;;
 
+    --load)
+      LOAD="--load $2"
+      shift 2
+      ;;
+
     --) # end argument parsing
       shift
       break
@@ -263,7 +276,7 @@ cd ~/projects/solrcloud/tests_v1;
 echo 'Starting the experiment'
 # start_experiment $USER $PY_SCRIPT
 
-profile_experiment_dstat $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM
+profile_experiment_dstat $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM $LOAD
 
 #start_experiment $USER $PY_SCRIPT "\"$PARAMETERS\""
 

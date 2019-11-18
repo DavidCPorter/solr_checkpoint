@@ -184,8 +184,8 @@
 # host checking can be disabled by using the system property "solr.disable.shardsWhitelist"
 #SOLR_OPTS="$SOLR_OPTS -Dsolr.shardsWhitelist=http://localhost:8983,http://localhost:8984"
 
-ZK_HOST="10.10.1.1:2181,10.10.1.2:2181,10.10.1.3:2181"
-ZK_CLIENT_TIMEOUT=15000
+ZK_HOST="10.10.1.1:2181,10.10.1.2:2181,10.10.1.3:2181/sixteenNode"
+ZK_CLIENT_TIMEOUT=30000
 SOLR_HOST=$SOLR_HOST
 SOLR_PID_DIR="/var/solr"
 SOLR_HOME="/users/dporte7/solr-8_0/solr/server/solr"
@@ -197,4 +197,4 @@ SOLR_PORT=8983
 # RMI_PORT=18983
 # heapsize 20g
 SOLR_JAVA_MEM="-Xms20g -Xmx20g"
-SOLR_OPTS="$SOLR_OPTS -Dcom.sun.management.jmxremote -javaagent:/opt/spm/spm-monitor/lib/spm-monitor-generic.jar=cfe92cf2-cf42-45b7-a965-b1bed5cea132::default"
+# SOLR_OPTS="$SOLR_OPTS -Dcom.sun.management.jmxremote -javaagent:/opt/spm/spm-monitor/lib/spm-monitor-generic.jar=cfe92cf2-cf42-45b7-a965-b1bed5cea132::default"

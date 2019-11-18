@@ -1,5 +1,5 @@
 # playbook for cloudconfig
-- hosts: nodes, zookeeperNodes
+- hosts: nodes
   roles:
     - cloud-env
 

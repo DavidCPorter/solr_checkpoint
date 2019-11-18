@@ -15,6 +15,13 @@
 #     opts: "size={{ ramdisk_size }}"
 #     state: mounted
 
+- name: add aws credentials
+  copy:
+    src: "{{cred_dir}}"
+    dest: /users/dporte7/
+  tags:
+    - aws
+
 - name: raise file and proc limits on servers
   blockinfile:
     path: '/etc/security/limits.conf'

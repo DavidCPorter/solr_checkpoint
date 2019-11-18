@@ -1,9 +1,8 @@
 #!/bin/bash
-alias killsolr=
-
-alias killsolr='cd ~/projects/solrcloud;pssh -i -h ssh_files/pssh_solr_node_file -l dporte7 -P sudo pkill -f solr'
+alias killmalware='cd ~/projects/solrcloud;pssh -i -h ssh_files/pssh_solr_node_file -l dporte7 -P sudo pkill -f'
 alias fulllogs="cd /Users/dporter/projects/solrcloud/; pssh -l dporte7 -h ssh_files/pssh_solr_node_file -P 'tail -n 100 /var/solr/logs/solr.log'"
 alias grepnodeprocs="cd /Users/dporter/projects/solrcloud/; pssh -l dporte7 -h ssh_files/pssh_solr_node_file -P 'ps aux | grep'"
+alias callingnodes="cd /Users/dporter/projects/solrcloud/; pssh -l dporte7 -h ssh_files/pssh_solr_node_file -P"
 alias wipetraffic='cd ~/projects/solrcloud;pssh -l dporte7 -h ssh_files/pssh_traffic_node_file_8 "echo ''>traffic_gen/traffic_gen.log"'
 alias viewtraffic='cd ~/projects/solrcloud;pssh -l dporte7 -h ssh_files/pssh_traffic_node_file_8 -P "tail -n 2000 traffic_gen/traffic_gen.log"'
 alias viewsolrj='cd ~/projects/solrcloud;pssh -l dporte7 -h ssh_files/pssh_traffic_node_file_8 -P "tail -n 2000 solrclientserver/solrjoutput.txt"'
@@ -23,7 +22,7 @@ export CHECKPORTSARGS="lsof -i | grep LISTEN"
 export CHECKARGS="ps aux | grep -i solrclientserver"
 alias prime="cd /Users/dporter/projects/solrcloud/tests_v1;cp -rf profiling_data/exp_results ~/exp_results/$(date '+%Y-%m-%d_%H:%M');rm -rf profiling_data/exp_results/*;cd /Users/dporter/projects/solrcloud/tests_v1;cp -rf *.zip ~/exp_results/$(date '+%Y-%m-%d_%H:%M');rm -rf *.zip"
 alias delete_collections="python3 /Users/dporter/projects/solrcloud/delete_collection.py"
-alias force_delete_single='nohup pssh -i -P -l dporte7 -h /Users/dporter/projects/solrcloud/ssh_files/pssh_solr_node_file "rm -rf /users/dporte7/solr-8_0/solr/server/solr/reviews*"'
+alias force_delete_all='play solr_configure_16.yml --tags solr_stop;nohup pssh -i -P -l dporte7 -h /Users/dporter/projects/solrcloud/ssh_files/pssh_solr_node_file "rm -rf /users/dporte7/solr-8_0/solr/server/solr/reviews*"'
 alias singlelogs="cd /Users/dporter/projects/solrcloud/; pssh -l dporte7 -h ssh_files/solr_single_node -P 'tail -n 1000 /var/solr/logs/solr.log'"
 
 alias archive_prev="cd /Users/dporter/projects/solrcloud/tests_v1;cp -rf profiling_data/exp_results ~/exp_results/$(date '+%Y-%m-%d_%H:%M');rm -rf profiling_data/exp_results/*"
@@ -31,10 +30,9 @@ alias archive_prev="cd /Users/dporter/projects/solrcloud/tests_v1;cp -rf profili
 alias archive_fcts="cd /Users/dporter/projects/solrcloud/tests_v1;cp -rf *.zip ~/exp_results/$(date '+%Y-%m-%d_%H:%M');rm -rf *.zip"
 alias singletest="cd /Users/dporter/projects/solrcloud/tests_v1; bash exp_single_cluster.sh"
 alias fulltest="cd /Users/dporter/projects/solrcloud/tests_v1; bash exp_scale_loop.sh"
-alias listcollections="cd /Users/dporter/projects/solrcloud/; pssh -l dporte7 -i -h ssh_files/solr_single_node 'ls /users/dporte7/solr-8_0/solr/server/solr'"
+alias listcores="cd /Users/dporter/projects/solrcloud/; pssh -l dporte7 -i -h ssh_files/pssh_solr_node_file 'ls /users/dporte7/solr-8_0/solr/server/solr'"
 alias deldown="cd /Users/dporter/projects/solrcloud/; pssh -l dporte7 -i -h ssh_files/solr_single_node 'bash /users/dporte7/solr-8_0/solr/bin/solr delete -c'"
 alias checkdisk="cd /Users/dporter/projects/solrcloud/; pssh -h ssh_files/pssh_solr_node_file -l dporte7 -P 'df | grep /dev/nvme0n1p1'"
-shopt -s expand_aliases
 
 alias checkconfig="cd /Users/dporter/projects/solrcloud/; pssh -l dporte7 -i -h ssh_files/solr_single_node 'cat /users/dporte7/solr-8_0/solr/server/solr/configsets/_default/conf/solrconfig.xml'"
 alias collectionconfig="curl http://128.110.153.162:8983/solr/reviews_rf4_s1_clustersize94/config"
@@ -66,6 +64,8 @@ node22=128.110.153.176
 node23=128.110.153.172
 
 alias ssher="ssh -l dporte7"
+shopt -s expand_aliases
+
 
 stopsingle (){
   for i in `seq 8`;do
@@ -100,4 +100,20 @@ wipeInstances (){
   echo "removing old node_ dirs on server1"
   pssh -h ~/projects/solrcloud/ssh_files/solr_single_node -l dporte7 -P "rm -rf $CLOUDHOME/node_*"
   sleep 2
+}
+
+
+stopSolr () {
+  printf "\n\n"
+  echo "stopping zookeeper and solr "
+  printf "\n\n"
+
+  play solr_configure_16.yml --tags solr_stop
+  wait $!
+  sleep 3
+
+  # play zoo_configure.yml --tags zoo_stop
+  # wait $!
+  # sleep 3
+
 }
