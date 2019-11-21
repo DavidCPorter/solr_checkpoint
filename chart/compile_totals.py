@@ -16,16 +16,16 @@ def main(query, codename):
     print(dirs)
     dirs = dirs.split('\n')
     dirs.pop()
-
+    final_resting_place='/Users/dporter/projects/solrcloud/chart/totals/cluster_totals'
     try:
-        os.makedirs('/Users/dporter/projects/solrcloud/chart/totals/clusterx')
+        os.makedirs(final_resting_place)
     except FileExistsError:
         print("file exists\n\n\n")
      # directory already exists
         pass
 
 # this is for total file
-    fm = open('/Users/dporter/projects/solrcloud/chart/totals/clusterx/all_cluster_'+query+'_'+codename+'.csv', "w+")
+    fm = open(final_resting_place'/all_cluster_'+query+'_'+codename+'.csv', "w+")
     fm.write('parallel_requests,QPS,median_lat,P95(ms),clustersize,query,rfshards\n')
 
     for d in dirs:

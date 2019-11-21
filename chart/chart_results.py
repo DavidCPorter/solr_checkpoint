@@ -15,7 +15,7 @@ def main(query,clustersize,codename):
     dirs = os.popen('ls '+proj_home+'/tests_v1/profiling_data/exp_results | grep clustersize'+clustersize).read()
     dirs = dirs.split('\n')
     dirs.pop()
-    
+
     try:
         os.makedirs('/Users/dporter/projects/solrcloud/chart/totals')
     except FileExistsError:
@@ -48,17 +48,20 @@ def main(query,clustersize,codename):
         fp.close()
 
 
+        fm = open('/Users/dporter/projects/solrcloud/chart/totals/total_'+clustersize+query+'_'+codename+'.csv', "a+")
 
+        
         for exp_output in files:
             f = open("/Users/dporter/projects/solrcloud/tests_v1/profiling_data/exp_results/"+d+'/'+exp_output, 'r')
             data = f.readline()
             f.close()
-            fp = open('/Users/dporter/projects/solrcloud/chart/'+d+'/query'+query+'/'+d+'query'+query+'_chartdata_'+codename+'.csv', "a+")
-            fp.write(data+','+clustersize+','+query+','+d[:8]+'\n')
-            fp.close()
-            fm = open('/Users/dporter/projects/solrcloud/chart/totals/total_'+clustersize+query+'_'+codename+'.csv', "a+")
+            # dont need to write this file anymore
+            # fp = open('/Users/dporter/projects/solrcloud/chart/'+d+'/query'+query+'/'+d+'query'+query+'_chartdata_'+codename+'.csv', "a+")
+            # fp.write(data+','+clustersize+','+query+','+d[:8]+'\n')
+            # fp.close()
             fm.write(data+','+clustersize+','+query+','+d[:8]+'\n')
-            fm.close()
+
+        fm.close()
 
 
 

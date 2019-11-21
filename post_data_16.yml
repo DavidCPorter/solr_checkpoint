@@ -1,0 +1,36 @@
+# playbook for cloudconfig
+
+
+
+- hosts: nodes
+  roles:
+    - upload_data
+  tags:
+    - never
+    - begin_exp
+
+- hosts: singleNode
+  tasks:
+    - name: this task will run when aws_index is false
+      include_tasks: /Users/dporter/projects/solrcloud/roles/upload_data/tasks/aws_absent.yml
+  tags:
+    - never
+    - begin_exp
+
+- hosts: nodes
+  tasks:
+    - name: run this at the end of each experiment AKA aws_exp_reset
+      include_tasks:
+        file: /Users/dporter/projects/solrcloud/roles/upload_data/tasks/aws_reset.yml
+  tags:
+    - never
+    - aws_exp_reset
+
+- hosts: singleNode
+  tasks:
+    - name: update collection configs
+      include_tasks:
+        file: '/Users/dporter/projects/solrcloud/roles/upload_data/tasks/all_config.yml'
+  tags:
+    - never
+    - update_collection_configs

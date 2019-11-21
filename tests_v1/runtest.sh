@@ -119,6 +119,8 @@ function start_experiment() {
     sleep 5
     python3 $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $REPLICAS $QUERY $LOOP $SHARDS $SOLRNUM $LOADSIZE $INSTANCES
     DATE=$(date '+%Y-%m-%d_%H:%M:%S')
+    python3 $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $REPLICAS $QUERY $LOOP $SHARDS $SOLRNUM $LOADSIZE $INSTANCES
+
     # for reference
     zip -r ${DATE}_query${15}_rf${11}_s${13}_clustersize${19}_threads${5}_proc${7}.zip profiling_data/proc_results
     printf "\n\n\n "

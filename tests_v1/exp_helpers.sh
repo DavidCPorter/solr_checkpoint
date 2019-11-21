@@ -7,7 +7,7 @@ source /Users/dporter/projects/solrcloud/utils.sh
 
 stopSolr () {
   printf "\n\n"
-  echo "stopping zookeeper and solr "
+  echo "stopping solr "
   printf "\n\n"
 
   play solr_configure_16.yml --tags solr_stop

@@ -20,6 +20,7 @@ if [ "$#" -eq 0 ]; then
 fi
 
 accepted_nodes=( 2 4 8 16 32 )
+CHARTNAME=$(LC_ALL=C tr -dc 'A-Za-z0-9!' </dev/urandom | head -c 13; echo)
 
 ####### validate arguments
 
@@ -40,23 +41,22 @@ done
 
 
 # ARCHIVE PREVIOUS EXPs
-archive_prev
+archivePrev $CHARTNAME
 archive_fcts
 
 #########  EXP PARAMS
 
 # constraint -> shards are 1, 2, or 4
-SHARDS=( 2 4 )
+SHARDS=( 1 )
 QUERY="direct"
-RF_MULTIPLE=2
-secondRF=2
-LOAD=8
+RF_MULTIPLE=( 2 )
+LOAD=4
 
 
 # loop_args
 T1=1
 STEP=1
-TN=8
+TN=5
 #########  PARAMS END
 
 
@@ -68,38 +68,44 @@ for SERVERNODE in "$@"; do
 
   for SHARD in ${SHARDS[@]}; do
 
-
-    ######## EXP LOOP = r*s = 2(num of SERVERNODES) ##########
-
-    # no fractional divison
-    if [[ $SHARD -eq 4 ]] && [[ $SERVERNODE = '1' ]];then
-      continue
-    fi
-
-    RF=$(($RF_MULTIPLE*$SERVERNODE))
-
-    # zookeeper is going to be confused when startSolr is run since the last exp moved indexes to cloud... but its fine
-    startSolr $SERVERNODE
-    # begin_exp is going to either post to solr a new colleciton or pull down an existing one from aws
-    play post_data.yml --tags begin_exp --extra-vars "replicas=$RF shards=$SHARD clustersize=$SERVERNODE"
-    wait $!
-    #  need to restart since pulling index from aws most likely happened and solr (not zookeeper) needs to restart after that hack
-    restartSolr $SERVERNODE
-    play post_data.yml --tags update_collection_configs --extra-vars "replicas=$RF shards=$SHARD clustersize=$SERVERNODE"
+    for RF_MULT in ${RF_MULTIPLE[@]}; do
 
 
+      ######## EXP LOOP = r*s = 2(num of SERVERNODES) ##########
 
-    for t in `seq $T1 $STEP $TN`; do
-      # keep last log
-      cd ~/projects/solrcloud;pssh -l dporte7 -h $LOADHOSTS "echo ''>traffic_gen/traffic_gen.log"
-      cd ~/projects/solrcloud/tests_v1; bash runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t ${t} -d 10 -p $SERVERNODE --solrnum $SERVERNODE --query $QUERY --loop open --load $LOAD
+      # no fractional divison
+      if [[ $SHARD -eq 4 ]] && [[ $SERVERNODE = '1' ]];then
+        continue
+      fi
+
+      RF=$(($RF_MULT*$SERVERNODE))
+
+      # zookeeper is going to be confused when startSolr is run since the last exp moved indexes to cloud... but its fine
+      startSolr $SERVERNODE
+      # begin_exp is going to either post to solr a new colleciton or pull down an existing one from aws
+      play post_data_$SERVERNODE.yml --tags begin_exp --extra-vars "replicas=$RF shards=$SHARD clustersize=$SERVERNODE"
       wait $!
-      sleep 2
+      #  need to restart since pulling index from aws most likely happened and solr (not zookeeper) needs to restart after that hack
+      restartSolr $SERVERNODE
+      play post_data_$SERVERNODE.yml --tags update_collection_configs --extra-vars "replicas=$RF shards=$SHARD clustersize=$SERVERNODE"
+
+
+
+      for t in `seq $T1 $STEP $TN`; do
+        # keep last log
+        cd ~/projects/solrcloud;pssh -l dporte7 -h $LOADHOSTS "echo ''>traffic_gen/traffic_gen.log"
+        cd ~/projects/solrcloud/tests_v1; bash runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t ${t} -d 10 -p $SERVERNODE --solrnum $SERVERNODE --query $QUERY --loop open --load $LOAD
+        wait $!
+        sleep 2
+      done
+  # need to call stopsolr it here since it needs to stop this exp explicitly before running a new one
+      stopSolr
+      play post_data_$SERVERNODE.yml --tags aws_exp_reset --extra-vars "replicas=$RF shards=$SHARD clustersize=$SERVERNODE"
     done
-
-# need to call stopsolr it here since it needs to stop this exp explicitly before running a new one
-    stopSolr
-    play post_data.yml --tags aws_exp_reset --extra-vars "replicas=$RF shards=$SHARD clustersize=$SERVERNODE"
-
   done
+  archivePrev $CHARTNAME
+  archive_fcts
 done
+python3 /Users/dporter/projects/solrcloud/chart/chart_all_full.py $QUERY $CHARTNAME
+python3 /Users/dporter/projects/solrcloud/chart/chartit.py $QUERY $CHARTNAME
+zip -r "/Users/dporter/projects/solrcloud/chart/exp_html_out/_$CHARTNAME/exp_zip.zip" "/Users/dporter/projects/solrcloud/chart/exp_records/$CHARTNAME"

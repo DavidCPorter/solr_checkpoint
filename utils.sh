@@ -21,13 +21,13 @@ export CHECKPORTSARGS="lsof -i | grep LISTEN"
 
 export CHECKARGS="ps aux | grep -i solrclientserver"
 alias prime="cd /Users/dporter/projects/solrcloud/tests_v1;cp -rf profiling_data/exp_results ~/exp_results/$(date '+%Y-%m-%d_%H:%M');rm -rf profiling_data/exp_results/*;cd /Users/dporter/projects/solrcloud/tests_v1;cp -rf *.zip ~/exp_results/$(date '+%Y-%m-%d_%H:%M');rm -rf *.zip"
-alias delete_collections="python3 /Users/dporter/projects/solrcloud/delete_collection.py"
+# alias delete_collections="python3 /Users/dporter/projects/solrcloud/delete_collection.py"
 alias force_delete_all='play solr_configure_16.yml --tags solr_stop;nohup pssh -i -P -l dporte7 -h /Users/dporter/projects/solrcloud/ssh_files/pssh_solr_node_file "rm -rf /users/dporte7/solr-8_0/solr/server/solr/reviews*"'
 alias singlelogs="cd /Users/dporter/projects/solrcloud/; pssh -l dporte7 -h ssh_files/solr_single_node -P 'tail -n 1000 /var/solr/logs/solr.log'"
 
-alias archive_prev="cd /Users/dporter/projects/solrcloud/tests_v1;cp -rf profiling_data/exp_results ~/exp_results/$(date '+%Y-%m-%d_%H:%M');rm -rf profiling_data/exp_results/*"
 
-alias archive_fcts="cd /Users/dporter/projects/solrcloud/tests_v1;cp -rf *.zip ~/exp_results/$(date '+%Y-%m-%d_%H:%M');rm -rf *.zip"
+
+alias archive_fcts="cd /Users/dporter/projects/solrcloud/tests_v1;cp -rf *.zip ~/exp_results_fct_zips/$(date '+%Y-%m-%d_%H:%M');rm -rf *.zip"
 alias singletest="cd /Users/dporter/projects/solrcloud/tests_v1; bash exp_single_cluster.sh"
 alias fulltest="cd /Users/dporter/projects/solrcloud/tests_v1; bash exp_scale_loop.sh"
 alias listcores="cd /Users/dporter/projects/solrcloud/; pssh -l dporte7 -i -h ssh_files/pssh_solr_node_file 'ls /users/dporte7/solr-8_0/solr/server/solr'"
@@ -37,6 +37,8 @@ alias checkdisk="cd /Users/dporter/projects/solrcloud/; pssh -h ssh_files/pssh_s
 alias checkconfig="cd /Users/dporter/projects/solrcloud/; pssh -l dporte7 -i -h ssh_files/solr_single_node 'cat /users/dporte7/solr-8_0/solr/server/solr/configsets/_default/conf/solrconfig.xml'"
 alias collectionconfig="curl http://128.110.153.162:8983/solr/reviews_rf4_s1_clustersize94/config"
 alias collectionconfigfull="curl http://128.110.153.162:8983/solr/reviews_rf32_s1_clustersize16/config"
+
+CORE_HOME=/users/dporte7/solr-8_0/solr/server/solr
 
 node0=128.110.153.162
 node1=128.110.153.184
@@ -66,6 +68,15 @@ node23=128.110.153.172
 alias ssher="ssh -l dporte7"
 shopt -s expand_aliases
 
+EXP_HOME=/Users/dporter/projects/solrcloud/chart/exp_records
+
+
+archivePrev (){
+  cd /Users/dporter/projects/solrcloud/tests_v1
+  mkdir $EXP_HOME/$1
+  cp -rf profiling_data/exp_results/* $EXP_HOME/$1
+  rm -rf profiling_data/exp_results/*
+}
 
 stopsingle (){
   for i in `seq 8`;do
