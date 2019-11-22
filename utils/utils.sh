@@ -1,4 +1,5 @@
 #!/bin/bash
+alias mechart="python3 /Users/dporter/projects/solrcloud/chart/chartit_error_bars.py"
 alias killmalware='cd ~/projects/solrcloud;pssh -i -h ssh_files/pssh_solr_node_file -l dporte7 -P sudo pkill -f'
 alias fulllogs="cd /Users/dporter/projects/solrcloud/; pssh -l dporte7 -h ssh_files/pssh_solr_node_file -P 'tail -n 100 /var/solr/logs/solr.log'"
 alias grepnodeprocs="cd /Users/dporter/projects/solrcloud/; pssh -l dporte7 -h ssh_files/pssh_solr_node_file -P 'ps aux | grep'"
@@ -7,7 +8,7 @@ alias wipetraffic='cd ~/projects/solrcloud;pssh -l dporte7 -h ssh_files/pssh_tra
 alias viewtraffic='cd ~/projects/solrcloud;pssh -l dporte7 -h ssh_files/pssh_traffic_node_file_8 -P "tail -n 2000 traffic_gen/traffic_gen.log"'
 alias viewsolrj='cd ~/projects/solrcloud;pssh -l dporte7 -h ssh_files/pssh_traffic_node_file_8 -P "tail -n 2000 solrclientserver/solrjoutput.txt"'
 alias search='cd ~/projects/solrcloud;pssh -l dporte7 -h ssh_files/pssh_zoo_node_file -P "tail -n 500 /var/solr/logs/solr.log"'
-alias play='cd ~/projects/solrcloud; ansible-playbook -i inventory'
+alias play='cd ~/projects/solrcloud/playbooks; ansible-playbook -i ../inventory'
 alias runsolrj='cd ~/projects/solrcloud;nohup pssh -i -h ssh_files/pssh_traffic_node_file_8 -l dporte7 "cd solrclientserver;java -cp target/solrclientserver-1.0-SNAPSHOT.jar com.dporte7.solrclientserver.DistributedWebServer > solrjoutput.txt" &'
 alias killsolrj='cd ~/projects/solrcloud;pssh -i -h ssh_files/pssh_traffic_node_file_8 -l dporte7 $KILLARGS'
 export KILLARGS="ps aux | grep -i solrclientserver | awk -F' ' '{print \$2}' | xargs kill -9"
@@ -67,6 +68,8 @@ node23=128.110.153.172
 
 alias ssher="ssh -l dporte7"
 shopt -s expand_aliases
+
+alias wipecores="callingnodes rm -rf /users/dporte7/solr-8_0/solr/server/solr/reviews*"
 
 EXP_HOME=/Users/dporter/projects/solrcloud/chart/exp_records
 

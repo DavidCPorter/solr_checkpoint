@@ -3,8 +3,8 @@
 CLOUDHOME="/users/dporte7"
 USER="dporte7"
 # load sugar
-source /Users/dporter/projects/solrcloud/utils.sh
-source /Users/dporter/projects/solrcloud/tests_v1/exp_helpers.sh
+source /Users/dporter/projects/solrcloud/utils/utils.sh
+source /Users/dporter/projects/solrcloud/utils/exp_helpers.sh
 
 
 if [ "$#" -gt 5 ]; then
@@ -27,7 +27,7 @@ CHARTNAME=$(LC_ALL=C tr -dc 'A-Za-z0-9!' </dev/urandom | head -c 13; echo)
 for SERVERNODE in "$@"; do
   containsElement $SERVERNODE ${accepted_nodes[@]}
   if [ $? -eq 1 ]; then
-    echo "nodesizes must be 1,2,4,8,16, or 32"
+    echo "nodesizes must be 2,4,8,16, or 32"
     exit
   fi
 done
@@ -40,31 +40,35 @@ done
 ######## VALIDATION COMPLETE
 
 
-# ARCHIVE PREVIOUS EXPs
+# ARCHIVE PREVIOUS EXPs (this shouldnt archive anything if done correctly so first wipe dir)
+rm -rf /Users/dporter/projects/solrcloud/tests_v1/profiling_data/exp_results/*
 archivePrev $CHARTNAME
 archive_fcts
 
 #########  EXP PARAMS
 
 # constraint -> shards are 1, 2, or 4
-SHARDS=( 1 )
+SHARDS=( 1 2 )
 QUERY="direct"
-RF_MULTIPLE=( 2 )
+RF_MULTIPLE=( 2 4 )
 LOAD=4
 
 
 # loop_args
 T1=1
 STEP=1
-TN=5
+TN=15
 #########  PARAMS END
 
 
 for SERVERNODE in "$@"; do
 
+  if [ $SERVERNODE -gt '4' ]; then
+    LOAD=8
+  fi
 
 # since this var is only used to delete logs, just keep at all 8
-  LOADHOSTS=ssh_files/pssh_traffic_node_file_8
+  LOADHOSTS=~/projects/solrcloud/ssh_files/pssh_traffic_node_file_8
 
   for SHARD in ${SHARDS[@]}; do
 
@@ -89,12 +93,16 @@ for SERVERNODE in "$@"; do
       restartSolr $SERVERNODE
       play post_data_$SERVERNODE.yml --tags update_collection_configs --extra-vars "replicas=$RF shards=$SHARD clustersize=$SERVERNODE"
 
-
+# warm cache... will throw this away in the chart_all_full.py script
+      cd ~/projects/solrcloud/tests_v1/scriptsThatRunLoadServers; bash runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t 1 -d 10 -p $SERVERNODE --solrnum $SERVERNODE --query $QUERY --loop open --load $LOAD
+      wait $!
+      sleep 2
+#  done
 
       for t in `seq $T1 $STEP $TN`; do
         # keep last log
         cd ~/projects/solrcloud;pssh -l dporte7 -h $LOADHOSTS "echo ''>traffic_gen/traffic_gen.log"
-        cd ~/projects/solrcloud/tests_v1; bash runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t ${t} -d 10 -p $SERVERNODE --solrnum $SERVERNODE --query $QUERY --loop open --load $LOAD
+        cd ~/projects/solrcloud/tests_v1/scriptsThatRunLoadServers; bash runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t ${t} -d 10 -p $SERVERNODE --solrnum $SERVERNODE --query $QUERY --loop open --load $LOAD
         wait $!
         sleep 2
       done
@@ -107,5 +115,5 @@ for SERVERNODE in "$@"; do
   archive_fcts
 done
 python3 /Users/dporter/projects/solrcloud/chart/chart_all_full.py $QUERY $CHARTNAME
-python3 /Users/dporter/projects/solrcloud/chart/chartit.py $QUERY $CHARTNAME
+python3 /Users/dporter/projects/solrcloud/chart/chartit_error_bars.py $QUERY $CHARTNAME
 zip -r "/Users/dporter/projects/solrcloud/chart/exp_html_out/_$CHARTNAME/exp_zip.zip" "/Users/dporter/projects/solrcloud/chart/exp_records/$CHARTNAME"

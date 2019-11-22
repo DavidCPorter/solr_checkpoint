@@ -12,7 +12,7 @@
 - hosts: singleNode
   tasks:
     - name: this task will run when aws_index is false
-      include_tasks: /Users/dporter/projects/solrcloud/roles/upload_data/tasks/aws_absent.yml
+      include_tasks: roles/upload_data/tasks/aws_absent.yml
   tags:
     - never
     - begin_exp
@@ -21,7 +21,7 @@
   tasks:
     - name: run this at the end of each experiment AKA aws_exp_reset
       include_tasks:
-        file: /Users/dporter/projects/solrcloud/roles/upload_data/tasks/aws_reset.yml
+        file: roles/upload_data/tasks/aws_reset.yml
   tags:
     - never
     - aws_exp_reset
@@ -30,7 +30,7 @@
   tasks:
     - name: update collection configs
       include_tasks:
-        file: '/Users/dporter/projects/solrcloud/roles/upload_data/tasks/all_config.yml'
+        file: roles/upload_data/tasks/all_config.yml
   tags:
     - never
     - update_collection_configs

@@ -22,8 +22,8 @@ public class DistributedWebServer {
 
     private static String defaultCollection = "reviews";
     protected static CloudSolrClient instance;
-    private static final Optional<String> empty = Optional.empty();
-
+    private static final Optional<String> empty = Optional.of(String "");
+// need to get clustersize here and pass to optional
     static {
         List<String> zesty = new ArrayList<>(Arrays.asList("10.10.1.1:2181","10.10.1.2:2181","10.10.1.3:2181"));
 

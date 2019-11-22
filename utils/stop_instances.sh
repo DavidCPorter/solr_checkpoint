@@ -26,7 +26,7 @@ accepted_instances=( 2 4 8 )
 
 
 # load sugar
-source /Users/dporter/projects/solrcloud/utils.sh
+source /Users/dporter/projects/solrcloud/utils/utils.sh
 shopt -s expand_aliases
 
 SHARDS=( 1 2 4 )

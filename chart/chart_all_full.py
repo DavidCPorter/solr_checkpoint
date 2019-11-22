@@ -37,7 +37,7 @@ def main(query,codename):
         print(files)
         files = files.split('\n')
         files.pop()
-        print(files)
+        print(files[1:])
         # out_dir='/Users/dporter/projects/solrcloud/chart/records_cluster_specific/'+d+'/query'+query+'/'
         # try:
         #     os.makedirs(out_dir)
@@ -54,8 +54,8 @@ def main(query,codename):
         # fp.close()
 
 
-
-        for exp_output in files:
+        # removing cache warming file with [1:]
+        for exp_output in files[1:]:
             f = open(exp_home+'/'+d+'/'+exp_output, 'r')
             data = f.readline()
             f.close()

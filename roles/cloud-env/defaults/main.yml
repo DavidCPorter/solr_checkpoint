@@ -1,6 +1,0 @@
----
-# defaults file for cloud-env
-
-ramdisk_path: /dev/shm
-ptp_install_dir: '/users/{{ansible_user}}/linuxptp'
-cred_dir: /Users/dporter/projects/solrcloud/roles/cloud-env/files/.aws

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 PROJECT_HOME='/Users/dporter/projects/solrcloud'
+RSCRIPTS=$PROJECT_HOME/tests_v1/remotescripts
 
 function start_experiment() {
 
@@ -53,9 +54,9 @@ function start_experiment() {
 ########## EXPERIMENT LOOPS #################
 
   echo "running on single solr server"
-  echo "#!/bin/bash" > ./remotescript.sh
-  echo "#!/bin/bash" > ./remotescript_foreground.sh
-  echo "# this file is used to run processes remotely since cloudlab blacklists aggressive ssh" >> ./remotescript.sh
+  echo "#!/bin/bash" > $RSCRIPTS/remotescript.sh
+  echo "#!/bin/bash" > $RSCRIPTS/remotescript_foreground.sh
+  echo "# this file is used to run processes remotely since cloudlab blacklists aggressive ssh" >> $RSCRIPTS/remotescript.sh
 
   # this will allocate the processes connections accross the ports open for each solr instance on server 1
   for i in `seq $MINUS1`; do
@@ -66,21 +67,21 @@ function start_experiment() {
 
     echo "$i"
     temp=$i
-    echo "python3 traffic_gen.py $SINGLE_PAR --port 99$temp$temp >/dev/null 2>&1 &" >> ./remotescript.sh
-    echo "python3 traffic_gen.py $SINGLE_PAR --port 99$temp$temp >/dev/null 2>&1 &" >> ./remotescript_foreground.sh
+    echo "python3 traffic_gen.py $SINGLE_PAR --port 99$temp$temp >/dev/null 2>&1 &" >> $RSCRIPTS/remotescript.sh
+    echo "python3 traffic_gen.py $SINGLE_PAR --port 99$temp$temp >/dev/null 2>&1 &" >> $RSCRIPTS/remotescript_foreground.sh
   done
 
-  echo "python3 traffic_gen.py $SINGLE_PAR --port 8983 >/dev/null 2>&1 &" >> ./remotescript.sh
+  echo "python3 traffic_gen.py $SINGLE_PAR --port 8983 >/dev/null 2>&1 &" >> $RSCRIPTS/remotescript.sh
   # see if changing this will affect solrj
-  echo "python3 traffic_gen.py $SINGLE_PAR --port 8983" >> ./remotescript_foreground.sh
+  echo "python3 traffic_gen.py $SINGLE_PAR --port 8983" >> $RSCRIPTS/remotescript_foreground.sh
   # run remotescripts on all background nodes
-  pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_7 ./remotescript.sh /users/$USER/traffic_gen
-  pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_single ./remotescript_foreground.sh /users/$USER/traffic_gen
+  pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_7 $RSCRIPTS/remotescript.sh /users/$USER/traffic_gen
+  pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_single $RSCRIPTS/remotescript_foreground.sh /users/$USER/traffic_gen
 
 
   #### RUNNING EXPERIMENTS #####
   echo "RUNNING THIS REMOTE SHELL SCRIPT ON LOAD NODES"
-  cat ./remotescript_foreground.sh
+  cat $RSCRIPTS/remotescript_foreground.sh
   # BACKGROUND LOAD GEN NODES
   nohup pssh -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_7 "cd $(basename $PY_SCRIPT); bash remotescript.sh"&
   # FOREGROUND LOAD GEN NODE

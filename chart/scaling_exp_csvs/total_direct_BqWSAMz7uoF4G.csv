@@ -1,0 +1,7 @@
+parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROUP
+32,16332.7,1,3,8,direct,rf16_s1_,12
+64,49164.2,0,1,8,direct,rf16_s1_,12
+64,49164.2,0,1,8,direct,rf16_s1_,12
+96,71364.6,0,1,8,direct,rf16_s1_,12
+128,73991.5,0,2,8,direct,rf16_s1_,12
+160,73635.7,1,3,8,direct,rf16_s1_,12

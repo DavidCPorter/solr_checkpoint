@@ -3,7 +3,7 @@
 CLOUDHOME="/users/dporte7"
 USER="dporte7"
 # load sugar
-source /Users/dporter/projects/solrcloud/utils.sh
+source /Users/dporter/projects/solrcloud/utils/utils.sh
 
 stopSolr () {
   printf "\n\n"

@@ -3,8 +3,9 @@
 CLOUDHOME="/users/dporte7"
 USER="dporte7"
 # load sugar
-source /Users/dporter/projects/solrcloud/utils.sh
+source /Users/dporter/projects/solrcloud/utils/utils.sh
 # shopt -s expand_aliases
+source /Users/dporter/projects/solrcloud/utils/exp_helpers.sh
 
 
 restartSolrZoo () {
@@ -220,7 +221,7 @@ for INSTANCES in "$@"; do
     for t in `seq $T1 $STEP $TN`; do
       # keep last log
       cd ~/projects/solrcloud;pssh -l dporte7 -h $LOADHOSTS "echo ''>traffic_gen/traffic_gen.log"
-      cd ~/projects/solrcloud/tests_v1; bash runtest_single.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t ${t} -d 10 -p $INSTANCES --solrnum $INSTANCES --query $QUERY --loop open --instances $INSTANCES
+      cd ~/projects/solrcloud/tests_v1/scriptsThatRunLoadServers; bash runtest_single.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t ${t} -d 10 -p $INSTANCES --solrnum $INSTANCES --query $QUERY --loop open --instances $INSTANCES
       wait $!
       sleep 2
       singlelogs > ./solr-log.txt
