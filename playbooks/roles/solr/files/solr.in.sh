@@ -184,7 +184,7 @@
 # host checking can be disabled by using the system property "solr.disable.shardsWhitelist"
 #SOLR_OPTS="$SOLR_OPTS -Dsolr.shardsWhitelist=http://localhost:8983,http://localhost:8984"
 
-ZK_HOST="10.10.1.1:2181,10.10.1.2:2181,10.10.1.3:2181/sixteenNode"
+ZK_HOST="10.10.1.1:2181,10.10.1.2:2181,10.10.1.3:2181"
 ZK_CLIENT_TIMEOUT=30000
 SOLR_HOST=$SOLR_HOST
 SOLR_PID_DIR="/var/solr"

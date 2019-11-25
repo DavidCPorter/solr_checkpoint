@@ -9,7 +9,6 @@
     environment:
       SOLR_HOST: "{{ansible_subnet}}"
       GLOBALIP: "{{hostvars[inventory_hostname]['ansible_default_ipv4']['address']}}"
-      CHROOT: sixteenNode
 
     listen:
       - "stop solr services"
@@ -23,9 +22,10 @@
     listen:
       - "stop solr services"
 
+#
 # q has been added to issue WARN log level only -> didnt seem to make a big difference
   - name: start solr
-    shell: ./solr/bin/solr start -q -c
+    shell: ./solr/bin/solr start -q -c -z "10.10.1.1:2181,10.10.1.2:2181,10.10.1.3:2181/{{chroot}}"
     register: solr_start_result
     ignore_errors: yes
 
@@ -34,7 +34,6 @@
     environment:
       SOLR_HOST: "{{ansible_subnet}}"
       GLOBALIP: "{{hostvars[inventory_hostname]['ansible_default_ipv4']['address']}}"
-      CHROOT: sixteenNode
     listen:
       - "start solr services"
 

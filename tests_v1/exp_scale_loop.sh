@@ -20,7 +20,6 @@ if [ "$#" -eq 0 ]; then
 fi
 
 accepted_nodes=( 2 4 8 16 32 )
-CHARTNAME=$(LC_ALL=C tr -dc 'A-Za-z0-9!' </dev/urandom | head -c 13; echo)
 
 ####### validate arguments
 
@@ -32,13 +31,18 @@ for SERVERNODE in "$@"; do
   fi
 done
 
+PREFIXER=""
 echo "running experiment for these solrnode cluster sizes:"
 for SERVERNODE in "$@"; do
+  PREFIXER="${PREFIXER}${SERVERNODE}_"
   echo $SERVERNODE
 done
-
+CHARTNAME=$(LC_ALL=C tr -dc 'a-z' </dev/urandom | head -c 7; echo)
+CHARTNAME="$(date +"%m-%d")::${PREFIXER}${CHARTNAME}"
 ######## VALIDATION COMPLETE
 
+echo "chartname:"
+echo $CHARTNAME
 
 # ARCHIVE PREVIOUS EXPs (this shouldnt archive anything if done correctly so first wipe dir)
 rm -rf /Users/dporter/projects/solrcloud/tests_v1/profiling_data/exp_results/*
@@ -48,17 +52,18 @@ archive_fcts
 #########  EXP PARAMS
 
 # constraint -> shards are 1, 2, or 4
-SHARDS=( 1 2 )
+SHARDS=( 1 )
 QUERY="direct"
-RF_MULTIPLE=( 2 4 )
+RF_MULTIPLE=( 2 )
 LOAD=4
 
 
 # loop_args
 T1=1
 STEP=1
-TN=15
+TN=6
 #########  PARAMS END
+
 
 
 for SERVERNODE in "$@"; do

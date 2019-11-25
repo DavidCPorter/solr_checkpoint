@@ -4,8 +4,8 @@
   include_vars: /Users/dporter/projects/solrcloud/playbooks/roles/upload_data/defaults/main.yml
 
 - name: check if aws has the index
-# aws s3 ls s3://solr-8-dporte7/10.10.1.12/reviews_rf32_s1_clustersize12
-  shell: aws s3 ls "s3://solr-8-dporte7/{{ansible_subnet}}/{{collection_name}}"
+# aws s3 ls s3://solr-8-dporter/10.10.1.12/reviews_rf32_s1_clustersize12
+  shell: aws s3 ls "s3://solr-8-dporter/{{ansible_subnet}}/{{collection_name}}"
   register: index_result
   ignore_errors: yes
 

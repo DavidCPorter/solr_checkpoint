@@ -22,7 +22,7 @@ export CHECKPORTSARGS="lsof -i | grep LISTEN"
 
 export CHECKARGS="ps aux | grep -i solrclientserver"
 alias prime="cd /Users/dporter/projects/solrcloud/tests_v1;cp -rf profiling_data/exp_results ~/exp_results/$(date '+%Y-%m-%d_%H:%M');rm -rf profiling_data/exp_results/*;cd /Users/dporter/projects/solrcloud/tests_v1;cp -rf *.zip ~/exp_results/$(date '+%Y-%m-%d_%H:%M');rm -rf *.zip"
-# alias delete_collections="python3 /Users/dporter/projects/solrcloud/delete_collection.py"
+# alias delete_collections="python3 /Users/dporter/projects/solrcloud/utils/delete_collection.py"
 alias force_delete_all='play solr_configure_16.yml --tags solr_stop;nohup pssh -i -P -l dporte7 -h /Users/dporter/projects/solrcloud/ssh_files/pssh_solr_node_file "rm -rf /users/dporte7/solr-8_0/solr/server/solr/reviews*"'
 alias singlelogs="cd /Users/dporter/projects/solrcloud/; pssh -l dporte7 -h ssh_files/solr_single_node -P 'tail -n 1000 /var/solr/logs/solr.log'"
 

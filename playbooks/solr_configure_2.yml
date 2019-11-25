@@ -2,3 +2,5 @@
 - hosts: twoNode
   roles:
     - solr
+  vars:
+    chroot: twoNode

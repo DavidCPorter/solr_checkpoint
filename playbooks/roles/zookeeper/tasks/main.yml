@@ -73,6 +73,7 @@
   become: yes
   become_user: root
   tags:
+    - never
     - burn_zoo
 
 - name: delete zookeeper dir
@@ -80,4 +81,5 @@
     path: "{{zoo_root_dir}}"
     state: absent
   tags:
+    - never
     - burn_zoo

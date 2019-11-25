@@ -29,6 +29,7 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
     lat = 0
     responses = 0
     fct_return = []
+    gut_check = []
 
     # Wait for start signal
     logging.debug( "Waiting for start event %s" % name )
@@ -58,6 +59,8 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
             # log 20% of queries
             # if responses%5 == 0:
             fct_return.append(fct)
+            if responses%1000 == 0:
+                gut_check.append(r[:1000])
             responses += 1
             j+=1
 
@@ -89,7 +92,7 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
     thread_stats.responses[int(name)] = responses/test_param.duration
     thread_stats.requests[int(name)] = tail
     thread_stats.avg_lat[int(name)] = median
-    fct_list.append((median,tail,tail_nine_list))
+    fct_list.append((gut_check,median,tail,tail_nine_list))
     logging.debug( "Exiting" )
 
     return
