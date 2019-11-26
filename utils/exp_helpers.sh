@@ -5,29 +5,9 @@ USER="dporte7"
 # load sugar
 source /Users/dporter/projects/solrcloud/utils/utils.sh
 
-stopSolr () {
-  printf "\n\n"
-  echo "stopping solr "
-  printf "\n\n"
 
-  play solr_configure_16.yml --tags solr_stop
-  wait $!
-  sleep 3
 
-  # play zoo_configure.yml --tags zoo_stop
-  # wait $!
-  # sleep 3
 
-}
-
-startSolr () {
-  printf "\n\n"
-  echo "starting zookeeper and solr "
-  printf "\n\n"
-  play solr_configure_$1.yml --tags solr_start
-  wait $!
-  sleep 3
-}
 
 restartSolr () {
   printf "\n\n"

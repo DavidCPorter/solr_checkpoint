@@ -53,15 +53,15 @@ archive_fcts
 
 # constraint -> shards are 1, 2, or 4
 SHARDS=( 1 )
-QUERY="direct"
-RF_MULTIPLE=( 2 )
+QUERY="solrj"
+RF_MULTIPLE=( 4 )
 LOAD=4
 
 
 # loop_args
 T1=1
 STEP=1
-TN=6
+TN=8
 #########  PARAMS END
 
 
@@ -112,7 +112,9 @@ for SERVERNODE in "$@"; do
         sleep 2
       done
   # need to call stopsolr it here since it needs to stop this exp explicitly before running a new one
-      stopSolr
+      stopSolr $SERVERNODE
+      wait $!
+      sleep 2
       play post_data_$SERVERNODE.yml --tags aws_exp_reset --extra-vars "replicas=$RF shards=$SHARD clustersize=$SERVERNODE"
     done
   done

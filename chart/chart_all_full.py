@@ -32,7 +32,7 @@ def main(query,codename):
     fm.write('parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROUP\n')
 
     for d in dirs:
-        print(d)
+        print(d)        
         files = os.popen('ls '+exp_home+'/'+d+' | grep '+query).read()
         print(files)
         files = files.split('\n')

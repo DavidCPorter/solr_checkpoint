@@ -22,15 +22,24 @@
     dest: solr-8_0/solr/server/solr/configsets/_default/conf/solrconfig.xml
   when: "'PRE' not in index_result.stdout"
 
-
+# why nottt just delete always before creating in case a dangler exists
+- name: DELETE collection when we have a dangling collection
+  shell: ./bin/solr delete -c "{{collection_name}}"
+  args:
+    chdir: '{{solr_install_dir}}/solr'
+  ignore_errors: yes
+  # when: 
+  when: "'PRE' not in index_result.stdout"
 
 - name: create collection "{{collection_name}}"
   shell: ./bin/solr create_collection -c "{{collection_name}}" -s "{{shards}}" -rf "{{replicas}}" -d _default -force
+  register: col_result
   args:
     chdir: '{{solr_install_dir}}/solr'
     creates: '{{data_upload_dir}}/{{collection_name}}.txt'
   ignore_errors: yes
   when: "'PRE' not in index_result.stdout"
+
 
 
 - name: create schema

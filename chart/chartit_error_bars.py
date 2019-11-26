@@ -75,6 +75,7 @@ def display_chart(query,clustersize,codename):
     return
 
 
+
 def fillLineList(lineList, df, c):
     # this loop fills the data structure the plotting library needs to project the results
     for ld in lineList:
@@ -87,7 +88,14 @@ def fillLineList(lineList, df, c):
             cluster_spec_data_for_gn = gn_line_df.loc[gn_line_df['clustersize'] == i ]
 
             ld.setInputX(i)
+
+            # these two lines remove the warm cache line
+
+            cluster_spec_data_for_gn.sort_values("QPS")
+            cluster_spec_data_for_gn = cluster_spec_data_for_gn.drop(cluster_spec_data_for_gn.index[0])
+
             # these set the value for a single error bar on the line
+
             ld.setInputY(cluster_spec_data_for_gn[c].mean())
             ld.setInputNe(cluster_spec_data_for_gn[c].max())
             ld.setInputSe(cluster_spec_data_for_gn[c].min())
@@ -117,8 +125,8 @@ def display_chart_scaling_errorbar(query, codename):
     fig_qps = go.Figure(qps_data_list)
     fig_lat = go.Figure(lat_data_list)
 
-    fig_qps.show()
-    fig_lat.show()
+    # fig_qps.show()
+    # fig_lat.show()
     try:
         os.makedirs('/Users/dporter/projects/solrcloud/chart/exp_html_out/_'+codename)
     except FileExistsError:

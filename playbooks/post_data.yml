@@ -34,3 +34,12 @@
   tags:
     - never
     - update_collection_configs
+
+- hosts: nodes
+  tasks:
+    - name: delete aws index
+      include_tasks:
+        file: roles/upload_data/tasks/rm_aws_index.yml
+  tags:
+    - never
+    - rm_index
