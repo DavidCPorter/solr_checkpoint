@@ -22,23 +22,22 @@ public class DistributedWebServer {
 
     private static String defaultCollection = "reviews";
     protected static CloudSolrClient instance;
-    private static final Optional<String> empty = Optional.of(String "");
-// need to get clustersize here and pass to optional
-    static {
+    // need to get clustersize here and pass to optional
+
+    public static void main(String[] args) throws Exception {
+        //try passing just one instance of cloudsolrclient to thread generator class
+        System.out.println("starting Server");
+        final Optional<String> znode = Optional.of(args[0]);
+        // need to get clustersize here and pass to optional
         List<String> zesty = new ArrayList<>(Arrays.asList("10.10.1.1:2181","10.10.1.2:2181","10.10.1.3:2181"));
 
-        instance = new CloudSolrClient.Builder(zesty, empty).build();
+        instance = new CloudSolrClient.Builder(zesty,znode).build();
         final int zkClientTimeout = 9999;
         final int zkConnectTimeout = 9999;
         instance.setDefaultCollection(defaultCollection);
         instance.setZkClientTimeout(zkClientTimeout);
         instance.setZkConnectTimeout(zkConnectTimeout);
-    }
 
-    public static void main(String[] args) throws Exception {
-        //try passing just one instance of cloudsolrclient to thread generator class
-        System.out.println("starting Server");
-        System.out.println(instance);
         MultiThreadedServer server1 = new MultiThreadedServer(9111, instance);
         MultiThreadedServer server2 = new MultiThreadedServer(9222, instance);
         MultiThreadedServer server3 = new MultiThreadedServer(9333, instance);

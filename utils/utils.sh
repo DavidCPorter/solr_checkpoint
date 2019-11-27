@@ -9,7 +9,6 @@ alias viewtraffic='cd ~/projects/solrcloud;pssh -l dporte7 -h ssh_files/pssh_tra
 alias viewsolrj='cd ~/projects/solrcloud;pssh -l dporte7 -h ssh_files/pssh_traffic_node_file_8 -P "tail -n 2000 solrclientserver/solrjoutput.txt"'
 alias search='cd ~/projects/solrcloud;pssh -l dporte7 -h ssh_files/pssh_zoo_node_file -P "tail -n 500 /var/solr/logs/solr.log"'
 alias play='cd ~/projects/solrcloud/playbooks; ansible-playbook -i ../inventory'
-alias runsolrj='cd ~/projects/solrcloud;nohup pssh -i -h ssh_files/pssh_traffic_node_file_8 -l dporte7 "cd solrclientserver;java -cp target/solrclientserver-1.0-SNAPSHOT.jar com.dporte7.solrclientserver.DistributedWebServer > solrjoutput.txt" &'
 alias killsolrj='cd ~/projects/solrcloud;pssh -i -h ssh_files/pssh_traffic_node_file_8 -l dporte7 $KILLARGS'
 export KILLARGS="ps aux | grep -i solrclientserver | awk -F' ' '{print \$2}' | xargs kill -9"
 alias clearout="cd ~/projects/solrcloud/tests_v1; echo ''> nohup.out"
@@ -73,6 +72,9 @@ alias wipecores="callingnodes rm -rf /users/dporte7/solr-8_0/solr/server/solr/re
 
 EXP_HOME=/Users/dporter/projects/solrcloud/chart/exp_records
 
+runsolrj (){
+  pssh -h ~/projects/solrcloud/ssh_files/pssh_traffic_node_file_8 -l dporte7 "cd solrclientserver;java -cp target/solrclientserver-1.0-SNAPSHOT.jar com.dporte7.solrclientserver.DistributedWebServer $1 > solrjout.log 2>&1 &"&
+}
 
 archivePrev (){
   cd /Users/dporter/projects/solrcloud/tests_v1
@@ -130,6 +132,7 @@ stopSolr () {
   # sleep 3
 
 }
+
 startSolr () {
   printf "\n\n"
   echo "starting zookeeper and solr "

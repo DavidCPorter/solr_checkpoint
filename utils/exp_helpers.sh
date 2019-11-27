@@ -3,7 +3,7 @@
 CLOUDHOME="/users/dporte7"
 USER="dporte7"
 # load sugar
-source /Users/dporter/projects/solrcloud/utils/utils.sh
+# source /Users/dporter/projects/solrcloud/utils/utils.sh
 
 
 
@@ -26,19 +26,42 @@ resetExperiment () {
 
 }
 
+getZnode (){
+  case $1 in
+
+    2)
+      echo "/twoNode"
+      ;;
+
+    4)
+      echo "/fourNode"
+      ;;
+
+    8)
+      echo "/eightNode"
+      ;;
+    16)
+      echo "/sixteenNode"
+      ;;
+
+    *)
+      echo "ERROR: Failed to parse znode $1. Please recheck the variables"
+      ;;
+  esac
+}
 
 restartSolrJ () {
   echo "restarting SOLRJ"
   printf "\n\n"
   echo "stopping SOLRJ"
   killsolrj
-  wait $!
   sleep 6
 
   printf "\n\n"
-  echo "starting SOLRJ"
+
+  # echo "starting SOLRJ $((getZnode $1))"
   printf "\n\n"
-  runsolrj
+  runsolrj $(getZnode $1)
   wait $!
   sleep 4
 

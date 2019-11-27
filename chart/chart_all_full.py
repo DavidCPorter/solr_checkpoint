@@ -32,30 +32,17 @@ def main(query,codename):
     fm.write('parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROUP\n')
 
     for d in dirs:
-        print(d)        
+        print(d)
         files = os.popen('ls '+exp_home+'/'+d+' | grep '+query).read()
         print(files)
         files = files.split('\n')
         files.pop()
-        print(files[1:])
-        # out_dir='/Users/dporter/projects/solrcloud/chart/records_cluster_specific/'+d+'/query'+query+'/'
-        # try:
-        #     os.makedirs(out_dir)
-        # except FileExistsError:
-        #     print("file exists\n\n\n")
-        #     # directory already exists
-        #     pass
-        #
-        #
-        # # add table headers
-        # complete_out_file=out_dir+d+'query'+query+'_chartdata_'+codename+'.csv'
-        # fp = open(complete_out_file, "w+")
-        # fp.write('parallel_requests,QPS,median_lat,tail_lat,clustersize,query,rfshards,GROUP\n')
-        # fp.close()
+        print(files)
+
 
 
         # removing cache warming file with [1:]
-        for exp_output in files[1:]:
+        for exp_output in files:
             f = open(exp_home+'/'+d+'/'+exp_output, 'r')
             data = f.readline()
             f.close()
@@ -66,12 +53,9 @@ def main(query,codename):
             rf = int(rf.strip('_'))
             shard=str(d[5:7])
             shard=shard.strip('_s')
-            print(shard+'shard')
             rf_mult=int(rf/int(csize))
-            print(rf_mult)
             # group is shards+replication_multiple
             group = shard+str(rf_mult)
-            print(group)
             # fp.write(data+','+csize+','+query+','+d[:8]+','+group+'\n')
             # fp.close()
             fm = open(total_scale_file, "a+")

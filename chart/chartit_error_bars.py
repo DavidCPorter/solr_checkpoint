@@ -91,18 +91,21 @@ def fillLineList(lineList, df, c):
 
             # these two lines remove the warm cache line
 
-            cluster_spec_data_for_gn.sort_values("QPS")
+            cluster_spec_data_for_gn.sort_values("QPS", inplace=True)
             cluster_spec_data_for_gn = cluster_spec_data_for_gn.drop(cluster_spec_data_for_gn.index[0])
-
             # these set the value for a single error bar on the line
 
             ld.setInputY(cluster_spec_data_for_gn[c].mean())
             ld.setInputNe(cluster_spec_data_for_gn[c].max())
             ld.setInputSe(cluster_spec_data_for_gn[c].min())
-            print(str(ld))
+            # print(str(ld))
 
 
 def display_chart_scaling_errorbar(query, codename):
+    qps_fig_title=""
+    qps_fig_title="SolrCloud Query Throughput (Round Robin)" if query == "direct" else "SolrCloud Query Throughput (SolrJ)"
+    lat_fig_title=""
+    lat_fig_title="SolrCloud Tail Latency (Round Robin)" if query == "direct" else "SolrCloud Tail Latency (SolrJ)"
 
     total_scale_file = '/Users/dporter/projects/solrcloud/chart/scaling_exp_csvs/total_'+query+'_'+codename+'.csv'
     df = pd.read_csv(total_scale_file)
@@ -124,6 +127,27 @@ def display_chart_scaling_errorbar(query, codename):
 
     fig_qps = go.Figure(qps_data_list)
     fig_lat = go.Figure(lat_data_list)
+    fig_qps.update_layout(
+        title=qps_fig_title,
+        xaxis_title="Cluster Size",
+        yaxis_title="QPS",
+        font=dict(
+            family="Courier New, monospace",
+            size=18,
+            color="#7f7f7f"
+            )
+    )
+    fig_lat.update_layout(
+        title=lat_fig_title,
+        xaxis_title="Cluster Size",
+        yaxis_title="P95_latency(ms)",
+        font=dict(
+            family="Courier New, monospace",
+            size=18,
+            color="#7f7f7f"
+            )
+    )
+
 
     # fig_qps.show()
     # fig_lat.show()

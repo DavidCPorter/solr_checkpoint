@@ -101,7 +101,7 @@ restartSolrJ () {
   printf "\n\n"
   echo "starting SOLRJ"
   printf "\n\n"
-  runsolrj
+  runsolrj $1
   wait $!
   sleep 4
 

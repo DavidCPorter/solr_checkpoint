@@ -11,3 +11,4 @@ nohup.out
 *.zip
 records*
 .aws
+remotescripts/

@@ -58,6 +58,12 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
             fct = req_finish - req_start
             # log 20% of queries
             # if responses%5 == 0:
+
+            fct_return.append(fct)
+            if responses%20 == 0:
+                gut_check.append(r)
+                gut_check.append(r)
+
             fct_return.append(fct)
             if responses%1000 == 0:
                 gut_check.append(r[:1000])
