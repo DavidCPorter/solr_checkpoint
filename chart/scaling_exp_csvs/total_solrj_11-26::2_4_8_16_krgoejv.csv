@@ -1,4 +1,5 @@
 parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROUP
+32,10057.5,1,4,4,solrj,rf16_s1_,14
 32,14755.8,0,2,4,solrj,rf16_s1_,14
 64,33644.0,0,2,4,solrj,rf16_s1_,14
 64,33644.0,0,2,4,solrj,rf16_s1_,14
@@ -8,6 +9,7 @@ parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROU
 192,15602.2,10,31,4,solrj,rf16_s1_,14
 224,13607.7,12,39,4,solrj,rf16_s1_,14
 256,14876.8,13,43,4,solrj,rf16_s1_,14
+64,20482.5,0,5,8,solrj,rf16_s1_,12
 64,37730.0,0,2,8,solrj,rf16_s1_,12
 128,45447.6,1,7,8,solrj,rf16_s1_,12
 128,45447.6,1,7,8,solrj,rf16_s1_,12
@@ -17,6 +19,7 @@ parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROU
 384,22633.9,11,32,8,solrj,rf16_s1_,12
 448,26232.5,16,37,8,solrj,rf16_s1_,12
 512,26469.7,12,42,8,solrj,rf16_s1_,12
+32,2370.6,6,22,4,solrj,rf16_s2_,24
 32,3412.3,3,8,4,solrj,rf16_s2_,24
 64,4461.7,5,24,4,solrj,rf16_s2_,24
 96,4952.1,8,117,4,solrj,rf16_s2_,24
@@ -26,6 +29,7 @@ parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROU
 224,6876.0,15,155,4,solrj,rf16_s2_,24
 256,7692.6,16,147,4,solrj,rf16_s2_,24
 256,7692.6,16,147,4,solrj,rf16_s2_,24
+64,4338.4,6,38,8,solrj,rf16_s2_,22
 64,5674.2,3,9,8,solrj,rf16_s2_,22
 64,5674.2,3,9,8,solrj,rf16_s2_,22
 128,6546.9,5,203,8,solrj,rf16_s2_,22
@@ -35,6 +39,7 @@ parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROU
 384,13964.8,8,137,8,solrj,rf16_s2_,22
 448,14217.8,8,142,8,solrj,rf16_s2_,22
 512,15133.4,7,156,8,solrj,rf16_s2_,22
+128,32831.7,1,6,16,solrj,rf32_s1_,12
 128,46360.6,1,5,16,solrj,rf32_s1_,12
 256,34898.3,6,15,16,solrj,rf32_s1_,12
 384,35174.6,8,24,16,solrj,rf32_s1_,12
@@ -43,6 +48,7 @@ parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROU
 768,32961.7,10,60,16,solrj,rf32_s1_,12
 896,35273.4,19,87,16,solrj,rf32_s1_,12
 1024,34629.4,16,109,16,solrj,rf32_s1_,12
+64,18496.5,1,5,8,solrj,rf32_s1_,14
 64,22564.4,0,3,8,solrj,rf32_s1_,14
 64,22564.4,0,3,8,solrj,rf32_s1_,14
 128,35530.4,1,6,8,solrj,rf32_s1_,14
@@ -52,6 +58,7 @@ parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROU
 384,21800.0,12,32,8,solrj,rf32_s1_,14
 448,24590.7,14,38,8,solrj,rf32_s1_,14
 512,25354.0,13,43,8,solrj,rf32_s1_,14
+128,6275.6,8,146,16,solrj,rf32_s2_,22
 128,7178.8,4,176,16,solrj,rf32_s2_,22
 128,7178.8,4,176,16,solrj,rf32_s2_,22
 256,9153.9,5,248,16,solrj,rf32_s2_,22
@@ -62,6 +69,7 @@ parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROU
 768,20451.9,6,191,16,solrj,rf32_s2_,22
 896,21510.8,6,197,16,solrj,rf32_s2_,22
 1024,22817.8,7,201,16,solrj,rf32_s2_,22
+64,3506.5,7,37,8,solrj,rf32_s2_,24
 64,3753.4,4,15,8,solrj,rf32_s2_,24
 128,4956.9,6,237,8,solrj,rf32_s2_,24
 192,6139.5,7,222,8,solrj,rf32_s2_,24
@@ -71,6 +79,7 @@ parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROU
 384,8690.4,10,223,8,solrj,rf32_s2_,24
 448,9027.9,10,234,8,solrj,rf32_s2_,24
 512,9977.5,10,228,8,solrj,rf32_s2_,24
+16,7752.0,1,2,2,solrj,rf4_s1__,12
 16,8454.4,1,1,2,solrj,rf4_s1__,12
 32,17537.5,0,1,2,solrj,rf4_s1__,12
 48,25580.2,0,2,2,solrj,rf4_s1__,12
@@ -80,6 +89,7 @@ parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROU
 96,25634.5,3,7,2,solrj,rf4_s1__,12
 112,26222.4,3,9,2,solrj,rf4_s1__,12
 128,26214.7,4,11,2,solrj,rf4_s1__,12
+16,2038.8,4,14,2,solrj,rf4_s2__,22
 16,3240.8,2,5,2,solrj,rf4_s2__,22
 32,5038.6,3,9,2,solrj,rf4_s2__,22
 48,6274.7,5,12,2,solrj,rf4_s2__,22
@@ -89,6 +99,7 @@ parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROU
 112,6510.0,12,36,2,solrj,rf4_s2__,22
 112,6510.0,12,36,2,solrj,rf4_s2__,22
 128,6308.1,14,45,2,solrj,rf4_s2__,22
+128,25862.3,2,6,16,solrj,rf64_s1_,14
 128,34464.2,1,4,16,solrj,rf64_s1_,14
 256,27675.6,4,14,16,solrj,rf64_s1_,14
 256,27675.6,4,14,16,solrj,rf64_s1_,14
@@ -98,6 +109,7 @@ parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROU
 768,33654.6,13,60,16,solrj,rf64_s1_,14
 896,33513.6,13,80,16,solrj,rf64_s1_,14
 1024,34460.4,10,103,16,solrj,rf64_s1_,14
+128,18278.0,7,13,16,solrj,rf64_s2_,24
 128,20298.5,7,12,16,solrj,rf64_s2_,24
 256,20399.6,15,24,16,solrj,rf64_s2_,24
 256,20399.6,15,24,16,solrj,rf64_s2_,24
@@ -107,6 +119,7 @@ parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROU
 768,19092.1,49,71,16,solrj,rf64_s2_,24
 896,18527.2,62,84,16,solrj,rf64_s2_,24
 1024,18773.3,70,95,16,solrj,rf64_s2_,24
+16,5600.3,1,4,2,solrj,rf8_s1__,14
 16,8356.2,0,2,2,solrj,rf8_s1__,14
 32,21613.1,0,1,2,solrj,rf8_s1__,14
 48,29241.2,0,1,2,solrj,rf8_s1__,14
@@ -115,6 +128,7 @@ parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROU
 96,25720.7,2,10,2,solrj,rf8_s1__,14
 112,15125.9,6,19,2,solrj,rf8_s1__,14
 128,9385.6,9,40,2,solrj,rf8_s1__,14
+32,12950.5,0,3,4,solrj,rf8_s1__,12
 32,20909.5,0,1,4,solrj,rf8_s1__,12
 64,47901.2,0,1,4,solrj,rf8_s1__,12
 96,44811.4,1,5,4,solrj,rf8_s1__,12
@@ -124,6 +138,7 @@ parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROU
 224,14436.2,13,39,4,solrj,rf8_s1__,12
 224,14436.2,13,39,4,solrj,rf8_s1__,12
 256,16217.4,12,43,4,solrj,rf8_s1__,12
+16,68462.0,0,0,2,solrj,rf8_s2__,24
 16,70967.9,0,0,2,solrj,rf8_s2__,24
 32,66984.5,0,0,2,solrj,rf8_s2__,24
 48,42118.0,0,2,2,solrj,rf8_s2__,24
@@ -132,6 +147,7 @@ parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROU
 96,25504.6,1,11,2,solrj,rf8_s2__,24
 112,19225.7,2,21,2,solrj,rf8_s2__,24
 128,5239.4,21,97,2,solrj,rf8_s2__,24
+32,3453.9,4,18,4,solrj,rf8_s2__,22
 32,4934.2,2,6,4,solrj,rf8_s2__,22
 64,6471.6,4,14,4,solrj,rf8_s2__,22
 96,8534.4,5,20,4,solrj,rf8_s2__,22
