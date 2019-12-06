@@ -6,7 +6,7 @@
     - never
     - general
 
-- hosts: generatorNodeEight
+- hosts: generatorNodeTen
   tasks:
   - name: pip install numpy
     pip:

@@ -2,10 +2,30 @@
 {% for host in nodes_dict.values()%}{{host}}{% if not loop.last %}{% endif %}{% endfor %}
 
 [zookeeperNodes]
-{% for host in zoo_dict.values() %}{{host}}{% if not loop.last %}{% endif %}{% endfor %}
+{% for host in zoo_list %}{{host}}{% if not loop.last %}{% endif %}{% endfor %}
+
+[twoNode]
+{% for host in twoNode %}{{host}}{% if not loop.last %}{% endif %}{% endfor %}
+
+[fourNode]
+{% for host in fourNode %}{{host}}{% if not loop.last %}{% endif %}{% endfor %}
+
+[eightNode]
+{% for host in eightNode %}{{host}}{% if not loop.last %}{% endif %}{% endfor %}
+
+[sixteenNode]
+{% for host in sixteenNode %}{{host}}{% if not loop.last %}{% endif %}{% endfor %}
+
+[twentyfourNode]
+{% for host in twentyfourNode %}{{host}}{% if not loop.last %}{% endif %}{% endfor %}
+
+[singleNode]
+{% for host in singleNode %}{{host}}{% if not loop.last %}{% endif %}{% endfor %}
+
 
 [generatorNode]
 {% for host in load_dict.values() %}{{host}}{% if not loop.last %}{% endif %}{% endfor %}
+
 
 [dataServer]
 {{ nodes_dict['3'] }}
@@ -24,5 +44,6 @@ node2={{ zoo_dict['2'][:15] }}
 {% if not loop.last %}{% endif %}{% endfor %}
 {% for key, value in load_dict.items() %}node{{key}}={{load_dict[key][:15]}}
 {% if not loop.last %}{% endif %}{% endfor %}
-root_path=/Users/dporter/Desktop/solrcloud-dev/
+root_path=/Users/dporter/projects/solrcloud/
 main_class=com.dporte7.solrclientserver.DistributedWebServer
+solr_bin_exec=/users/dporte7/solr-8_0/solr/bin/solr
