@@ -28,6 +28,7 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
     # fct_stamps = []
     lat = 0
     responses = 0
+    requests = 0
     fct_return = []
     gut_check = []
 
@@ -48,10 +49,14 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
     # i = 0
     while not stop_flag.is_set():
 
-        req_start = time.time()
         route = urls[random.randint(1,4990)]
+        requests += 1
+
         try:
+            req_start = time.time()
+
             conn.request( "GET", route , headers = {'Connection':'keep-alive'})
+
             resp = conn.getresponse()
             r = resp.read()
             req_finish = time.time()
@@ -60,11 +65,8 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
             # if responses%5 == 0:
 
             fct_return.append(fct)
-            if responses%20 == 0:
-                gut_check.append(r)
-                gut_check.append(r)
-
-            fct_return.append(fct)
+            if responses == 1:
+                gut_check.append(r[:1000])
             if responses%1000 == 0:
                 gut_check.append(r[:1000])
             responses += 1
@@ -98,7 +100,7 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
     thread_stats.responses[int(name)] = responses/test_param.duration
     thread_stats.requests[int(name)] = tail
     thread_stats.avg_lat[int(name)] = median
-    fct_list.append((gut_check,median,tail,tail_nine_list))
+    fct_list.append((requests,responses,gut_check,median,tail,tail_nine_list))
     logging.debug( "Exiting" )
 
     return

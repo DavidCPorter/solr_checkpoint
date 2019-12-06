@@ -1,21 +1,14 @@
 package com.dporte7.solrclientserver;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.impl.CloudSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
-import org.apache.solr.client.solrj.SolrRequest;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.solr.common.util.NamedList;
 
 /**
  *
@@ -37,6 +30,8 @@ public class WorkerRunnable implements Runnable {
     private OutputStream output;
     private long time;
     private boolean isStopped;
+    private long numFound = 0;
+
     //    we should be checking what solr responds with even tho we send default response to client each time.
     private List solr_response_list;
 
@@ -75,6 +70,8 @@ public class WorkerRunnable implements Runnable {
             e.printStackTrace();
         }
     }
+
+
     private boolean readBuffer(OutputStream out, InputStream is) throws IOException {
 
         try{
@@ -113,12 +110,14 @@ public class WorkerRunnable implements Runnable {
     private void writeResponse() throws IOException {
         try{
             // time = System.currentTimeMillis();
-            output.write(("HTTP/1.1 200 OK\nContent-Type: application/json;charset=utf-8\nContent-Length:0"+ "\n\n").getBytes());
+            final byte[] utf8Bytes = Long.toString(this.numFound).getBytes();
+
+            output.write(("HTTP/1.1 200 OK\nContent-Type: application/json;charset=utf-8\nContent-Length:"+Long.toString(utf8Bytes.length)+ "\n\n"+Long.toString(this.numFound)).getBytes());
         }
         catch (IOException e) {
-          this.pySocket.close();
+            this.pySocket.close();
 
-          e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -144,12 +143,7 @@ public class WorkerRunnable implements Runnable {
             QueryResponse response = cloudSolrClient.query(collection, query);
 
             SolrDocumentList ret = response.getResults();
-            // bw = new BufferedWriter(
-            //         new FileWriter("/users/dporte7/output.txt", true)  //Set true for append mode
-            // );
-            // bw.newLine();
-            // bw.write("#results：" + ret.getNumFound());
-            // bw.close();
+            this.numFound = ret.getNumFound();
 
         } catch (Exception e) {
             e.printStackTrace();

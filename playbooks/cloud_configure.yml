@@ -2,6 +2,9 @@
 - hosts: nodes
   roles:
     - cloud-env
+  tags:
+    - never
+    - general
 
 - hosts: generatorNodeEight
   tasks:
@@ -9,3 +12,17 @@
     pip:
       name: numpy
       executable: /usr/bin/pip3
+  tags:
+    - never
+    - numpy
+
+# - hosts: generatorNodeEight:nodes
+#   tasks:
+#   - name: iftop install
+#     include_role:
+#       name: cloud-env
+#       apply:
+#         tags:
+#           - iftop
+#   tags:
+#     - iftop

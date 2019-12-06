@@ -196,5 +196,5 @@ SOLR_PORT=8983
 # ENABLE_REMOTE_JMX_OPTS=true
 # RMI_PORT=18983
 # heapsize 20g
-SOLR_JAVA_MEM="-Xms20g -Xmx20g"
+SOLR_JAVA_MEM="-Xms30g -Xmx30g"
 # SOLR_OPTS="$SOLR_OPTS -Dcom.sun.management.jmxremote -javaagent:/opt/spm/spm-monitor/lib/spm-monitor-generic.jar=cfe92cf2-cf42-45b7-a965-b1bed5cea132::default"

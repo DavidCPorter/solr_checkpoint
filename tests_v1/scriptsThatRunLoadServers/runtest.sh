@@ -1,132 +1,156 @@
 #! /bin/bash
 
-PROJECT_HOME='/Users/dporter/projects/solrcloud'
 
 RSCRIPTS=$PROJECT_HOME/tests_v1/remotescripts
 
+
+
 function start_experiment() {
 
-    if [ "$#" -lt 3 ]; then
-        echo "Usage: start_experiment <username> <python scripts dir> <term list textfile>"
-    	exit
-    fi
-    USER=$1
-  	PY_SCRIPT=$2
-    TERMS=$3
-    THREADS="$4 $5"
-    PROCESSES="$7"
-    DURATION="$8 $9"
-    REPLICAS="${10} ${11}"
-    SHARDS="${12} ${13}"
-    QUERY="${14} ${15}"
-    LOOP="${16} ${17}"
-    SOLRNUM="${18} ${19}"
-    LOAD="${21}"
-    INSTANCES="0"
-    # these correlate the order in the ssh_files
-    node16="128.110.153.163"
-    node17="128.110.153.154"
-    node18="128.110.153.167"
-    node19="128.110.153.189"
-    node20="128.110.153.188"
-    node21="128.110.153.217"
-    node22="128.110.153.176"
-    node23="128.110.153.172"
+  if [ "$#" -lt 3 ]; then
+      echo "Usage: start_experiment <username> <python scripts dir> <term list textfile>"
+  	exit
+  fi
+  USER=$1
+	PY_SCRIPT=$2
+  TERMS=$3
+  THREADS="$4 $5"
+  PROCESSES="$7"
+  DURATION="$8 $9"
+  REPLICAS="${10} ${11}"
+  SHARDS="${12} ${13}"
+  QUERY="${14} ${15}"
+  LOOP="${16} ${17}"
+  SOLRNUM="${18} ${19}"
+  LOAD="${21}"
+  INSTANCES="0"
+  SOLR_SIZE=${19}
+  # these correlate the order in the ssh_files
 
-    # loadsize = num of load servers
-    LOADSIZE=$LOAD
+  # loadsize = num of load servers
+  LOADSIZE=$LOAD
 
-    echo "LOAD"
-    echo $(($LOADSIZE-1))
+  echo "LOAD"
+  tmp=$(setLoadArray $LOADSIZE)
+  # LOAD_NODES is the array of IPs for the specified loadsize
+  LOAD_NODES=($tmp)
 
-    # these correlate the order in the ssh_files
-    if [ $LOADSIZE = '4' ]; then
-      LOAD_NODES=( $node20 $node21 $node22 $node23 )
-    else
-      LOAD_NODES=( $node16 $node17 $node18 $node19 $node20 $node21 $node22 $node23 )
-    fi
-    echo "LOAD_NODES = $LOAD_NODES"
-    echo 'Copying python scripts to remote machine'
-    pscp -l $USER -r -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_8 $PY_SCRIPT /users/dporte7
-    pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_8 $TERMS /users/dporte7
+  # echo "$LOAD_NODES"
+  # echo "LOAD_NODES = ${LOAD_NODES[1]}"
+  echo 'Copying python scripts to remote machine'
+  pscp -l $USER -r -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_8 $PY_SCRIPT /users/dporte7
+  pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_8 $TERMS /users/dporte7
 
-    # each process in the python script will make #THREAD num of REPLICASnections to a SINGLE solr instance "--host" (for --query direct)
-    # parameters for py script running on nodes 32, 33, 34, 35
-    # hosts here will either be this local for solrj since solj is running on same node, or a subnet address
-    # different ports reflect the number of solrj processes on each node running solrj
-    #  otherwise ports will be changed to 8983 since solrcloud httpserver runs there on the network
-    PAR_0="$THREADS $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --port 9111" #host appended below
-    PAR_1="$THREADS $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --port 9222" #host appended below
-    PAR_2="$THREADS $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --port 9333" #host appended below
-    PAR_3="$THREADS $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --port 9444" #host appended below
+  # each process in the python script will make #THREAD num of REPLICASnections to a SINGLE solr instance "--host" (for --query direct)
+  # parameters for py script running on nodes 32, 33, 34, 35
+  # hosts here will either be this local for solrj since solj is running on same node, or a subnet address
+  # different ports reflect the number of solrj processes on each node running solrj
+  #  otherwise ports will be changed to 8983 since solrcloud httpserver runs there on the network
+  PAR_0="$DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --port 9111" #host appended below
+  PAR_1="$DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --port 9222" #host appended below
+  PAR_2="$DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --port 9333" #host appended below
+  PAR_3="$DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --port 9444" #host appended below
 
-    echo "removing previous output from remote and local host"
-    pssh -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_8 --user $USER "rm ~/traffic_gen/http_benchmark_*"
-    rm $PROJECT_HOME/tests_v1/profiling_data/proc_results/http_benchmark_*
-    MINUS1="$(($PROCESSES - 1))"
-
+  echo "removing previous output from remote and local host"
+  pssh -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_8 --user $USER "rm ~/traffic_gen/http_benchmark_*"
+  rm $PROJECT_HOME/tests_v1/profiling_data/proc_results/*
+# THIS MIGHT HAVE BEEN THE PROBLEM
 
 ########## EXPERIMENTS #################
 
 
-    echo "*** running remote experiment ****"
-    # clear script to run python processes
-    echo "#!/bin/bash" > $RSCRIPTS/remotescript.sh
-    echo "#!/bin/bash" > $RSCRIPTS/remotescript_foreground.sh
-    echo "# this file is used to run processes remotely since cloudlab blacklists aggressive ssh" >> $RSCRIPTS/remotescript.sh
+  echo "*** running remote experiment ****"
+  for i in "${LOAD_NODES[@]}";do
+    mkdir $RSCRIPTS/${i}
+    touch $RSCRIPTS/${i}/remotescript.sh
+  done
 
-    # each server will run X processes communicating to all X nodes in cluster
-    #  This loop creates a shell script for the load nodes
-    for i in $(seq $MINUS1); do
+
+  for i in "${LOAD_NODES[@]}";do
+    echo "#!/bin/bash" > $RSCRIPTS/${i}/remotescript.sh
+  done
+
+  # iterate over the number of python web processes you want communicating to the cluster and assign each process to an available load node
+#  16 is the number of cores on each load machine
+  LOAD_ITER_MAX=$(($LOADSIZE-1))
+
+  for ((l=0; l<$LOAD_ITER_MAX; l++)); do
+    LUCKY_LOAD=${LOAD_NODES[$l]}
+    if [ $l -gt 0 ];then
+      THREADS="--threads 2"
+    fi
+
+    for ((i=1; i<=32; i++)); do
+      # if more than 1 node, then the nodes subsequent to the first always have the max three threads for optimal parallelism
       PARAMS=$(eval 'echo $PAR_'"$(($i % 4))")
-    	echo "python3 traffic_gen.py $PARAMS --host 10.10.1.$(($i % (${19})+1)) >/dev/null 2>&1 &" >> $RSCRIPTS/remotescript.sh
-    	echo "python3 traffic_gen.py $PARAMS --host 10.10.1.$(($i % (${19})+1)) >/dev/null 2>&1 &" >> $RSCRIPTS/remotescript_foreground.sh
+    	echo "python3 traffic_gen.py $THREADS $PARAMS --host 10.10.1.$(($(($i % $SOLR_SIZE))+1)) >/dev/null 2>&1 &" >> $RSCRIPTS/${LUCKY_LOAD}/remotescript.sh
     done
-    #  for foreground the final processes in shell scipt must be synchornized for experiment timing purposes (or we could just have this whole thing wait, but it's better to get output back for a single synch process)
-  # ${19}+1 the plus one is because arg 19 is num of nodes, and the nodes start at 1
-  # use +2 now because we killed 10.10.1.1 due to malware
+  done
 
-    PARAMS=$(eval 'echo $PAR_'"$(($PROCESSES % 4))")
-    echo "python3 traffic_gen.py $PARAMS --host 10.10.1.$(($PROCESSES % (${19})+1)) >/dev/null 2>&1 &" >> $RSCRIPTS/remotescript.sh
-    echo "python3 traffic_gen.py $PARAMS --host 10.10.1.$(($PROCESSES % (${19})+1))" >> $RSCRIPTS/remotescript_foreground.sh
+  # foreground is so the experiment will wait for these procs to finish.
+  LUCKY_LOAD=${LOAD_NODES[$LOAD_ITER_MAX]}
+  if [ $LOAD_ITER_MAX -gt 0 ];then
+    THREADS="--threads 2"
+  fi
+  for ((i=1; i<=31; i++)); do
+    # if more than 1 node, then the nodes subsequent to the first always have the max three threads for optimal parallelism
+    PARAMS=$(eval 'echo $PAR_'"$(($i % 4))")
+    echo "python3 traffic_gen.py $THREADS $PARAMS --host 10.10.1.$(($(($i % $SOLR_SIZE))+1)) >/dev/null 2>&1 &" >> $RSCRIPTS/${LUCKY_LOAD}/remotescript.sh
+  done
+  echo "python3 traffic_gen.py $THREADS $PARAMS --host 10.10.1.$(($((16 % $SOLR_SIZE))+1)) >/dev/null 2>&1" >> $RSCRIPTS/${LUCKY_LOAD}/remotescript.sh
 
-    # move remotescripts on all background nodes = LOADSIZE-1
-    pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_$(($LOADSIZE-1)) $RSCRIPTS/remotescript.sh /users/$USER/traffic_gen
-    # move remotescripts foreground node
-    pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_single $RSCRIPTS/remotescript_foreground.sh /users/$USER/traffic_gen
 
+# copy to respective load nodes
+  for noder in "${LOAD_NODES[@]}";do
+    scp ${RSCRIPTS}/${noder}/remotescript.sh $USER@${noder}:/users/${USER}/traffic_gen
+  done
 
 #### RUNNING EXPERIMENTS #####
-    echo "RUNNING THIS REMOTE SHELL SCRIPT ON LOAD NODES"
-    cat $RSCRIPTS/remotescript_foreground.sh
-    # BACKGROUND LOAD GEN NODES
-    nohup pssh -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_$(($LOADSIZE-1)) "cd $(basename $PY_SCRIPT); bash remotescript.sh"&
+  echo "RUNNING THIS REMOTE SHELL SCRIPT ON LOAD NODES"
+  for i in "${LOAD_NODES[@]}";do
+    echo "${i}::"
+    cat $RSCRIPTS/${i}/remotescript.sh
+  done
+  echo "nohup output to loadoutput.out"
 
-    # FOREGROUND LOAD GEN NODE
-    nohup ssh $USER@$node20 "cd $(basename $PY_SCRIPT); bash remotescript_foreground.sh"
-    wait $!
-    echo "finished EXP"
+  # BACKGROUND LOAD GEN NODES
+#  nohup pssh -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_$(($LOADSIZE-1)) "cd $(basename $PY_SCRIPT); bash remotescript_net.sh"&
+  nohup pssh -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_$LOADSIZE "cd $(basename $PY_SCRIPT); bash remotescript.sh" > loadoutput.out
+  wait $!
+  echo "finished EXP"
 #### FINISHED #####
 
 
-    echo "copying results... "
+  echo "copying results... "
 
-    # wait for slow processes to complete (prolly not effective)
-    sleep 5
-    for i in "${LOAD_NODES[@]}"; do
-        echo "$i"
-        scp $USER@$i:~/traffic_gen/http_benchmark_${15}* $PROJECT_HOME/tests_v1/profiling_data/proc_results &
-    done
-    wait $!
-    sleep 5
-    python3 $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $REPLICAS $QUERY $LOOP $SHARDS $SOLRNUM $LOADSIZE $INSTANCES
-    DATE=$(date '+%Y-%m-%d_%H:%M:%S')
+  # wait for slow processes to complete (prolly not effective)
+  sleep 2
+  for i in "${LOAD_NODES[@]}"; do
+      echo "$i"
+#        scp $USER@$i:~/traffic_gen/iftop_log* $PROJECT_HOME/tests_v1/profiling_data/network_monitoring/${THREADS}_${SOLRNUM} &
+#        scp $USER@$i:~/traffic_gen/iftop_log* $PROJECT_HOME/tests_v1/profiling_data/network_monitoring &
+#
+      scp $USER@$i:~/traffic_gen/http_benchmark_${15}* $PROJECT_HOME/tests_v1/profiling_data/proc_results &
+  done
 
-    # for reference fcts
-    zip -r ${DATE}_query${15}_rf${11}_s${13}_clustersize${19}_threads${5}_proc${7}.zip profiling_data/proc_results
-    printf "\n\n\n "
-    echo "DONE with $THREADS X $LOADSIZE outstanding requests in"
-    printf "\n python3 traffic_gen.py $PARAMS --host 10.10.1.N \n\n\n\n\n "
+  wait $!
+  sleep 1
+  printf "\n\n\n"
+  echo "$PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $REPLICAS $QUERY $LOOP $SHARDS $SOLRNUM $LOADSIZE $INSTANCES"
+  python3 $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $REPLICAS $QUERY $LOOP $SHARDS $SOLRNUM $LOADSIZE $INSTANCES
+  wait $!
+  DATE=$(date '+%Y-%m-%d_%H:%M:%S')
+  touch $PROJECT_HOME/tests_v1/profiling_data/proc_results/javaServer.log
+  for i in "${LOAD_NODES[@]}";do
+    echo "${i}::" >> $PROJECT_HOME/tests_v1/profiling_data/proc_results/javaServer.log
+    ssh dporte7@$i tail -n 10 /users/dporte7/solrclientserver/javaServer.log >> $PROJECT_HOME/tests_v1/profiling_data/proc_results/javaServer.log
+  done
+  pssh -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_$LOADSIZE "echo ''> /users/dporte7/solrclientserver/javaServer.log"
+  # for reference fcts
+  zip -r $PROJECT_HOME/tests_v1/${DATE}_query${15}_rf${11}_s${13}_clustersize${19}_threads${5}_proc${7}.zip $PROJECT_HOME/tests_v1/profiling_data/proc_results
+
+  printf "\n\n\n "
+  echo "DONE with $THREADS X $LOADSIZE outstanding requests in"
 
 }
 
