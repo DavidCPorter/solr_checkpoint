@@ -1,8 +1,8 @@
 #########  EXP PARAMS
 
 # constraint -> shards are 1, 2, or 4
-SHARDS=( 1 )
-QUERYS=("direct")
+SHARDS=( 1 2 4 )
+QUERYS=("direct" "solrj")
 RF_MULTIPLE=( 2 )
 LOAD=24
 export MAX_LOAD=24
