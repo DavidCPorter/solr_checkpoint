@@ -1,3 +1,4 @@
+import dns.resolver
 import os
 import sys
 import paramiko
@@ -5,7 +6,6 @@ import base64
 import time
 
 from jinja2 import Template
-
 
 
 if len(sys.argv) != 4:
@@ -18,7 +18,8 @@ node_dict={}
 with open(sys.argv[2], 'r') as domainfile:
     i=0
     for line in domainfile:
-        node_dict[str(i)] = line[:-1]
+        ip = dns.resolver.query(line.split('\n')[0], 'A') 
+        node_dict[str(i)] = str(ip[0])
         i+=1
 
 k = paramiko.RSAKey.from_private_key_file(sys.argv[3])
@@ -29,10 +30,11 @@ load_dict={}
 open('hostsIps','w').close()
 
 for hostname in node_dict.values():
-    time.sleep(2)
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     print("attempting to connect to %s" % hostname)
+    print("...%s...." % hostname)
+
     ssh.connect(hostname,username=user,pkey=k)
     print("Connected to %s" % hostname)
     # get global IP

@@ -2,7 +2,7 @@
 
 
 
-- hosts: nodes
+- hosts: solrNodes
   roles:
     - upload_data
   tags:
@@ -17,7 +17,7 @@
     - never
     - begin_exp
 
-- hosts: nodes
+- hosts: solrNodes
   tasks:
     - name: run this at the end of each experiment AKA aws_exp_reset
       include_tasks:
@@ -35,7 +35,7 @@
     - never
     - update_collection_configs
 
-- hosts: nodes
+- hosts: solrNodes
   tasks:
     - name: delete aws index
       include_tasks:

@@ -200,7 +200,7 @@ for INSTANCES in "$@"; do
 
 
   # since this var is only used to delete logs, just keep at all 8
-  LOADHOSTS=ssh_files/pssh_traffic_node_file_8
+  LOADHOSTS=ssh_files/pssh_traffic_node_file
 
   # constraint -> shards are 1, 2, or 4
 

@@ -43,7 +43,9 @@ getZnode (){
     16)
       echo "/sixteenNode"
       ;;
-
+    24)
+      echo "/twentyfourNode"
+      ;;
     *)
       echo "ERROR: Failed to parse znode $1. Please recheck the variables"
       ;;

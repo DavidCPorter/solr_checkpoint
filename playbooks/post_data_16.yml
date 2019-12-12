@@ -2,7 +2,7 @@
 
 
 
-- hosts: nodes
+- hosts: sixteenNode
   roles:
     - upload_data
   tags:
@@ -17,7 +17,7 @@
     - never
     - begin_exp
 
-- hosts: nodes
+- hosts: sixteenNode
   tasks:
     - name: run this at the end of each experiment AKA aws_exp_reset
       include_tasks:

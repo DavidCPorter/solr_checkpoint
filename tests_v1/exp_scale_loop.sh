@@ -2,10 +2,14 @@
 
 CLOUDHOME="/users/dporte7"
 USER="dporte7"
+
 # load sugar
-source /Users/dporter/projects/solrcloud/tests_v1/exp_scale_loop_params.sh
 source /Users/dporter/projects/solrcloud/utils/utils.sh
 source /Users/dporter/projects/solrcloud/utils/exp_helpers.sh
+source /Users/dporter/projects/solrcloud/utils/exp_scale_loop_params.sh
+
+LOAD_SCRIPTS="$PROJ_HOME/tests_v1/traffic_gen"
+TERMS="$PROJ_HOME/tests_v1/words.txt"
 
 
 if [ "$#" -gt 5 ]; then
@@ -20,7 +24,7 @@ if [ "$#" -eq 0 ]; then
 	exit
 fi
 
-accepted_nodes=( 2 4 8 16 32 )
+accepted_nodes=( 2 4 8 16 24 )
 
 ####### validate arguments
 
@@ -49,16 +53,20 @@ mkdir $EXP_HOME/$CHARTNAME
 # ARCHIVE PREVIOUS EXPs (this shouldnt archive anything if done correctly so first wipe dir)
 rm -rf /Users/dporter/projects/solrcloud/tests_v1/profiling_data/exp_results/*
 
+# echo "$LOAD_NODES"
+# echo "LOAD_NODES = ${LOAD_NODES[1]}"
+echo 'Copying python scripts and search terms to load machines'
+play update_loadscripts.yml --extra-vars "scripts_path=$LOAD_SCRIPTS terms_path=$TERMS"
+
 for QUERY in ${QUERYS[@]}; do
 
   for SERVERNODE in "$@"; do
     # maybe restart zoo
 
 
-    LOAD=$(getLoadNum $SERVERNODE)
+    LOAD=$(getLoadNum $LOAD)
 
-  # since this var is only used to delete logs, just keep at all 8
-    LOADHOSTS=~/projects/solrcloud/ssh_files/pssh_traffic_node_file_8
+    LOADHOSTS="$PROJ_HOME/ssh_files/pssh_traffic_node_file"
 
     for SHARD in ${SHARDS[@]}; do
 
@@ -93,39 +101,45 @@ for QUERY in ${QUERYS[@]}; do
         PROCESSES=$SERVERNODE
         SOLRNUM=$SERVERNODE
           # scale each load up to servernode size then add a load node
-        request_counter=0
         # remove previous dstatout
-        pssh -h $PROJECT_HOME/ssh_files/pssh_solr_node_file --user $USER "rm ~/${QUERY}*"
+        pssh -h $PROJ_HOME/ssh_files/pssh_all --user $USER "rm ~/*dstat.csv"
         # dstat on each node
-        for n in "${ALL_NODES[@]}";do
-          nohup ssh $USER@$n "dstat -t --cpu --mem --disk --io --net --int --sys --swap --tcp --output ${QUERY}_${n}_dstat_traffic_gen.csv &" >/dev/null 2>&1 &
+        # nodecounter just makes it easier to know which node dstat file was
+        node_counter=0
+        for n in $ALL_NODES;do
+          nohup ssh $USER@$n "dstat -t --cpu --mem --disk --io --net --int --sys --swap --tcp --output node${node_counter}_${n}_${QUERY}::rf${RF}_s${SHARD}_cluster${SOLRNUM}_dstat.csv &" >/dev/null 2>&1 &
+          node_counter=$(($node_counter+1))
         done
         echo "cd ~/projects/solrcloud/tests_v1/scriptsThatRunLoadServers; bash runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -d 10 --solrnum $SOLRNUM --query $QUERY"
 
-        for l in {1..8}; do
-          for t in {1..2}; do
+        # vars for loop for config experiment
+        machines=0
+        box_cores=16
+        box_threads=2
+        app_threads=2
+        export incrementer=2
+        export procs=$(($box_cores*$box_threads))
+        for ((l=$incrementer; l<=$LOAD; l=$((l+$incrementer))));do
+          machines=$(($machines+$incrementer))
 
-            request_counter=$(($request_counter+1))
+          # keep last log
+          cd ~/projects/solrcloud;pssh -l dporte7 -h "${LOADHOSTS}_${LOAD}" "echo ''>traffic_gen/traffic_gen.log"
 
-            # keep last log
-            cd ~/projects/solrcloud;pssh -l dporte7 -h $LOADHOSTS "echo ''>traffic_gen/traffic_gen.log"
+          echo "cd ~/projects/solrcloud/tests_v1/scriptsThatRunLoadServers; bash runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t ${app_threads} -d 10 -p $(($procs*$machines*$app_threads)) --solrnum $SOLRNUM --query $QUERY --loop open --load $l"
 
-            echo "cd ~/projects/solrcloud/tests_v1/scriptsThatRunLoadServers; bash runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t ${t} -d 10 -p $((16*$request_counter)) --solrnum $SOLRNUM --query $QUERY --loop open --load $l"
-
-            cd ~/projects/solrcloud/tests_v1/scriptsThatRunLoadServers; bash runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t ${t} -d 10 -p $((16*$request_counter)) --solrnum $SOLRNUM --query $QUERY --loop open --load $l
-            sleep 2
-          done
+          cd ~/projects/solrcloud/tests_v1/scriptsThatRunLoadServers; bash runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t ${app_threads} -d 10 -p $(($procs*$machines*$app_threads)) --solrnum $SOLRNUM --query $QUERY --loop open --load $l
+          sleep 2
         done
 
-        for n in "${ALL_NODES[@]}";do
+        for n in $ALL_NODES;do
           ssh $USER@$n "pkill -f dstat" >/dev/null 2>&1 &
         done
 
-        DSTAT_DIR="${PROJECT_HOME}/rf_${RF}_s${SHARD}_solrnum${SOLRNUM}_query${QUERY}"
+        DSTAT_DIR="${PROJ_HOME}/rf_${RF}_s${SHARD}_solrnum${SOLRNUM}_query${QUERY}"
         mkdir $DSTAT_DIR
 
-        for n in "${ALL_NODES[@]}";do
-          scp -r $USER@${n}:~/${QUERY}* $DSTAT_DIR
+        for n in $ALL_NODES;do
+          scp -r $USER@${n}:~/*dstat.csv $DSTAT_DIR
         done
 
         mv $DSTAT_DIR "/Users/dporter/projects/solrcloud/chart/exp_records/$CHARTNAME"

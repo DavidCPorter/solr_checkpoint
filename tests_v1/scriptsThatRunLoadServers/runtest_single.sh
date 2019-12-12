@@ -39,14 +39,14 @@ function start_experiment() {
 
   echo "LOAD_NODES = $LOAD_NODES"
   echo 'Copying python scripts to remote machine'
-  pscp -l $USER -r -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_8 $PY_SCRIPT /users/dporte7
-  pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_8 $TERMS /users/dporte7
+  pscp -l $USER -r -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file $PY_SCRIPT /users/dporte7
+  pscp -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file $TERMS /users/dporte7
 
 
   SINGLE_PAR="$THREADS $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --instances $INSTANCES --connections 1 --output-dir ./ --host 10.10.1.1"
 
   echo "removing previous output from remote and local host"
-  pssh -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_8 --user $USER "rm ~/traffic_gen/http_benchmark_*"
+  pssh -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file --user $USER "rm ~/traffic_gen/http_benchmark_*"
   rm $PROJECT_HOME/tests_v1/profiling_data/proc_results/http_benchmark_*
   MINUS1="$(($PROCESSES - 1))"
 

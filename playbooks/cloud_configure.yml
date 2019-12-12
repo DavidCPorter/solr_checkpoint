@@ -1,12 +1,12 @@
 # playbook for cloudconfig
-- hosts: nodes
+- hosts: allNodes
   roles:
     - cloud-env
   tags:
     - never
     - general
 
-- hosts: generatorNodeTen
+- hosts: generatorNode
   tasks:
   - name: pip install numpy
     pip:

@@ -63,6 +63,7 @@ def main(p, t, d, rf, q, l, shards, solrnum, loadnodes, instances=None):
     fp = open('/Users/dporter/projects/solrcloud/tests_v1/profiling_data/exp_results/rf'+rf+'_s'+shards+'__clustersize'+solrnum+'/rf'+rf+'_s'+shards+'__clustersize'+solrnum+"::query="+q+"::proc="+p+"::threads="+t+"::dur="+d+":::TIME->"+datetime.today().strftime('%Y-%m-%d-%H:%M:%S'), 'w+')
 # for charting
 #  writes -> total outstanding requests, QPS, median LAT, Tail LAT
+    # 2*2 is simply compensating for the fact that I don't want to change the driver code to generate the correct number here - so i'm just hardcoding the outstanding requests position with p*2*2 b/c thats the right number.
     fp.write(p+','+str(total_qps)+','+str(total_med_lat)+','+str(total_tail_lat))
     fp.close()
     print("ALL DONE with READRESULTS")
