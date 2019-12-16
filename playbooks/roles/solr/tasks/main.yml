@@ -19,9 +19,9 @@
   tags:
     - solr_update
 
-- name: delete /users/dporte7/solr-8_0/solr/server/solr/configsets/sample_techproducts_configs
+- name: delete /users/dporte7/solr-8_3/solr/server/solr/configsets/sample_techproducts_configs
   file:
-    path: /users/dporte7/solr-8_0/solr/server/solr/configsets/sample_techproducts_configs
+    path: /users/dporte7/solr-8_3/solr/server/solr/configsets/sample_techproducts_configs
     state: absent
   tags:
   - rm_sample
@@ -88,7 +88,7 @@
   tags:
     - remove_slow_query
 
-- name: modify solr executable ~/solr-8_0/solr/bin/solr
+- name: modify solr executable ~/solr-8_3/solr/bin/solr
   lineinfile:
     path: '{{solr_install_dir}}/solr/bin/solr'
     regex: '^REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname=$SOLR_HOST")'

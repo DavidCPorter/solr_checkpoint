@@ -30,6 +30,10 @@
     shell: bash "{{solr_bin_exec}}" zk mkroot /twentyfourNode
     ignore_errors: yes
 
+  - name: set default chroot for znodes for all solr node configs
+    shell: bash "{{solr_bin_exec}}" zk mkroot /default
+    ignore_errors: yes
+
 - hosts: solrNodes
   roles:
     - solr
@@ -38,3 +42,24 @@
   tags:
     - never
     - setup
+
+
+- hosts: solrNodes
+  tasks:
+    - name: delete solr data
+      file:
+        path: /var/solr
+        state: absent
+      become: yes
+      become_user: root
+      tags:
+        - never
+        - burn_solr
+
+    - name: delete solr home dir
+      file:
+        path: "{{prev_solr_install_dir}}"
+        state: absent
+      tags:
+        - never
+        - burn_solr

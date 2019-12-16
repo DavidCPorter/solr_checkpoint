@@ -7,7 +7,7 @@ KILLARGS="ps aux | grep -i solrclientserver | awk -F' ' '{print \$2}' | xargs ki
 CHECKARGS='ps aux | grep -i solrclientserver'
 
 alias grepmal="cd $PROJ_HOME/; pssh -l $CL_USER -h ssh_files/pssh_solr_node_file -P 'ps aux | grep kdevtmpfsi > tmpout.txt;head -n 1 tmpout.txt'"
-alias whatsgood="cd $PROJ_HOME/tests_v1/profiling_data/exp_results; ls -t; cat * */*;cd $PROJ_HOME" 
+alias whatsgood="cd $PROJ_HOME/tests_v1/profiling_data/exp_results; ls -t; cat * */*;cd $PROJ_HOME"
 alias mechart="python3 $PROJ_HOME/chart/chartit_error_bars.py"
 alias killallbyname="cd /Users/dporter/projects/solrcloud;pssh -i -h ssh_files/pssh_all -l dporte7 -P sudo pkill -f"
 alias fulllogs="cd $PROJ_HOME/; pssh -l $CL_USER -h ssh_files/pssh_solr_node_file -P 'tail -n 100 /var/solr/logs/solr.log'"
@@ -30,15 +30,15 @@ alias singlelogs="cd $PROJ_HOME/; pssh -l $CL_USER -h ssh_files/solr_single_node
 # alias archive_fcts="cd $PROJ_HOME/tests_v1;cp -rf *.zip ~/exp_results_fct_zips/$(date '+%Y-%m-%d_%H:%M');rm -rf *.zip"
 alias singletest="cd $PROJ_HOME/tests_v1; bash exp_single_cluster.sh"
 alias fulltest="cd $PROJ_HOME/tests_v1; bash exp_scale_loop.sh"
-alias listcores="cd $PROJ_HOME/; pssh -l $CL_USER -i -h ssh_files/pssh_solr_node_file 'ls /users/$CL_USER/solr-8_0/solr/server/solr'"
-alias deldown="cd $PROJ_HOME/; pssh -l $CL_USER -i -h ssh_files/solr_single_node 'bash ~/solr-8_0/solr/bin/solr delete -c'"
+alias listcores="cd $PROJ_HOME/; pssh -l $CL_USER -i -h ssh_files/pssh_solr_node_file 'ls /users/$CL_USER/solr-8_3/solr/server/solr'"
+alias deldown="cd $PROJ_HOME/; pssh -l $CL_USER -i -h ssh_files/solr_single_node 'bash ~/solr-8_3/solr/bin/solr delete -c'"
 alias checkdisk="cd $PROJ_HOME/; pssh -h ssh_files/pssh_solr_node_file -l $CL_USER -P 'df | grep /dev/nvme0n1p1'"
 
-alias checkconfig="cd $PROJ_HOME/; pssh -l $CL_USER -i -h ssh_files/solr_single_node 'cat ~/solr-8_0/solr/server/solr/configsets/_default/conf/solrconfig.xml'"
+alias checkconfig="cd $PROJ_HOME/; pssh -l $CL_USER -i -h ssh_files/solr_single_node 'cat ~/solr-8_3/solr/server/solr/configsets/_default/conf/solrconfig.xml'"
 alias collectionconfig="curl http://128.110.153.162:8983/solr/reviews_rf4_s1_clustersize94/config"
 alias collectionconfigfull="curl http://128.110.153.162:8983/solr/reviews_rf32_s1_clustersize16/config"
 
-export CORE_HOME=/users/dporte7/solr-8_0/solr/server/solr
+export CORE_HOME=/users/dporte7/solr-8_3/solr/server/solr
 
 
 export node0='128.110.153.169'
@@ -121,7 +121,7 @@ stopsingle (){
   for i in `seq 8`;do
     printf "\n STOPPING SOLR INSTANCES:"
     echo "node__$i/solr -p 99$i$i"
-    pssh -h $PROJ_HOME/ssh_files/solr_single_node -l $CL_USER -P "bash ~/solr-8_0/solr/bin/solr stop -cloud -q -s ~/node__$i/solr -p 99$i$i -Dhost=10.10.1.1"
+    pssh -h $PROJ_HOME/ssh_files/solr_single_node -l $CL_USER -P "bash ~/solr-8_3/solr/bin/solr stop -cloud -q -s ~/node__$i/solr -p 99$i$i -Dhost=10.10.1.1"
   done
 }
 
@@ -143,7 +143,7 @@ wipeInstances (){
   for i in `seq 8`;do
     printf "\n STOPPING SOLR INSTANCES:"
     echo "node__$i/solr -p 99$i$i"
-    pssh -h $PROJ_HOME/ssh_files/solr_single_node -l $CL_USER -P "bash ~/solr-8_0/solr/bin/solr stop -cloud -q -s ~/node__$i/solr -p 99$i$i -Dhost=10.10.1.1"
+    pssh -h $PROJ_HOME/ssh_files/solr_single_node -l $CL_USER -P "bash ~/solr-8_3/solr/bin/solr stop -cloud -q -s ~/node__$i/solr -p 99$i$i -Dhost=10.10.1.1"
   done
 
   sleep 8

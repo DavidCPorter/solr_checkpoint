@@ -188,8 +188,8 @@ ZK_HOST="10.10.1.1:2181,10.10.1.2:2181,10.10.1.3:2181"
 ZK_CLIENT_TIMEOUT=30000
 SOLR_HOST=$SOLR_HOST
 SOLR_PID_DIR="/var/solr"
-SOLR_HOME="/users/dporte7/solr-8_0/solr/server/solr"
-LOG4J_PROPS="/users/dporte7/solr-8_0/solr/server/resources/log4j2.xml"
+SOLR_HOME="/users/dporte7/solr-8_3/solr/server/solr"
+LOG4J_PROPS="/users/dporte7/solr/server/resources/log4j2.xml"
 SOLR_LOGS_DIR="/var/solr/logs"
 SOLR_PORT=8983
 # heapsize 20g

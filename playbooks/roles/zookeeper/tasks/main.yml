@@ -4,7 +4,7 @@
 - name: Download and unpack zookeeper
   unarchive:
     remote_src: yes
-    src: https://archive.apache.org/dist/zookeeper/zookeeper-3.4.13/zookeeper-3.4.13.tar.gz
+    src: https://archive.apache.org/dist/zookeeper/zookeeper-3.5.5/apache-zookeeper-3.5.5.tar.gz
     dest: '{{zoo_install_dir}}/'
 
   tags:
@@ -53,6 +53,27 @@
   copy:
     content: "{{zoo_id}}"
     dest: /var/lib/zookeeper/myid
+    mode: "777"
+  become: yes
+  become_user: root
+
+- name: add zookeeper_server.pid  to "/var/lib/zookeeper"
+  file:
+    path: "/var/lib/zookeeper/zookeeper_server.pid"
+    state: file
+    mode: "777"
+    force: yes
+  become: yes
+  become_user: root
+  tags:
+    - zoo_3-5_weirdness
+
+- name: compile zookeeper
+  shell: ant compile
+  args:
+    chdir: '{{zoo_root_dir}}'
+  tags:
+    - compile
 
 # systemd option not worth it right now
 - name: stop zookeeper

@@ -32,7 +32,7 @@
 # there will always be shard1 and replica n1 at node1
 - name: check if collection exists
   stat:
-    path: "/users/dporte7/solr-8_0/solr/server/solr/{{collection_name}}_shard1_replica_n1"
+    path: "/users/dporte7/solr-8_3/solr/server/solr/{{collection_name}}_shard1_replica_n1"
   register: yay
   tags:
     - schema

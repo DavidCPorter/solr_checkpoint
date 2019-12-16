@@ -55,7 +55,7 @@ createInstances () {
         break
       fi
       echo "copying config files to $CLOUDHOME/node__$i/"
-      pssh -h ~/projects/solrcloud/ssh_files/solr_single_node -l dporte7 -P "cp -rf $CLOUDHOME/solr-8_0/solr/server/solr $CLOUDHOME/node__$i/"
+      pssh -h ~/projects/solrcloud/ssh_files/solr_single_node -l dporte7 -P "cp -rf $CLOUDHOME/solr-8_3/solr/server/solr $CLOUDHOME/node__$i/"
     done
     wait $!
 
@@ -66,7 +66,7 @@ createInstances () {
       printf "\n launching:"
       echo "node__$i/solr -p 99$i$i"
       # should we nohup here?
-      pssh -h ~/projects/solrcloud/ssh_files/solr_single_node -l dporte7 -P "bash ~/solr-8_0/solr/bin/solr start -cloud -q -s ~/node__$i/solr -p 99$i$i -Dhost=10.10.1.1"
+      pssh -h ~/projects/solrcloud/ssh_files/solr_single_node -l dporte7 -P "bash ~/solr-8_3/solr/bin/solr start -cloud -q -s ~/node__$i/solr -p 99$i$i -Dhost=10.10.1.1"
       printf "\n done \n"
     done
 

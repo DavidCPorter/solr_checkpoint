@@ -47,7 +47,7 @@ sleep 5
 for i in `seq $INSTANCES`;do
   printf "\n STOPPING SOLR INSTANCES:"
   echo "node__$i/solr -p 99$i$i"
-  nohup pssh -h ~/projects/solrcloud/ssh_files/solr_single_node -l dporte7 -P "bash ~/solr-8_0/solr/bin/solr stop -cloud -q -s ~/node__$i/solr -p 99$i$i -Dhost=10.10.1.1" &
+  nohup pssh -h ~/projects/solrcloud/ssh_files/solr_single_node -l dporte7 -P "bash ~/solr-8_3/solr/bin/solr stop -cloud -q -s ~/node__$i/solr -p 99$i$i -Dhost=10.10.1.1" &
 done
 sleep 5
 echo "STOPPED THE ANCILLARY INSTANCES"
