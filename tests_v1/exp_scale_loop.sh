@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CLOUDHOME="/users/dporte7"
+CLOUDHOME=/users/dporte7
 USER="dporte7"
 
 # load sugar
@@ -37,7 +37,10 @@ for SERVERNODE in "$@"; do
 done
 
 PREFIXER=""
-echo "running experiment for these solrnode cluster sizes:"
+printf "\n\n\n\n"
+echo "******** STARTING FULL SCALING EXPERIEMENT **********"
+printf "\n"
+echo " SCALE EXP loop will measure performance of solrcloud with these cluster sizes:"
 for SERVERNODE in "$@"; do
   PREFIXER="${PREFIXER}${SERVERNODE}_"
   echo $SERVERNODE
@@ -45,18 +48,26 @@ done
 CHARTNAME=$(LC_ALL=C tr -dc 'a-z' </dev/urandom | head -c 7; echo)
 CHARTNAME="$(date +"%m-%d")::${PREFIXER}${CHARTNAME}"
 ######## VALIDATION COMPLETE
-
+printf "\n\n\n"
+# pythreads is simply the number of threads in each python load gen script
+pythreads=2
+cpu_cores=16
+cpu_threads=2
+first_load=2
+echo "SCALE EXP will increase outstanding query requests (LOAD) from $(($first_load*$pythreads*$cpu_cores*$cpu_threads)) --->> $(($LOAD*$pythreads*$cpu_cores*$cpu_threads))"
 echo "chartname:"
 echo $CHARTNAME
 EXP_HOME=/Users/dporter/projects/solrcloud/chart/exp_records
 mkdir $EXP_HOME/$CHARTNAME
 # ARCHIVE PREVIOUS EXPs (this shouldnt archive anything if done correctly so first wipe dir)
-rm -rf /Users/dporter/projects/solrcloud/tests_v1/profiling_data/exp_results/*
+rm -rf $PROJ_HOME/tests_v1/profiling_data/exp_results/*
 
 # echo "$LOAD_NODES"
 # echo "LOAD_NODES = ${LOAD_NODES[1]}"
-echo 'Copying python scripts and search terms to load machines'
-play update_loadscripts.yml --extra-vars "scripts_path=$LOAD_SCRIPTS terms_path=$TERMS"
+if [ $copy_python_scripts == "yes" ]; then
+  echo 'Copying python scripts and search terms to load machines'
+  play update_loadscripts.yml --extra-vars "scripts_path=$LOAD_SCRIPTS terms_path=$TERMS"
+fi
 
 for QUERY in ${QUERYS[@]}; do
 
@@ -102,15 +113,30 @@ for QUERY in ${QUERYS[@]}; do
         SOLRNUM=$SERVERNODE
           # scale each load up to servernode size then add a load node
         # remove previous dstatout
+        echo "dstat should not be running but killing just in case"
+        pssh -h $PROJ_HOME/ssh_files/pssh_all --user $USER "pkill -f dstat"
+
+
+        echo "removing prev dstat files"
         pssh -h $PROJ_HOME/ssh_files/pssh_all --user $USER "rm ~/*dstat.csv"
         # dstat on each node
         # nodecounter just makes it easier to know which node dstat file was
         node_counter=0
+
+
+        echo "COMMENCE DSTAT ON ALL MACHINES..."
+        printf "\n"
+
+
+        ssh $USER@$n "pkill -f dstat" >/dev/null 2>&1 &
+
         for n in $ALL_NODES;do
           nohup ssh $USER@$n "dstat -t --cpu --mem --disk --io --net --int --sys --swap --tcp --output node${node_counter}_${n}_${QUERY}::rf${RF}_s${SHARD}_cluster${SOLRNUM}_dstat.csv &" >/dev/null 2>&1 &
           node_counter=$(($node_counter+1))
         done
-        echo "cd ~/projects/solrcloud/tests_v1/scriptsThatRunLoadServers; bash runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -d 10 --solrnum $SOLRNUM --query $QUERY"
+        printf "\n"
+        echo "DSTAT LIVE"
+        printf "\n"
 
         # vars for loop for config experiment
         machines=0
@@ -123,10 +149,19 @@ for QUERY in ${QUERYS[@]}; do
           machines=$(($machines+$incrementer))
 
           # keep last log
+          printf "\n"
+          printf "\n"
+          printf "\n"
+
+          echo "********   STARTING EXP PRELIM STEPS   ************"
+          printf "\n"
+
+          echo "removing previous exp load script output ::: traffic_gen/traffic_gen.log"
           cd ~/projects/solrcloud;pssh -l dporte7 -h "${LOADHOSTS}_${LOAD}" "echo ''>traffic_gen/traffic_gen.log"
-
-          echo "cd ~/projects/solrcloud/tests_v1/scriptsThatRunLoadServers; bash runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t ${app_threads} -d 10 -p $(($procs*$machines*$app_threads)) --solrnum $SOLRNUM --query $QUERY --loop open --load $l"
-
+          printf "\n\n\n\n"
+          echo " PARAMETERS TO runscript.sh:::: "
+          echo "\$ ./tests_v1/scriptsThatRunLoadServers/runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t ${app_threads} -d 10 -p $(($procs*$machines*$app_threads)) --solrnum $SOLRNUM --query $QUERY --loop open --load $l"
+          printf "\n\n"
           cd ~/projects/solrcloud/tests_v1/scriptsThatRunLoadServers; bash runtest.sh traffic_gen words.txt --user dporte7 -rf $RF -s $SHARD -t ${app_threads} -d 10 -p $(($procs*$machines*$app_threads)) --solrnum $SOLRNUM --query $QUERY --loop open --load $l
           sleep 2
         done
@@ -149,11 +184,14 @@ for QUERY in ${QUERYS[@]}; do
         stopSolr $SERVERNODE
         play post_data_$SERVERNODE.yml --tags aws_exp_reset --extra-vars "replicas=$RF shards=$SHARD clustersize=$SERVERNODE"
 
+        # next RF
       done
+      # next shard
     done
-    archivePrev $CHARTNAME
-
+    # next servernode
+    archivePrev $CHARTNAME $SERVERNODE $QUERY
   done
+  # next query
   python3 /Users/dporter/projects/solrcloud/chart/chart_all_full.py $QUERY $CHARTNAME
   python3 /Users/dporter/projects/solrcloud/chart/chartit_error_bars.py $QUERY $CHARTNAME
   zip -r /Users/dporter/projects/solrcloud/chart/exp_html_out/_$CHARTNAME/exp_zip.zip /Users/dporter/projects/solrcloud/chart/exp_records/$CHARTNAME

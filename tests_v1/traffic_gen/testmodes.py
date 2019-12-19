@@ -78,6 +78,7 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
             #     thread_stats.errors[j] += 1
     if test_param.port != 8983:
         conn.send(b'bye\n')
+
     conn.close()
     fct_return.sort()
     length = len(fct_return)

@@ -113,7 +113,8 @@ archivePrev (){
   mkdir $EXP_HOME/$1
   cp -rf profiling_data/exp_results/* $EXP_HOME/$1
   rm -rf profiling_data/exp_results/*
-  cp -rf *.zip $EXP_HOME/$1
+  mkdir -p $EXP_HOME/$1/FCTS/$2/$3
+  cp -rf *.zip $EXP_HOME/$1/FCTS/$2/$3
   rm -rf *.zip
 }
 

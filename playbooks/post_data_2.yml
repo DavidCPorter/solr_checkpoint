@@ -1,7 +1,5 @@
 # playbook for cloudconfig
 
-
-
 - hosts: twoNode
   roles:
     - upload_data
@@ -16,6 +14,18 @@
   tags:
     - never
     - begin_exp
+
+# need to put begin_exp tag here to enable tracing.
+- hosts: twoNode
+  tasks:
+    - name: update solr.xml
+      copy:
+        src: "{{upload_data_file_path}}/solr.xml"
+        dest: "{{solr_home}}"
+        force: yes
+  tags:
+    - begin_exp
+#
 
 - hosts: twoNode
   tasks:

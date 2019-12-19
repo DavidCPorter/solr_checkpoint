@@ -28,15 +28,12 @@ function start_experiment() {
   LOAD=${21}
   INSTANCES="0"
   SOLR_SIZE=${19}
-  # these correlate the order in the ssh_files
-  echo $LOAD
   # loadsize = num of load servers
   LOADSIZE=$LOAD
-  echo "LOAD"
   # proper array for this var
   LOAD_NODES=($(setLoadArray $LOADSIZE))
   # LOAD_NODES is the array of IPs for the specified loadsize
-
+  echo "THESE ARE THE LOAD NODES FOR THIS ITERATION OF EXP::"
   for i in "${LOAD_NODES[@]}";do
     echo $i
   done
@@ -51,16 +48,15 @@ function start_experiment() {
   PAR_1="$DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --port 9222" #host appended below
   PAR_2="$DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --port 9333" #host appended below
   PAR_3="$DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM --connections 1 --output-dir ./ --port 9444" #host appended below
-
-  echo "removing previous output from remote and local host"
+  printf "\n\n\n"
+  echo "removing previous output from remote sources and local host copies"
   pssh -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file --user $USER "rm ~/traffic_gen/http_benchmark_*"
   rm $PROJECT_HOME/tests_v1/profiling_data/proc_results/*
 # THIS MIGHT HAVE BEEN THE PROBLEM
 
 ########## EXPERIMENTS #################
-
-
-  echo "*** running remote experiment ****"
+  printf "\n"
+  echo "making dirs for copying remote scripts"
   for i in "${LOAD_NODES[@]}";do
     mkdir $RSCRIPTS/${i}
     touch $RSCRIPTS/${i}/remotescript.sh
@@ -105,35 +101,64 @@ function start_experiment() {
   for noder in "${LOAD_NODES[@]}";do
     scp ${RSCRIPTS}/${noder}/remotescript.sh $USER@${noder}:/users/${USER}/traffic_gen/remotescript.sh
   done
+  printf "\n"
+  echo "******** EXP PRELIM STEPS COMPLETE!! ************"
+  printf "\n"
+  printf "\n"
+  printf "\n"
 
+  echo "********* STARTING EXPERIMENT *********"
+  printf "\n"
+  printf "\n"
+  printf "\n"
 #### RUNNING EXPERIMENTS #####
-  echo "RUNNING THIS REMOTE SHELL SCRIPT ON LOAD NODES"
+  echo "RUNNING THESE SHELL SCRIPTS ON LOAD NODES"
+  easyreadcount=0
   for i in "${LOAD_NODES[@]}";do
-    echo "${i}::"
-    cat $RSCRIPTS/${i}/remotescript.sh
+    if [ "$easyreadcount" -eq 0 ];then
+      echo "${i}::"
+      cat $RSCRIPTS/${i}/remotescript.sh
+      printf "\n"
+
+    else
+      echo "${i}::"
+      head -n 5 $RSCRIPTS/${i}/remotescript.sh
+      echo "......"
+      printf "\n"
+    fi
+
+    easyreadcount+=1
+
   done
   echo "nohup output to loadoutput.out"
-
+  printf "\n"
+  printf "\n"
   # BACKGROUND LOAD GEN NODES
 #  nohup pssh -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_$(($LOADSIZE-1)) "cd $(basename $PY_SCRIPT); bash remotescript_net.sh"&
   nohup pssh -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_$LOADSIZE "cd $(basename $PY_SCRIPT); bash remotescript.sh" > loadoutput.out
   wait $!
-  echo "finished EXP"
+  echo "************* FINISHED EXP ****************"
 #### FINISHED #####
 
-
-  echo "copying results... "
+  printf "\n"
+  printf "\n"
+  printf "\n"
+  printf "\n"
+  echo "************* STARTING POST EXP STEPS ****************"
+  printf "\n"
+  printf "\n"
+  echo "copying exp results to profiling_data/proc_results/  ... "
 
   # wait for slow processes to complete (prolly not effective)
   sleep 2
   for i in "${LOAD_NODES[@]}"; do
-      echo "$i"
-      scp $USER@$i:~/traffic_gen/http_benchmark_${15}* $PROJECT_HOME/tests_v1/profiling_data/proc_results &
+      scp -q $USER@$i:~/traffic_gen/http_benchmark_${15}* $PROJECT_HOME/tests_v1/profiling_data/proc_results &
   done
 
   wait $!
   sleep 1
   printf "\n\n\n"
+  echo "RUNNING READ RESULTS SCRIPT"
   echo "$PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $REPLICAS $QUERY $LOOP $SHARDS $SOLRNUM $LOADSIZE $INSTANCES"
   python3 $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $REPLICAS $QUERY $LOOP $SHARDS $SOLRNUM $LOADSIZE $INSTANCES
   wait $!
@@ -145,64 +170,14 @@ function start_experiment() {
   done
   pssh -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file_$LOADSIZE "echo ''> /users/dporte7/solrclientserver/javaServer.log"
   # for reference fcts
-  zip -r $PROJECT_HOME/tests_v1/${DATE}_query${15}_rf${11}_s${13}_clustersize${19}_threads${5}_proc${7}.zip $PROJECT_HOME/tests_v1/profiling_data/proc_results
+  zip -rq $PROJECT_HOME/tests_v1/${DATE}:::FCTS__query${15}_rf${11}_s${13}_clustersize${19}_threads${5}_proc${7}.zip $PROJECT_HOME/tests_v1/profiling_data/proc_results
 
   printf "\n\n\n "
-  echo "DONE with $PROCESSES outstanding requests for:::: $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $REPLICAS $QUERY $LOOP $SHARDS $SOLRNUM $LOADSIZE $INSTANCES "
+  echo "****** COMPLETED POST EXP STEPS *******"
+  printf "\n\n\n "
+
 
 }
-
-function profile_experiment_dstat() {
-
-    if [ "$#" -lt 3 ]; then
-        echo "Usage: profile_experiment_dstat <username> <python scripts dir> <search term list>"
-    	exit
-    fi
-    USER=$1
-  	PY_SCRIPT=$2
-    TERMS=$3
-    THREADS="$4 $5"
-    PROCESSES="$6 $7"
-    DURATION="$8 $9"
-    REPLICAS="${10} ${11}"
-    SHARDS="${12} ${13}"
-    QUERY="${14} ${15}"
-	  #PARAMETERS=$3
-
-    LOOP="${16} ${17}"
-    SOLRNUM="${18} ${19}"
-    LOAD="${20} ${21}"
-
-    DPARAMS='-t --cpu --mem --disk --io --net --int --sys --swap --tcp'
-
-    PY_NAME=$(basename $PY_SCRIPT | cut -d '.' -f1)
-
-    # echo 'deleting node dstat remote files'
-    # DATE=$(date '+%Y-%m-%d_%H:%M:%S')
-    # nohup pssh -i -l $USER -h $PROJECT_HOME/ssh_files/pssh_solr_node_file "rm ~/${DATE}_rf${11}_s${13}_clustersize${19}_threads${5}_proc${7}_dstat_$PY_NAME.csv" &
-    # sleep 1
-  	# echo 'Starting the dstat'
-    # nohup pssh -i -l $USER -h $PROJECT_HOME/ssh_files/pssh_solr_node_file "dstat $DPARAMS --output ${15}_node_dstat_$PY_NAME.csv >/dev/null 2>&1" &
-    # nohup pssh -i -l $USER -h $PROJECT_HOME/ssh_files/pssh_traffic_node_file "cd solrclientserver;java -cp target/solrclientserver-1.0-SNAPSHOT.jar com.dporte7.solrclientserver.DistributedWebServer" &
-    export procs=$procs
-
-  	echo 'Starting the experiment'
-  	 start_experiment $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM $LOAD
-
-    # start_experiment returns after requests
-
-
-    # echo 'Stopping dstat'
-    #   nohup pssh -l $USER -i -h $PROJECT_HOME/ssh_files/pssh_solr_node_file "ps aux | grep -i 'dstat*' | awk -F' ' '{print \$2}' | xargs kill -9 >/dev/null 2>&1" &
-
-    # echo 'Copying the remote dstat data to local -> /profiling_data'
-    # echo 'TO DO'
-    #
-    # # pscp $USER@node$i:"~/${15}_node${i}_dstat_$PY_NAME.csv" profiling_data/
-    #
-    # echo 'Done'
-
-  }
 
 
 if [ "$#" -lt 3 ]; then
@@ -301,11 +276,10 @@ TERMS="words.txt"
   # wait $!
 
 cd ~/projects/solrcloud/tests_v1;
-echo 'Starting the experiment'
 # start_experiment $USER $PY_SCRIPT
 export procs=$procs
 
-profile_experiment_dstat $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM $LOAD
+start_experiment $USER $PY_SCRIPT $TERMS $THREADS $PROCESSES $DURATION $REPLICAS $SHARDS $QUERY $LOOP $SOLRNUM $LOAD
 
 #start_experiment $USER $PY_SCRIPT "\"$PARAMETERS\""
 

@@ -9,16 +9,14 @@ import gzip
 def main(query,codename):
     proj_home = "~/projects/solrcloud"
     exp_home = "/Users/dporter/projects/solrcloud/chart/exp_records/"+codename
-    print('RUNNING chart results')
+    print('******** FINISHED FULL SCALING EXPERIEMENT **********')
+    print("\n\nRUNNING chart_all_full.py ")
     QPS = []
     median_lat = []
     tail_lat = []
     dirs = os.popen('ls '+exp_home+' | grep __clustersize').read()
-    print(dirs)
     dirs = dirs.split('\n')
     dirs.pop()
-    print(dirs)
-
     try:
         os.makedirs('/Users/dporter/projects/solrcloud/chart/scaling_exp_csvs')
     except FileExistsError:
@@ -33,16 +31,13 @@ def main(query,codename):
 
     for d in dirs:
         print(d)
-        files = os.popen('ls '+exp_home+'/'+d+' | grep '+query).read()
-        print(files)
-        files = files.split('\n')
-        files.pop()
-        print(files)
+        bench_files = os.popen('ls '+exp_home+'/'+d+' | grep '+query).read()
+        print("these are the output files for "+d+" solrcloud experiment")
+        print(bench_files)
+        bench_files = bench_files.split('\n')
+        bench_files.pop()
 
-
-
-        # removing cache warming file with [1:]
-        for exp_output in files:
+        for exp_output in bench_files:
             f = open(exp_home+'/'+d+'/'+exp_output, 'r')
             data = f.readline()
             f.close()
@@ -61,6 +56,8 @@ def main(query,codename):
             fm = open(total_scale_file, "a+")
             fm.write(data+','+csize+','+query+','+d[:8]+','+group+'\n')
             fm.close()
+
+    print("\n COMPLETED chart_all_full.py \n\n\n")
 
 
 

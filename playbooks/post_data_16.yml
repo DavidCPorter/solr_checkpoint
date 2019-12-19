@@ -19,6 +19,16 @@
 
 - hosts: sixteenNode
   tasks:
+    - name: update solr.xml
+      copy:
+        src: "{{upload_data_file_path}}/solr.xml"
+        dest: "{{solr_home}}"
+        force: yes
+  tags:
+    - begin_exp
+    
+- hosts: sixteenNode
+  tasks:
     - name: run this at the end of each experiment AKA aws_exp_reset
       include_tasks:
         file: roles/upload_data/tasks/aws_reset.yml

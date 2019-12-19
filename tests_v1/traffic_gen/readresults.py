@@ -8,18 +8,16 @@ import gzip
 
 def main(p, t, d, rf, q, l, shards, solrnum, loadnodes, instances=None):
     proj_home = "~/projects/solrcloud"
-    print('RUNNING READRESULTS %s%s%s' % (p, t, d))
+    print('\n\nRUNNING readresults.py ::: ARGS == proc=%s threads=%s duration=%s' % (p, t, d))
     QPS = []
     median_lat = []
     tail_lat = []
     files = os.popen('ls '+proj_home+'/tests_v1/profiling_data/proc_results | grep '+q).read()
     files = files.split('\n')
     processes = float(len(files))
-    print("supposed to be num processes %s" % str(processes))
+    print("num output files copied from remote == %s | should == %s (num procs passsed in to this script)" % (str(processes*int(t)), p) )
     files.pop()
-    print(files)
     for file in files:
-        print(file)
         f = open("/Users/dporter/projects/solrcloud/tests_v1/profiling_data/proc_results/"+file, 'r')
         #
         f.readline()
@@ -50,7 +48,7 @@ def main(p, t, d, rf, q, l, shards, solrnum, loadnodes, instances=None):
 
 # simply to denote this is a single node cluster record
     if instances != "0":
-        print("SUPPOSED TO BE SINGLE")
+        print("SINGLE NODE READRESULTS ")
         solrnum='9'+str(solrnum)
 
     try:
@@ -66,7 +64,7 @@ def main(p, t, d, rf, q, l, shards, solrnum, loadnodes, instances=None):
     # 2*2 is simply compensating for the fact that I don't want to change the driver code to generate the correct number here - so i'm just hardcoding the outstanding requests position with p*2*2 b/c thats the right number.
     fp.write(p+','+str(total_qps)+','+str(total_med_lat)+','+str(total_tail_lat))
     fp.close()
-    print("ALL DONE with READRESULTS")
+    print("READRESULTS SCRIPT COMPLETE\n\n\n")
 
 if __name__ == "__main__":
     arg_dict = {}
