@@ -33,13 +33,17 @@ this will generate >> `inventory_gen.txt` file. swap this file with `./inventory
 - fork the lucene-solr repo https://github.com/DavidCPorter/lucene-solr.git
 - add ssh keys from solr nodes to github account (temp solution so ansible can easily update repos remotely)
 - locally clone repo
-- checkout branch_8_0
+- checkout branch_8_3 (or whatever solr version you want)
 - create new branch <name> e.g. `git checkout -b <name>`
 - push <name> branch to origin
-- replace `dporter` with <branch name> in roles/solr/defaults/main.yml.
+- replace git_branch_name=dporter_8_3 in inventory to git_branch_name=<name>
 - replace `dporte7` in ansible role "vars" and "defaults" files with your username in cloudlab
 
 ##### LOAD env helpers utils.sh and be sure to replace PROJ_HOME and CL_USER var with your path for this app.
+
+#### set up shell envs
+1. update all files in utils folder with your current cluster and user-specific info **especially the node strings with the IPS**
+2. then, run `ssh_files/produce_ssh_files.sh` to create files for pssh tasks dependencies in runtest.sh
 
 #### run ansible scripts
 3. to install the cloud env, run:  
@@ -47,13 +51,11 @@ this will generate >> `inventory_gen.txt` file. swap this file with `./inventory
 4. to install and run zookeeper, run:  
 `play zoo_configure.yml`
 5. to install and run solrcloud, run:  
-`play solr_configure.yml`
+`play solr_configure_all.yml --tags setup --extra-vars "solr_bin_exec=/users/dporte7/solr-8_3/solr/bin/solr"`
 6. to install solrj-enabled client application (cloudaware solr client). There is a tag you can use to enable remote monitoring via jmx if you would like to see that. Also requires REMOTE_JMX setting mod (see below)
 `play solr_bench.yml --tags solrj`
 
-#### set up shell envs
-1. update all files in utils folder with your current cluster and user-specific info **especially the ARRAYS with the IPS**
-2. then, run `ssh_files/produce_ssh_files.sh` to create files for pssh tasks dependencies in runtest.sh
+
 
 
 #### run experiment

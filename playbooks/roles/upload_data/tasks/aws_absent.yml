@@ -14,13 +14,14 @@
   when: "'PRE' not in index_result.stdout"
 
 
-
+# solrconfig.xml is index-specific so it should be part of upload_data role rather than solr role.
 - name: copy solrconfig to nodes
   copy:
-    src: /Users/dporter/projects/solrcloud/playbooks/roles/upload_data/files/solrconfig.xml
+    src: /Users/dporter/projects/solrcloud/playbooks/roles/upload_data/files/solr8-3config.xml
     dest: solr-8_3/solr/server/solr/configsets/_default/conf/solrconfig.xml
   when: "'PRE' not in index_result.stdout"
-
+  tags:
+    - update_solrconfig
 # why nottt just delete always before creating in case a dangler exists
 - name: DELETE collection when we have a dangling collection
   shell: ./bin/solr delete -c "{{collection_name}}"

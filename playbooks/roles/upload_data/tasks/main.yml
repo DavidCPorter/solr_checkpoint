@@ -8,7 +8,7 @@
   ignore_errors: yes
 
 
-- name: include tasks when index is there
+- name: include aws_pull task when index exists in AWS
   include_tasks:
     file: 'tasks/aws_pull.yml'
     apply:

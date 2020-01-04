@@ -20,12 +20,11 @@
   tasks:
     - name: update solr.xml
       copy:
-        src: "{{upload_data_file_path}}/solr.xml"
-        dest: "{{solr_home}}"
+        src: /Users/dporter/projects/solrcloud/playbooks/roles/upload_data/files/solr.xml
+        dest: /users/dporte7/solr-8_3/solr/server/solr/
         force: yes
   tags:
     - begin_exp
-#
 
 - hosts: twoNode
   tasks:

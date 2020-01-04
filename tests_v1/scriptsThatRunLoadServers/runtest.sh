@@ -127,7 +127,7 @@ function start_experiment() {
       printf "\n"
     fi
 
-    easyreadcount+=1
+    ((easyreadcount+=1))
 
   done
   echo "nohup output to loadoutput.out"

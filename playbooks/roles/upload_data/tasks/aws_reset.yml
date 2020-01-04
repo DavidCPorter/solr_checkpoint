@@ -18,7 +18,7 @@
   when: "'PRE' not in index_result.stdout"
 
 
-- name: rm index
+- name: rm cores from nodes
   shell: rm -rf reviews*
   args:
     chdir: '{{solr_home}}'

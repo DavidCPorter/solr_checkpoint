@@ -1,9 +1,19 @@
 # playbook
 
+
+
+- hosts: twentyfourNode
+  roles:
+    - solr
+  vars:
+    chroot: default
+
+
 - hosts: singleNode
   tags:
     - znode
-    - setup
+    - never
+    # - setup
   tasks:
   - name: set singleNode chroot for znodes for all solr node configs
     shell: bash "{{solr_bin_exec}}" zk mkroot /singleNode
@@ -33,33 +43,3 @@
   - name: set default chroot for znodes for all solr node configs
     shell: bash "{{solr_bin_exec}}" zk mkroot /default
     ignore_errors: yes
-
-- hosts: solrNodes
-  roles:
-    - solr
-  vars:
-    chroot: default
-  tags:
-    - never
-    - setup
-
-
-- hosts: solrNodes
-  tasks:
-    - name: delete solr data
-      file:
-        path: /var/solr
-        state: absent
-      become: yes
-      become_user: root
-      tags:
-        - never
-        - burn_solr
-
-    - name: delete solr home dir
-      file:
-        path: "{{prev_solr_install_dir}}"
-        state: absent
-      tags:
-        - never
-        - burn_solr

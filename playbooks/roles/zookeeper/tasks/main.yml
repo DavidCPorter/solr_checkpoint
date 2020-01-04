@@ -59,10 +59,9 @@
 
 - name: add zookeeper_server.pid  to "/var/lib/zookeeper"
   file:
-    path: "/var/lib/zookeeper/zookeeper_server.pid"
-    state: file
+    path: /var/lib/zookeeper/zookeeper_server.pid
+    state: touch
     mode: "777"
-    force: yes
   become: yes
   become_user: root
   tags:

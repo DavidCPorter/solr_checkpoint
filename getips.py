@@ -8,19 +8,25 @@ import time
 from jinja2 import Template
 
 
-if len(sys.argv) != 4:
-    print("\nusage: getips.py <username> <clouddnsfile> <path_to_private_rsa_key>\n")
+if len(sys.argv) != 5:
+    print("\nusage: getips.py <username> <clouddnsfile> <path_to_private_rsa_key> <#load nodes>\n")
     exit()
 
+loadnodes = int(sys.argv[4])
 user = sys.argv[1]
 node_dict={}
+totalnodes=0
 
 with open(sys.argv[2], 'r') as domainfile:
     i=0
     for line in domainfile:
-        ip = dns.resolver.query(line.split('\n')[0], 'A') 
+        ip = dns.resolver.query(line.split('\n')[0], 'A')
         node_dict[str(i)] = str(ip[0])
         i+=1
+    totalnodes = i
+
+print("total nodes = %s" % totalnodes)
+first_load_node = totalnodes-loadnodes
 
 k = paramiko.RSAKey.from_private_key_file(sys.argv[3])
 zoo_dict={}
@@ -48,18 +54,19 @@ for hostname in node_dict.values():
     zoo_id = zoo_id.pop()
     print(zoo_id)
     # non-zookeeper nodes
-    if int(zoo_id[:-1]) > 3 and int(zoo_id[:-1]) < 25:
-        nodes_dict[str(int(zoo_id[:-1])-1)] = ansible_line
+    if int(zoo_id) > 3 and int(zoo_id) <= first_load_node:
+        nodes_dict[str(int(zoo_id)-1)] = ansible_line
     # load gen nodes
-    elif int(zoo_id[:-1]) > 24:
-        load_dict[str(int(zoo_id[:-1])-1)] = ansible_line
+    elif int(zoo_id) > first_load_node:
+        load_dict[str(int(zoo_id)-1)] = ansible_line
     # zookeeper nodes
     else:
-        zoo_dict[str(int(zoo_id[:-1])-1)] = ansible_line[:-1]+'  zoo_id='+zoo_id
+        zoo_dict[str(int(zoo_id)-1)] = ansible_line[:-1]+'  zoo_id='+zoo_id
 
     ssh.close()
 #  updating script with stupid hack here to save some time
 zoo_dict.update(nodes_dict)
+zoo_dict.update(load_dict)
 nodes_dict = zoo_dict
 zoo_list = list(nodes_dict.values())[:3]
 singleNode = list(nodes_dict.values())[:1]
@@ -69,7 +76,7 @@ eightNode = list(nodes_dict.values())[:8]
 sixteenNode = list(nodes_dict.values())[:16]
 twentyfourNode = list(nodes_dict.values())[:24]
 
-print("...generating inventory file with Ips -> ./inventory_gen.txt\n *** please merge ./inventory file with this output *** ")
+print("...generating inventory file with Ips -> ./inventory_gen.txt\n *** please check output file then run $ cat inventory_gen.txt > inventory *** ")
 with open('inventory_file_template.j2') as file_:
     template = Template(file_.read())
 template = template.render(nodes_dict=nodes_dict,zoo_list=zoo_list,zoo_dict=zoo_dict,load_dict=load_dict,host_user=user,singleNode=singleNode,twoNode=twoNode,fourNode=fourNode,eightNode=eightNode, sixteenNode=sixteenNode,twentyfourNode=twentyfourNode)

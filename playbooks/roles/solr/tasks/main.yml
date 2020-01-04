@@ -5,6 +5,8 @@
   stat:
     path: "{{ solr_install_dir }}"
   register: solr_install_path_status
+  tags:
+    - setup
   # tags:
     # - solr_update
 
@@ -15,17 +17,20 @@
       version: "{{git_branch_name}}"
       force: yes
   register: solr_git_status
-  # when: solr_install_path_status.stat.exists == False
+  when: solr_install_path_status.stat.exists == False
   tags:
     - solr_update
+    - setup
+
 
 - name: delete /users/dporte7/solr-8_3/solr/server/solr/configsets/sample_techproducts_configs
   file:
     path: /users/dporte7/solr-8_3/solr/server/solr/configsets/sample_techproducts_configs
     state: absent
   tags:
-  - rm_sample
-  - solr_update
+    - rm_sample
+    - solr_update
+    - setup
 
 
 - name: Run ant-ivy.
@@ -33,26 +38,31 @@
   args:
     chdir: "{{solr_install_dir}}"
   when: solr_install_path_status.stat.exists == False
+  tags:
+    - setup
 
 - name: Build solr with ant.
   shell: ant compile
   args:
     chdir: '{{solr_install_dir}}'
   when: solr_install_path_status.stat.exists == False
+  tags:
+    - setup
 
 - name: run ant server
   shell: ant server
   args:
     chdir: '{{solr_install_dir}}/solr'
   when: solr_install_path_status.stat.exists == False
-
+  tags:
+    - setup
 
 
 - name: remove old solr.in.sh
   shell: rm -f '{{solr_install_dir}}/solr/bin/solr.in.sh'
   tags:
     - solrinsh
-
+    - setup
 # not the best convention here...
 - name: copy solr init file to hosts
   copy:
@@ -61,7 +71,7 @@
   tags:
     - config
     - solrinsh
-
+    - setup
 
 - name: create and grant log dir permissions for solr
   file:
@@ -79,6 +89,7 @@
     line: '<slowQueryThresholdMillis>500</slowQueryThresholdMillis>'
   tags:
     - slow_query
+    # - setup
 #  decided to completely disable logging for experiments.
 - name: add slow query logging for queries > .5s to default solrconfig.xml
   lineinfile:
@@ -87,6 +98,21 @@
     regex: '<slowQueryThresholdMillis>500</slowQueryThresholdMillis>'
   tags:
     - remove_slow_query
+    # - setup
+
+- name: replace solrconfig.xml with local default copy
+  copy:
+    src: ./roles/solr/files/solrconfig_default.xml
+    dest: '{{solr_install_dir}}/solr/server/solr/configsets/_default/conf/solrconfig.xml'
+  tags:
+    - solrconfig
+
+- name: replace solr.xml with local copy
+  copy:
+    src: ./roles/solr/files/solr_default.xml
+    dest: '{{solr_install_dir}}/solr/server/solr/solr.xml'
+  tags:
+    - solrxml
 
 - name: modify solr executable ~/solr-8_3/solr/bin/solr
   lineinfile:
@@ -95,18 +121,16 @@
     line: 'REMOTE_JMX_OPTS+=("-Djava.rmi.server.hostname={{globalIP}}")'
   tags:
     - rmi
+    - setup
 
 - debug:
     msg: "{{chroot}}"
   tags:
-    - never
     - solr_start
     - solr_restart
+    - setup
 # what the hell here:::
 
-- name: add trace config to solr.xml
-  file:
-    src:
 
 - name: restart solr
   shell: ./solr/bin/solr restart -c -q -z "10.10.1.1:2181,10.10.1.2:2181,10.10.1.3:2181/{{chroot}}"
