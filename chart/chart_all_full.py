@@ -27,7 +27,7 @@ def main(query,codename):
 # this is for total file
     total_scale_file = '/Users/dporter/projects/solrcloud/chart/scaling_exp_csvs/total_'+query+'_'+codename+'.csv'
     fm = open(total_scale_file, "w+")
-    fm.write('parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROUP\n')
+    fm.write('parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROUP,fcts\n')
 
     for d in dirs:
         print(d)
@@ -40,10 +40,21 @@ def main(query,codename):
         for exp_output in bench_files:
             f = open(exp_home+'/'+d+'/'+exp_output, 'r')
             data = f.readline()
+            data=data.replace("\n","")
+            fcts= f.readline()
+            fct_data=fcts.strip()
+            fct_data=fct_data.replace(" ",'')
+            fct_data=fct_data.replace("[",'')
+            fct_data=fct_data.replace("]",'')
+            fct_data=fct_data.replace("\n",'')
+            fct_string=fct_data.replace(",","--")
+            # fct_data should be comma separated string of fcts
             f.close()
             # fp = open(complete_out_file, "a+")
             csize=d[-4:]
             csize = csize.strip(' size')
+            if csize == "0":
+                csize = "1"
             rf=str(d[2:4])
             rf = int(rf.strip('_'))
             shard=str(d[5:7])
@@ -54,7 +65,7 @@ def main(query,codename):
             # fp.write(data+','+csize+','+query+','+d[:8]+','+group+'\n')
             # fp.close()
             fm = open(total_scale_file, "a+")
-            fm.write(data+','+csize+','+query+','+d[:8]+','+group+'\n')
+            fm.write(data+','+csize+','+query+','+d[:8]+','+group+','+fct_string+'\n')
             fm.close()
 
     print("\n COMPLETED chart_all_full.py \n\n\n")

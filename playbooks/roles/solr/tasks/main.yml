@@ -63,15 +63,17 @@
   tags:
     - solrinsh
     - setup
+    - solr_start
 # not the best convention here...
 - name: copy solr init file to hosts
   copy:
-    src: ./roles/solr/files/solr.in.sh
-    dest: '{{solr_install_dir}}/solr/bin'
+    src: "{{solr_init_file}}"
+    dest: '{{solr_install_dir}}/solr/bin/solr.in.sh'
   tags:
     - config
     - solrinsh
     - setup
+    - solr_start
 
 - name: create and grant log dir permissions for solr
   file:

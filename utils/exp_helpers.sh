@@ -28,7 +28,10 @@ resetExperiment () {
 
 getZnode (){
   case $1 in
-
+    1)
+      echo "/singleNode"
+      ;;
+      
     2)
       echo "/twoNode"
       ;;

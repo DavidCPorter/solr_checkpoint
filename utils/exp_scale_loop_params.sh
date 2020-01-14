@@ -1,12 +1,22 @@
 #########  EXP PARAMS
 
 # constraint -> shards are 1, 2, or 4
+DSTAT_SWITCH=off
 copy_python_scripts="no"
-SHARDS=( 1 )
-QUERYS=("direct")
-RF_MULTIPLE=( 2 )
-LOAD=24
-export MAX_LOAD=24
+SHARDS=( 1 2 )
+QUERYS=( "solrj" "direct" )
+RF_MULTIPLE=( 1 2 )
+LOAD=36
+load_start=3
+export MAX_LOAD=36
+instances=0
+export SOLRJ_PORT_OVERRIDE=true
+load_server_incrementer=3
+EXTRA_ITERS=12
+
+
+
+
 #########  PARAMS END
 
 setLoadArray (){

@@ -1,6 +1,0 @@
-"Dstat 0.7.3 CSV output"
-"Author:","Dag Wieers <dag@wieers.com>",,,,"URL:","http://dag.wieers.com/home-made/dstat/"
-"Host:","node-39.solr8-3.uic-cs-edu-pg0.utah.cloudlab.us",,,,"User:","dporte7"
-"Cmdline:","dstat -t --cpu --mem --disk --io --net --int --sys --swap --tcp --output node39_128.110.153.222_direct::rf8_s1_cluster4_dstat.csv",,,,"Date:","19 Dec 2019 15:11:58 MST"
-"system","total cpu usage",,,,,"memory usage",,,,"dsk/total",,"io/total",,"net/total",,"interrupts",,,"system",,"swap",,"tcp sockets",,,,
-"time","usr","sys","idl","wai","stl","used","free","buff","cach","read","writ","read","writ","recv","send","79","80","81","int","csw","used","free","lis","act","syn","tim","clo"

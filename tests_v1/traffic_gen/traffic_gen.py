@@ -28,20 +28,22 @@ def main( ):
         # distributed solrcloud scenario
         if main_args.instances == None:
             main_args.port = 8983
+
+        # NOTE: clustersize of 1 and instance of N already configged host and port correctly
         else:
             pass
 
-        # NOTE: clustersize of 1 and instance of N already configged host and port correctly
 
     elif main_args.query == 'solrj':
         main_args.host = '127.0.0.1'
+        # solrj with singlenode cluster
         if main_args.instances != None:
             if main_args.port == 8983:
                 main_args.port = 9444
             # changes 9911 -> 9111 e.g.
             else:
                 main_args.port = int(str(main_args.port)[1:]+str(main_args.port)[-1:])
-        # NOTE: ports for solrj are already passed in correctly
+        # solrj w/ cloud cluster -> NOTE: ports for solrj are already passed in correctly
         else:
             pass
 
@@ -155,7 +157,7 @@ def main( ):
             next_thread.join( )
 
     # Calculate statistics
-    print(thread_stats.responses)
+    # print(thread_stats.responses)
     web_stats = calc_web_stats( main_args, thread_stats )
     # print(web_stats)
     web_stats = convert_units( web_stats )

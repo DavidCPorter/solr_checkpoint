@@ -144,6 +144,12 @@ public class WorkerRunnable implements Runnable {
 
             SolrDocumentList ret = response.getResults();
             this.numFound = ret.getNumFound();
+            // for(SolrDocument document : documents) {
+            //   final String id = (String) document.getFirstValue("id");
+            //   final String name = (String) document.getFirstValue("name");
+            //
+            //   print("id: " + id + "; name: " + name);
+            // }
 
         } catch (Exception e) {
             e.printStackTrace();

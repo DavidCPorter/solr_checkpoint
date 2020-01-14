@@ -37,15 +37,8 @@ public class DistributedWebServer {
         instance.setDefaultCollection(defaultCollection);
         instance.setZkClientTimeout(zkClientTimeout);
         instance.setZkConnectTimeout(zkConnectTimeout);
-
-        MultiThreadedServer server1 = new MultiThreadedServer(9111, instance);
-        MultiThreadedServer server2 = new MultiThreadedServer(9222, instance);
-        MultiThreadedServer server3 = new MultiThreadedServer(9333, instance);
         MultiThreadedServer server4 = new MultiThreadedServer(9444, instance);
 
-        new Thread(server1).start();
-        new Thread(server2).start();
-        new Thread(server3).start();
         new Thread(server4).start();
 
         try {
@@ -55,9 +48,7 @@ public class DistributedWebServer {
         }
         System.out.println("Stopping Server");
         //stops multithreded server loop
-        server1.stop();
-        server2.stop();
-        server3.stop();
+
         server4.stop();
     }
 

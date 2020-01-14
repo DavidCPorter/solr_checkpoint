@@ -31,7 +31,6 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
     requests = 0
     fct_return = []
     gut_check = []
-
     # Wait for start signal
     logging.debug( "Waiting for start event %s" % name )
     event_start = start_flag.wait()
@@ -65,6 +64,7 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
             # if responses%5 == 0:
 
             fct_return.append(fct)
+
             if responses == 1:
                 gut_check.append(r[:1000])
             if responses%1000 == 0:
@@ -80,28 +80,32 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
         conn.send(b'bye\n')
 
     conn.close()
-    fct_return.sort()
-    length = len(fct_return)
-    # get index for 90% tail latency
-    tail_nine_index = int(length/10)
-    # get 95% tail_index
-    tail_nine_five_index = int(length/20)
 
-    median_index = int(length/2)
+    random.shuffle(fct_return)
+    length_all = len(fct_return)
+    if length_all <= 120:
+        sample_fcts = fct_return
+    else:
+        sample_fcts = fct_return[:120]
+
+    sample_fcts.sort()
+
+    length_all = len(sample_fcts)
+
+    tail_nine_five_index = int(length_all/20)
+
+    median_index = int(length_all/2)
 
     # log median latency
-    median = fct_return[median_index]
-    # log 90->100% latency numbers
-    tail_nine_list = fct_return[-tail_nine_index:]
+    median = sample_fcts[median_index]
     # log 95% tail latency
-    tail = fct_return[-tail_nine_five_index]
-
+    tail = sample_fcts[-tail_nine_five_index]
 
     # throughput in qps
     thread_stats.responses[int(name)] = responses/test_param.duration
     thread_stats.requests[int(name)] = tail
     thread_stats.avg_lat[int(name)] = median
-    fct_list.append((requests,responses,gut_check,median,tail,tail_nine_list))
+    fct_list.append((requests,responses,gut_check,median,tail,sample_fcts))
     logging.debug( "Exiting" )
 
     return

@@ -12,6 +12,7 @@ def main(p, t, d, rf, q, l, shards, solrnum, loadnodes, instances=None):
     QPS = []
     median_lat = []
     tail_lat = []
+    fct_total_string=''
     files = os.popen('ls '+proj_home+'/tests_v1/profiling_data/proc_results | grep '+q).read()
     files = files.split('\n')
     processes = float(len(files))
@@ -20,13 +21,12 @@ def main(p, t, d, rf, q, l, shards, solrnum, loadnodes, instances=None):
     for file in files:
         f = open("/Users/dporter/projects/solrcloud/tests_v1/profiling_data/proc_results/"+file, 'r')
         #
-        f.readline()
+        result_page=f.readlines()
         # read first line which is the request total
-        QPS.append(f.readline())
-        f.readline()
-        median_lat.append(f.readline())
-        f.readline()
-        tail_lat.append(f.readline())
+        QPS.append(result_page[1])
+        median_lat.append(result_page[3])
+        tail_lat.append(result_page[5])
+        fct_total_string=fct_total_string+","+str(result_page[13])
 
         f.close()
 
@@ -36,15 +36,36 @@ def main(p, t, d, rf, q, l, shards, solrnum, loadnodes, instances=None):
 
     sum_median_lat=0
     for i in median_lat:
-        sum_median_lat +=int(float(i))
+        sum_median_lat +=float(i)
 
     sum_tail_lat=0
     for i in tail_lat:
-        sum_tail_lat +=int(float(i))
+        sum_tail_lat +=float(i)
+
+    # fct_total_string=fct_total_string.replace(' ','')
+    fct_total_string=fct_total_string.replace('\n','')
+    fct_total_string=fct_total_string.replace('[','')
+    fct_total_string=fct_total_string.replace(']','')
+    fct_total_string=fct_total_string.replace(' ','')
+
+
+
+    fct_total_list=fct_total_string.split(",")
+    fct_total_list=[float(i) for i in fct_total_list[1:]]
+
+
 
     total_qps = round(sum_queries_per_second,2)
-    total_med_lat = int(sum_median_lat/int(processes))
-    total_tail_lat = int(sum_tail_lat/int(processes))
+    total_med_lat = float(sum_median_lat/float(processes))
+    total_tail_lat = float(sum_tail_lat/float(processes))
+    fct_total_list.sort()
+    fct_len=len(fct_total_list)
+    incrementer=int(fct_len/20)
+    # gonna make a list [0,5,10,... 100] and save to text file and that will be the data read into the CDF chart
+
+    fct_percentiles=[fct_total_list[incrementer*x] for x in range(0,20)]
+
+
 
 # simply to denote this is a single node cluster record
     if instances != "0":
@@ -62,7 +83,9 @@ def main(p, t, d, rf, q, l, shards, solrnum, loadnodes, instances=None):
 # for charting
 #  writes -> total outstanding requests, QPS, median LAT, Tail LAT
     # 2*2 is simply compensating for the fact that I don't want to change the driver code to generate the correct number here - so i'm just hardcoding the outstanding requests position with p*2*2 b/c thats the right number.
-    fp.write(p+','+str(total_qps)+','+str(total_med_lat)+','+str(total_tail_lat))
+    fp.write(p+','+str(total_qps)+','+str(total_med_lat)+','+str(total_tail_lat)+'\n')
+    fp.write(str(fct_percentiles))
+
     fp.close()
     print("READRESULTS SCRIPT COMPLETE\n\n\n")
 
@@ -80,7 +103,7 @@ if __name__ == "__main__":
     shards = sys.argv[13]
     solrnum = sys.argv[15]
     loadnodes = sys.argv[16]
-    instances = sys.argv[17]
+    instances = sys.argv[18]
 
     sys.exit(
     main(processes,threads,duration,replicas,query,loop, shards, solrnum, loadnodes, instances)

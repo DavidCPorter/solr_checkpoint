@@ -257,6 +257,8 @@
       -->
     <!-- <infoStream file="INFOSTREAM.txt">false</infoStream> -->
   </indexConfig>
+<!-- this is default ... wonder if other options require merge sort as well -->
+  <statsCache class="org.apache.solr.search.stats.LocalStatsCache"/>
 
 
   <!-- JMX
@@ -278,6 +280,7 @@
     -->
 
   <!-- The default high-performance update handler -->
+
   <updateHandler class="solr.DirectUpdateHandler2">
 
     <!-- Enables a transaction log, used for real-time get, durability, and

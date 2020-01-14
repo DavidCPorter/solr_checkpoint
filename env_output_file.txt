@@ -1,0 +1,808 @@
+LOADNODES:::
+128.110.153.83: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[1] 18:12:39 [SUCCESS] 128.110.153.83
+128.110.153.88: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+128.110.153.69: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+128.110.153.73: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+128.110.153.95: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[2] 18:12:39 [SUCCESS] 128.110.153.88
+128.110.153.100: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[3] 18:12:39 [SUCCESS] 128.110.153.69
+[4] 18:12:39 [SUCCESS] 128.110.153.95
+[5] 18:12:39 [SUCCESS] 128.110.153.73
+128.110.153.64: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[6] 18:12:39 [SUCCESS] 128.110.153.100
+[7] 18:12:39 [SUCCESS] 128.110.153.64
+128.110.153.107: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[8] 18:12:39 [SUCCESS] 128.110.153.107
+128.110.153.108: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[9] 18:12:39 [SUCCESS] 128.110.153.108
+128.110.153.74: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+128.110.153.101: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+128.110.153.65: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[10] 18:12:39 [SUCCESS] 128.110.153.74
+[11] 18:12:39 [SUCCESS] 128.110.153.101
+[12] 18:12:39 [SUCCESS] 128.110.153.65
+128.110.153.106: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[13] 18:12:39 [SUCCESS] 128.110.153.106
+128.110.153.87: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[14] 18:12:39 [SUCCESS] 128.110.153.87
+128.110.153.86: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[15] 18:12:39 [SUCCESS] 128.110.153.86
+128.110.153.70: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[16] 18:12:39 [SUCCESS] 128.110.153.70
+128.110.153.153: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[17] 18:12:39 [SUCCESS] 128.110.153.153
+128.110.153.71: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+128.110.153.97: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[18] 18:12:39 [SUCCESS] 128.110.153.71
+[19] 18:12:39 [SUCCESS] 128.110.153.97
+128.110.153.122: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+128.110.153.99: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+128.110.153.82: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+128.110.153.85: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[20] 18:12:39 [SUCCESS] 128.110.153.122
+[21] 18:12:39 [SUCCESS] 128.110.153.82
+[22] 18:12:39 [SUCCESS] 128.110.153.85
+[23] 18:12:39 [SUCCESS] 128.110.153.99
+128.110.153.149: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[24] 18:12:39 [SUCCESS] 128.110.153.149
+128.110.153.84: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[25] 18:12:39 [SUCCESS] 128.110.153.84
+128.110.153.96: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[26] 18:12:39 [SUCCESS] 128.110.153.96
+128.110.153.105: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[27] 18:12:39 [SUCCESS] 128.110.153.105
+128.110.153.80: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[28] 18:12:39 [SUCCESS] 128.110.153.80
+128.110.153.104: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[29] 18:12:39 [SUCCESS] 128.110.153.104
+128.110.153.135: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[30] 18:12:39 [SUCCESS] 128.110.153.135
+128.110.153.92: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[31] 18:12:39 [SUCCESS] 128.110.153.92
+128.110.153.79: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[32] 18:12:39 [SUCCESS] 128.110.153.79
+128.110.153.90: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[33] 18:12:40 [SUCCESS] 128.110.153.90
+128.110.153.91: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[34] 18:12:40 [SUCCESS] 128.110.153.91
+128.110.153.121: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[35] 18:12:40 [SUCCESS] 128.110.153.121
+128.110.153.144: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[36] 18:12:40 [SUCCESS] 128.110.153.144
+********
+SOLR NODES:::
+128.110.153.105: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[1] 18:12:41 [SUCCESS] 128.110.153.105
+128.110.153.89: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+128.110.153.103: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[2] 18:12:41 [SUCCESS] 128.110.153.89
+[3] 18:12:41 [SUCCESS] 128.110.153.103
+128.110.153.75: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+128.110.153.92: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+128.110.153.144: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[4] 18:12:41 [SUCCESS] 128.110.153.75
+[5] 18:12:41 [SUCCESS] 128.110.153.92
+[6] 18:12:41 [SUCCESS] 128.110.153.144
+128.110.153.90: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[7] 18:12:41 [SUCCESS] 128.110.153.90
+128.110.153.135: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[8] 18:12:41 [SUCCESS] 128.110.153.135
+128.110.153.91: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[9] 18:12:41 [SUCCESS] 128.110.153.91
+128.110.153.125: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+128.110.153.96: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[10] 18:12:41 [SUCCESS] 128.110.153.125
+[11] 18:12:41 [SUCCESS] 128.110.153.96
+128.110.153.77: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[12] 18:12:41 [SUCCESS] 128.110.153.77
+128.110.153.76: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[13] 18:12:41 [SUCCESS] 128.110.153.76
+128.110.153.66: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[14] 18:12:41 [SUCCESS] 128.110.153.66
+128.110.153.121: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[15] 18:12:42 [SUCCESS] 128.110.153.121
+128.110.153.78: Architecture:        x86_64
+CPU(s):              16
+On-line CPU(s) list: 0-15
+Thread(s) per core:  2
+Core(s) per socket:  8
+Socket(s):           1
+L1d cache:           32K
+L1i cache:           32K
+L2 cache:            256K
+L3 cache:            12288K
+NUMA node0 CPU(s):   0-15
+[16] 18:12:42 [SUCCESS] 128.110.153.78
+********
+NETWORK BANDWIDTH::: 
+128.110.153.103: 10000
+[1] 18:12:43 [SUCCESS] 128.110.153.103
+128.110.153.105: 10000
+[2] 18:12:43 [SUCCESS] 128.110.153.105
+128.110.153.75: 10000
+[3] 18:12:43 [SUCCESS] 128.110.153.75
+128.110.153.96: 10000
+[4] 18:12:43 [SUCCESS] 128.110.153.96
+128.110.153.95: 10000
+[5] 18:12:43 [SUCCESS] 128.110.153.95
+128.110.153.66: 10000
+128.110.153.125: 10000
+128.110.153.100: 10000
+[6] 18:12:43 [SUCCESS] 128.110.153.66
+[7] 18:12:43 [SUCCESS] 128.110.153.100
+[8] 18:12:43 [SUCCESS] 128.110.153.125
+128.110.153.135: 10000
+[9] 18:12:43 [SUCCESS] 128.110.153.135
+128.110.153.83: 10000
+[10] 18:12:43 [SUCCESS] 128.110.153.83
+128.110.153.91: 10000
+128.110.153.90: 10000
+128.110.153.70: 10000
+[11] 18:12:43 [SUCCESS] 128.110.153.91
+[12] 18:12:43 [SUCCESS] 128.110.153.90
+[13] 18:12:43 [SUCCESS] 128.110.153.70
+128.110.153.144: 10000
+128.110.153.121: 10000
+128.110.153.97: 10000
+[14] 18:12:43 [SUCCESS] 128.110.153.144
+[15] 18:12:43 [SUCCESS] 128.110.153.121
+[16] 18:12:43 [SUCCESS] 128.110.153.97
+128.110.153.82: 10000
+128.110.153.87: 10000
+[17] 18:12:43 [SUCCESS] 128.110.153.82
+[18] 18:12:43 [SUCCESS] 128.110.153.87
+128.110.153.69: 10000
+128.110.153.71: 10000
+[19] 18:12:43 [SUCCESS] 128.110.153.69
+[20] 18:12:43 [SUCCESS] 128.110.153.71
+128.110.153.153: 10000
+[21] 18:12:43 [SUCCESS] 128.110.153.153
+128.110.153.77: 10000
+128.110.153.107: 10000
+128.110.153.108: 10000
+[22] 18:12:43 [SUCCESS] 128.110.153.77
+[23] 18:12:43 [SUCCESS] 128.110.153.107
+[24] 18:12:43 [SUCCESS] 128.110.153.108
+128.110.153.64: 10000
+[25] 18:12:43 [SUCCESS] 128.110.153.64
+128.110.153.89: 10000
+[26] 18:12:43 [SUCCESS] 128.110.153.89
+128.110.153.106: 10000
+[27] 18:12:43 [SUCCESS] 128.110.153.106
+128.110.153.73: 10000
+[28] 18:12:43 [SUCCESS] 128.110.153.73
+128.110.153.92: 10000
+[29] 18:12:44 [SUCCESS] 128.110.153.92
+128.110.153.76: 10000
+[30] 18:12:44 [SUCCESS] 128.110.153.76
+128.110.153.78: 10000
+[31] 18:12:44 [SUCCESS] 128.110.153.78
+128.110.153.88: 10000
+[32] 18:12:44 [SUCCESS] 128.110.153.88
+128.110.153.101: 10000
+[33] 18:12:44 [SUCCESS] 128.110.153.101
+128.110.153.86: 10000
+128.110.153.65: 10000
+[34] 18:12:44 [SUCCESS] 128.110.153.86
+[35] 18:12:44 [SUCCESS] 128.110.153.65
+128.110.153.74: 10000
+[36] 18:12:44 [SUCCESS] 128.110.153.74
+128.110.153.122: 10000
+[37] 18:12:44 [SUCCESS] 128.110.153.122
+128.110.153.80: 10000
+[38] 18:12:44 [SUCCESS] 128.110.153.80
+128.110.153.104: 10000
+[39] 18:12:44 [SUCCESS] 128.110.153.104
+128.110.153.84: 10000
+[40] 18:12:44 [SUCCESS] 128.110.153.84
+128.110.153.99: 10000
+[41] 18:12:44 [SUCCESS] 128.110.153.99
+128.110.153.79: 10000
+[42] 18:12:44 [SUCCESS] 128.110.153.79
+128.110.153.149: 10000
+[43] 18:12:44 [SUCCESS] 128.110.153.149
+128.110.153.85: 10000
+[44] 18:12:44 [SUCCESS] 128.110.153.85
+********
+RAM::: 
+128.110.153.89:        size: 62GiB
+[1] 18:12:45 [SUCCESS] 128.110.153.89
+128.110.153.103:        size: 62GiB
+[2] 18:12:45 [SUCCESS] 128.110.153.103
+128.110.153.107:        size: 62GiB
+[3] 18:12:46 [SUCCESS] 128.110.153.107
+128.110.153.97:        size: 62GiB
+[4] 18:12:46 [SUCCESS] 128.110.153.97
+128.110.153.125:        size: 62GiB
+128.110.153.75:        size: 62GiB
+128.110.153.144:        size: 62GiB
+[5] 18:12:46 [SUCCESS] 128.110.153.125
+128.110.153.105:        size: 62GiB
+[6] 18:12:46 [SUCCESS] 128.110.153.75
+[7] 18:12:46 [SUCCESS] 128.110.153.144
+128.110.153.88:        size: 62GiB
+[8] 18:12:46 [SUCCESS] 128.110.153.105
+[9] 18:12:46 [SUCCESS] 128.110.153.88
+128.110.153.135:        size: 62GiB
+[10] 18:12:46 [SUCCESS] 128.110.153.135
+128.110.153.96:        size: 62GiB
+[11] 18:12:46 [SUCCESS] 128.110.153.96
+128.110.153.108:        size: 62GiB
+[12] 18:12:46 [SUCCESS] 128.110.153.108
+128.110.153.66:        size: 62GiB
+[13] 18:12:46 [SUCCESS] 128.110.153.66
+128.110.153.73:        size: 62GiB
+[14] 18:12:46 [SUCCESS] 128.110.153.73
+128.110.153.92:        size: 62GiB
+128.110.153.91:        size: 62GiB
+128.110.153.83:        size: 62GiB
+[15] 18:12:46 [SUCCESS] 128.110.153.92
+[16] 18:12:46 [SUCCESS] 128.110.153.91
+128.110.153.95:        size: 62GiB
+[17] 18:12:46 [SUCCESS] 128.110.153.95
+[18] 18:12:46 [SUCCESS] 128.110.153.83
+128.110.153.100:        size: 62GiB
+[19] 18:12:46 [SUCCESS] 128.110.153.100
+128.110.153.76:        size: 62GiB
+[20] 18:12:46 [SUCCESS] 128.110.153.76
+128.110.153.121:        size: 62GiB
+[21] 18:12:46 [SUCCESS] 128.110.153.121
+128.110.153.90:        size: 62GiB
+[22] 18:12:46 [SUCCESS] 128.110.153.90
+128.110.153.106:        size: 62GiB
+[23] 18:12:46 [SUCCESS] 128.110.153.106
+128.110.153.78:        size: 62GiB
+[24] 18:12:46 [SUCCESS] 128.110.153.78
+128.110.153.77:        size: 62GiB
+[25] 18:12:46 [SUCCESS] 128.110.153.77
+128.110.153.64:        size: 62GiB
+[26] 18:12:46 [SUCCESS] 128.110.153.64
+128.110.153.71:        size: 62GiB
+[27] 18:12:46 [SUCCESS] 128.110.153.71
+128.110.153.82:        size: 62GiB
+[28] 18:12:46 [SUCCESS] 128.110.153.82
+128.110.153.87:        size: 62GiB
+[29] 18:12:46 [SUCCESS] 128.110.153.87
+128.110.153.70:        size: 62GiB
+[30] 18:12:46 [SUCCESS] 128.110.153.70
+128.110.153.153:        size: 62GiB
+[31] 18:12:46 [SUCCESS] 128.110.153.153
+128.110.153.69:        size: 62GiB
+[32] 18:12:46 [SUCCESS] 128.110.153.69
+128.110.153.101:        size: 62GiB
+128.110.153.86:        size: 62GiB
+128.110.153.74:        size: 62GiB
+[33] 18:12:47 [SUCCESS] 128.110.153.86
+[34] 18:12:47 [SUCCESS] 128.110.153.101
+[35] 18:12:47 [SUCCESS] 128.110.153.74
+128.110.153.122:        size: 62GiB
+[36] 18:12:47 [SUCCESS] 128.110.153.122
+128.110.153.104:        size: 62GiB
+[37] 18:12:47 [SUCCESS] 128.110.153.104
+128.110.153.65:        size: 62GiB
+128.110.153.85:        size: 62GiB
+[38] 18:12:47 [SUCCESS] 128.110.153.85
+[39] 18:12:47 [SUCCESS] 128.110.153.65
+128.110.153.149:        size: 62GiB
+128.110.153.80:        size: 62GiB
+128.110.153.79:        size: 62GiB
+128.110.153.99:        size: 62GiB
+[40] 18:12:47 [SUCCESS] 128.110.153.80
+[41] 18:12:47 [SUCCESS] 128.110.153.99
+[42] 18:12:47 [SUCCESS] 128.110.153.79
+[43] 18:12:47 [SUCCESS] 128.110.153.149
+128.110.153.84:        size: 62GiB
+[44] 18:12:47 [SUCCESS] 128.110.153.84
+********

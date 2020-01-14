@@ -31,7 +31,7 @@ def get_urls(test_param, terms, shards, replicas, clustersize, instances, query)
     csize = str(clustersize)
 
     if instances != None:
-        csize = '9'+str(instances)
+        csize = '9'+csize
 
     if query == "direct":
         r = random.randint(1,len(terms))
@@ -43,8 +43,7 @@ def get_urls(test_param, terms, shards, replicas, clustersize, instances, query)
             q = '/solr/reviews_rf'+str(replicas)+'_s'+str(shards)+'_clustersize'+csize+'/select?q='+field+'%3A'+term+'&rows=10'
             urls.append("%s%s" % (prefix_url, q))
 
-
-# either solrj normal or any of the other
+# solrj
     else:
         col = 'reviews_rf'+str(replicas)+'_s'+str(shards)+'_clustersize'+csize
         # port 9111 flow -> via solrJ

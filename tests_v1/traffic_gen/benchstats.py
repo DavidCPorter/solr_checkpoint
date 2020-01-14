@@ -72,7 +72,7 @@ def calc_web_stats( main_args, thread_stats ):
     tot_bytes  = np.sum( thread_stats.byte_count  )
     # Caclulate bandwidth
     bw           = np.divide( tot_bytes, thread_stats.duration    )
-    # Calculate total number of requests
+    # avg of the p95 tail responses
     tot_requests = np.average( thread_stats.requests )
     # sum across threads of total number of responses per second
     tot_res_proc = np.sum( thread_stats.responses )
@@ -149,5 +149,6 @@ def write_csv( csv_file, web_stats, main_args, fct_list=None ):
         output_file.write("%s" % str(web_stats.tot_requests)+'\n\n')
         output_file.write('(median for each thread, 95% lat for each thread, lists of fct 90%->100% tail on 20% of results):\n')
         for i in fct_list:
-            output_file.write(str(i)+'\n')
+            for j in i:
+                output_file.write(str(j)+'\n')
     return
