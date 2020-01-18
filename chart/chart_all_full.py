@@ -27,7 +27,7 @@ def main(query,codename):
 # this is for total file
     total_scale_file = '/Users/dporter/projects/solrcloud/chart/scaling_exp_csvs/total_'+query+'_'+codename+'.csv'
     fm = open(total_scale_file, "w+")
-    fm.write('parallel_requests,QPS,median_lat,P95_latency(ms),clustersize,query,rfshards,GROUP,fcts\n')
+    fm.write('parallel_requests,QPS,P50_latency(ms),P90_latency(ms),P95_latency(ms),P99_latency(ms),clustersize,query,rfshards,GROUP,fcts\n')
 
     for d in dirs:
         print(d)

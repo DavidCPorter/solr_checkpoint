@@ -7,12 +7,12 @@ SHARDS=( 1 2 )
 QUERYS=( "solrj" "direct" )
 RF_MULTIPLE=( 1 2 )
 LOAD=36
-load_start=3
+load_start=2
 export MAX_LOAD=36
 instances=0
 export SOLRJ_PORT_OVERRIDE=true
-load_server_incrementer=3
-EXTRA_ITERS=12
+load_server_incrementer=2
+EXTRA_ITERS=8
 
 
 

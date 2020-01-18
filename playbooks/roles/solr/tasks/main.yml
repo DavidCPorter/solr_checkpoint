@@ -1,4 +1,4 @@
-#get the 8_1 version of solr (this repo was forked from apache on 6/12/19).
+#get the 8_3 version of solr (this repo was forked from apache on 6/12/19).
 
 
 - name: Check if Solr has been installed already.

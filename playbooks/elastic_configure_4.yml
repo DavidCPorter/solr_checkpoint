@@ -1,0 +1,5 @@
+# playbook
+- hosts: fourNode
+  roles:
+    - elastic
+  vars:

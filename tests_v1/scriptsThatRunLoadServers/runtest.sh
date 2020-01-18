@@ -253,8 +253,9 @@ function start_experiment() {
 
 
   printf "\n\n\n"
-  echo "RUNNING READ RESULTS SCRIPT"
   if [ "$first_time" = no ];then
+    echo "RUNNING READ RESULTS SCRIPT"
+
     echo "$PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $REPLICAS $QUERY $LOOP $SHARDS $SOLRNUM $LOADSIZE $INSTANCES"
     python3 $PROJECT_HOME/tests_v1/traffic_gen/readresults.py $PROCESSES $THREADS $DURATION $REPLICAS $QUERY $LOOP $SHARDS $SOLRNUM $LOADSIZE $INSTANCES
     wait $!

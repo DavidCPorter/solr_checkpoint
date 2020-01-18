@@ -12,6 +12,8 @@ def main(p, t, d, rf, q, l, shards, solrnum, loadnodes, instances=None):
     QPS = []
     median_lat = []
     tail_lat = []
+    ninenine=[]
+    ninezero=[]
     fct_total_string=''
     files = os.popen('ls '+proj_home+'/tests_v1/profiling_data/proc_results | grep '+q).read()
     files = files.split('\n')
@@ -23,10 +25,12 @@ def main(p, t, d, rf, q, l, shards, solrnum, loadnodes, instances=None):
         #
         result_page=f.readlines()
         # read first line which is the request total
-        QPS.append(result_page[1])
-        median_lat.append(result_page[3])
-        tail_lat.append(result_page[5])
-        fct_total_string=fct_total_string+","+str(result_page[13])
+        ninenine.append(result_page[1])
+        ninezero.append(result_page[3])
+        QPS.append(result_page[5])
+        median_lat.append(result_page[7])
+        tail_lat.append(result_page[9])
+        fct_total_string=fct_total_string+","+str(result_page[17])
 
         f.close()
 
@@ -42,28 +46,41 @@ def main(p, t, d, rf, q, l, shards, solrnum, loadnodes, instances=None):
     for i in tail_lat:
         sum_tail_lat +=float(i)
 
+    sum_ninenine_lat=0
+    for i in ninenine:
+         sum_ninenine_lat +=float(i)
+
+    sum_ninezero_lat=0
+    for i in ninezero:
+        sum_ninezero_lat +=float(i)
+
     # fct_total_string=fct_total_string.replace(' ','')
     fct_total_string=fct_total_string.replace('\n','')
     fct_total_string=fct_total_string.replace('[','')
     fct_total_string=fct_total_string.replace(']','')
     fct_total_string=fct_total_string.replace(' ','')
 
-
-
     fct_total_list=fct_total_string.split(",")
     fct_total_list=[float(i) for i in fct_total_list[1:]]
-
-
 
     total_qps = round(sum_queries_per_second,2)
     total_med_lat = float(sum_median_lat/float(processes))
     total_tail_lat = float(sum_tail_lat/float(processes))
+    total_ninenine_lat=float(sum_ninenine_lat/float(processes))
+    total_ninezero_lat=float(sum_ninezero_lat/float(processes))
+
     fct_total_list.sort()
     fct_len=len(fct_total_list)
-    incrementer=int(fct_len/20)
+    incrementer_95=int(fct_len/20)
+    # incrementer_50=int(fct_len/2)
+    # incrementer_90=int(fct_len/10)
+    # incrementer_99=int(fct_len/100)
     # gonna make a list [0,5,10,... 100] and save to text file and that will be the data read into the CDF chart
 
-    fct_percentiles=[fct_total_list[incrementer*x] for x in range(0,20)]
+    p_95=[fct_total_list[incrementer_95*x] for x in range(0,20)]
+    # p_95=[fct_total_list[incrementer*x] for x in range(0,20)]
+    # fct_percentiles_95=[fct_total_list[incrementer*x] for x in range(0,20)]
+    # fct_percentiles_95=[fct_total_list[incrementer*x] for x in range(0,20)]
 
 
 
@@ -83,8 +100,11 @@ def main(p, t, d, rf, q, l, shards, solrnum, loadnodes, instances=None):
 # for charting
 #  writes -> total outstanding requests, QPS, median LAT, Tail LAT
     # 2*2 is simply compensating for the fact that I don't want to change the driver code to generate the correct number here - so i'm just hardcoding the outstanding requests position with p*2*2 b/c thats the right number.
-    fp.write(p+','+str(total_qps)+','+str(total_med_lat)+','+str(total_tail_lat)+'\n')
-    fp.write(str(fct_percentiles))
+    fp.write(p+','+str(total_qps)+','+str(total_med_lat)+','+str(total_ninezero_lat)+","+str(total_tail_lat)+","+str(total_ninenine_lat)+'\n')
+    fp.write(str(p_95))
+    # fp.write(str(p_90))
+    # fp.write(str(p_50))
+    # fp.write(str(p_99))
 
     fp.close()
     print("READRESULTS SCRIPT COMPLETE\n\n\n")

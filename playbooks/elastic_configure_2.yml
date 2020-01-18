@@ -1,0 +1,5 @@
+# playbook
+- hosts: twoNode
+  roles:
+    - elastic
+  vars:

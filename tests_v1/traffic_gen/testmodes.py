@@ -94,6 +94,9 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
 
     tail_nine_five_index = int(length_all/20)
 
+    tail_nine_nine_index = int(length_all/100)
+    tail_nine_zero_index = int(length_all/10)
+
     median_index = int(length_all/2)
 
     # log median latency
@@ -101,10 +104,15 @@ def duration_based_test( test_param, thread_stats, conn, urls, start_flag, stop_
     # log 95% tail latency
     tail = sample_fcts[-tail_nine_five_index]
 
+    ninenine=sample_fcts[-tail_nine_nine_index]
+    ninezero=sample_fcts[-tail_nine_zero_index]
+
     # throughput in qps
     thread_stats.responses[int(name)] = responses/test_param.duration
     thread_stats.requests[int(name)] = tail
     thread_stats.avg_lat[int(name)] = median
+    thread_stats.nine_nine[int(name)] = ninenine
+    thread_stats.nine_zero[int(name)] = ninezero
     fct_list.append((requests,responses,gut_check,median,tail,sample_fcts))
     logging.debug( "Exiting" )
 
