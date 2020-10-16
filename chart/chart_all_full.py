@@ -6,9 +6,8 @@ import gzip
 
 # args = $THREADS $DURATION $CON $QUERY $LOOP $PROCESSES
 
-def main(query,codename):
-    proj_home = "~/projects/solrcloud"
-    exp_home = "/Users/dporter/projects/solrcloud/chart/exp_records/"+codename
+def main(query,codename, proj_home):
+    exp_home = proj_home+"/chart/exp_records/"+codename
     print('******** FINISHED FULL SCALING EXPERIEMENT **********')
     print("\n\nRUNNING chart_all_full.py ")
     QPS = []
@@ -18,14 +17,14 @@ def main(query,codename):
     dirs = dirs.split('\n')
     dirs.pop()
     try:
-        os.makedirs('/Users/dporter/projects/solrcloud/chart/scaling_exp_csvs')
+        os.makedirs(proj_home+'/chart/scaling_exp_csvs')
     except FileExistsError:
         print("file exists\n\n\n")
      # directory already exists
         pass
 
 # this is for total file
-    total_scale_file = '/Users/dporter/projects/solrcloud/chart/scaling_exp_csvs/total_'+query+'_'+codename+'.csv'
+    total_scale_file = proj_home+'/chart/scaling_exp_csvs/total_'+query+'_'+codename+'.csv'
     fm = open(total_scale_file, "w+")
     fm.write('parallel_requests,QPS,P50_latency(ms),P90_latency(ms),P95_latency(ms),P99_latency(ms),clustersize,query,rfshards,GROUP,fcts\n')
 
@@ -85,6 +84,7 @@ if __name__ == "__main__":
     # loop = sys.argv[11]
     # shards = sys.argv[13]
     # solrnum = sys.argv[15]
+    proj_home=sys.argv[3]
     sys.exit(
-    main(sys.argv[1],sys.argv[2])
+    main(sys.argv[1],sys.argv[2],proj_home)
     )
